@@ -2,6 +2,15 @@
     --green: #00ff00;
     --white: #ffffff;
     --black: #000000;
+
+
+    --selBlack:     #0D0600;
+    --selRed:       #A60303;
+    --selWhite:     #F2F2F2;
+
+    --dmGray:       #282828;
+    --dmAccent:     #333333;
+
 }
 
 body {
@@ -31,14 +40,14 @@ li {
 }
 
 .light-theme {
-    --bg: var(--green);
-    --fontColor: var(--black);
-    --btnBg: var(--black);
-    --btnFontColor: var(--white);
+    --bg: var(--selWhite);
+    --fontColor: var(--selBlack);
+    --btnBg: var(--selRed);
+    --btnFontColor: var(--selWhite);
 }
 .dark-theme {
-    --bg: var(--black);
-    --fontColor: var(--green);
-    --btnBg: var(--white);
-    --btnFontColor: var(--black);
+    --bg: var(--dmGray);
+    --fontColor: var(--selWhite);
+    --btnBg: var(--selRed);
+    --btnFontColor: var(--selWhite);
 }
