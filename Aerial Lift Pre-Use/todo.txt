@@ -1,0 +1,2 @@
+Draw out a desgin
+figure out how to make the signatures in a popup window - bonus points if this only happens on phones

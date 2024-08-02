@@ -1,0 +1,112 @@
+$primary: #f5f5f5;
+$secondary: #a8a8a8;
+$accent: #d32f2f;
+$background: #e8e8e8;
+$text-color: #333333;
+$font-size: 1rem;
+
+body{
+    color: $text-color;
+    background-color: $background;
+    font-size: $font-size;
+}
+
+.vertical-wrapper{
+    display: flex;
+    flex-direction: column;
+    background-color: $primary;
+    h2 {
+        font-size: $font-size;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        text-align: center;
+        margin: 0;
+        padding: 1px;
+        background-color: $text-color;
+        color: $primary;
+    }
+}
+
+.grid-wrapper{
+    display: grid;
+    gap: 0;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    div {
+        flex: 1 1 100px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+        padding: 2px;
+        box-sizing: border-box;
+        label {
+            text-align: left;
+        }
+    }
+}
+
+.horizontal-wrapper{
+    display: flex;
+    flex-direction: row;
+    background-color: $primary;
+    width: 100%;
+    margin: 0;
+    .vertical-wrapper{
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        margin: 0;
+        label{
+            background-color: $text-color;
+            color: $primary;
+            text-align: center;
+            border: 1px solid $secondary;
+            margin: 0;
+            padding: 1px;
+        }
+        input{
+            text-align: center;
+            border-radius: 0;
+            border: 1px solid $secondary;
+            background-color: $primary;
+            margin: 0;
+        }
+    }
+    label {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        background-color: $text-color;
+        color: $primary;
+        text-align: center;
+        border: 1px solid $secondary;
+        margin: 0;
+        padding: 1px;
+    }
+    .signature-input{
+        width: 50%;
+        max-width: 50%;
+    }
+    input.signature-input{
+        height: 1.2rem;
+        border: 1px solid $secondary;
+        box-sizing: border-box;
+    }
+    .canvas-wrapper{
+        max-width: 50%;
+        width: 50%;
+        box-sizing: border-box;
+        canvas{
+            aspect-ratio: 3/1;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid $secondary;
+            box-sizing: border-box;
+        }
+    }
+    .hazards-input{
+        max-width: (100% / 3);
+    }
+}
+

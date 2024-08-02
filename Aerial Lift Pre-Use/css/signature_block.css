@@ -1,0 +1,16 @@
+.signature-component-wrapper {
+  max-width: 50%;
+  width: 50%;
+}
+.signature-component-wrapper .canvas-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.signature-component-wrapper .canvas-wrapper canvas {
+  aspect-ratio: 3/1;
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #a8a8a8;
+}/*# sourceMappingURL=signature_block.css.map */

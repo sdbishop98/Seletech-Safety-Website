@@ -1,0 +1,104 @@
+body {
+  color: #333333;
+  background-color: #e8e8e8;
+  font-size: 1rem;
+}
+
+.vertical-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+}
+.vertical-wrapper h2 {
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+  padding: 1px;
+  background-color: #333333;
+  color: #f5f5f5;
+}
+
+.grid-wrapper {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+}
+.grid-wrapper div {
+  flex: 1 1 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  padding: 2px;
+  box-sizing: border-box;
+}
+.grid-wrapper div label {
+  text-align: left;
+}
+
+.horizontal-wrapper {
+  display: flex;
+  flex-direction: row;
+  background-color: #f5f5f5;
+  width: 100%;
+  margin: 0;
+}
+.horizontal-wrapper .vertical-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 0;
+}
+.horizontal-wrapper .vertical-wrapper label {
+  background-color: #333333;
+  color: #f5f5f5;
+  text-align: center;
+  border: 1px solid #a8a8a8;
+  margin: 0;
+  padding: 1px;
+}
+.horizontal-wrapper .vertical-wrapper input {
+  text-align: center;
+  border-radius: 0;
+  border: 1px solid #a8a8a8;
+  background-color: #f5f5f5;
+  margin: 0;
+}
+.horizontal-wrapper label {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-color: #333333;
+  color: #f5f5f5;
+  text-align: center;
+  border: 1px solid #a8a8a8;
+  margin: 0;
+  padding: 1px;
+}
+.horizontal-wrapper .signature-input {
+  width: 50%;
+  max-width: 50%;
+}
+.horizontal-wrapper input.signature-input {
+  height: 1.2rem;
+  border: 1px solid #a8a8a8;
+  box-sizing: border-box;
+}
+.horizontal-wrapper .canvas-wrapper {
+  max-width: 50%;
+  width: 50%;
+  box-sizing: border-box;
+}
+.horizontal-wrapper .canvas-wrapper canvas {
+  aspect-ratio: 3/1;
+  width: 100%;
+  max-width: 600px;
+  border: 1px solid #a8a8a8;
+  box-sizing: border-box;
+}
+.horizontal-wrapper .hazards-input {
+  max-width: 33.3333333333%;
+}/*# sourceMappingURL=main.css.map */
