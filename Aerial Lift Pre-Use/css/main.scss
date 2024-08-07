@@ -9,6 +9,7 @@ body{
     color: $text-color;
     background-color: $background;
     font-size: $font-size;
+    box-sizing: border-box;
 }
 
 .vertical-wrapper{
@@ -49,9 +50,12 @@ body{
 .horizontal-wrapper{
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     background-color: $primary;
     width: 100%;
     margin: 0;
+    border: 0;
+    padding: 0;
     .vertical-wrapper{
         display: flex;
         flex-direction: column;
@@ -105,8 +109,37 @@ body{
             box-sizing: border-box;
         }
     }
-    .hazards-input{
-        max-width: (100% / 3);
+    .hazards-label{
+        max-width: calc(100% / 3);
     }
 }
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    .even{
+        background-color: $accent;
+    }
+    .odd{
+        background-color: $secondary;
+    }
+    th {
+        background-color: $text-color;
+        color: $primary;
+    }
+    td{
+        vertical-align: top;
+        input{
+            width: 100%;
+            box-sizing: border-box;
+        }
+        ul{
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+        }
+    }
+}
+
 
