@@ -2,7 +2,7 @@
 const SignaturePad = window.SignaturePad;
 
 // global variables
-let signature_pads = {};
+let signature_pads = {}; // dictionairy of the signatures
 
 function signature_block(){
     /* SET STYLE SHEET */
@@ -189,13 +189,10 @@ function resizeCanvas(){
 }
 // window.onresize = resizeCanvi;
 window.addEventListener('resize', function() {
-    // console.log('Window resized');
     resizeCanvas();
 })
 window.addEventListener('load', function() {
-    // console.log(`window is loaded\nSignature Pad Keys: \n${Object.keys(signature_pads)}`);
     resizeCanvas();
-
 })
 
 

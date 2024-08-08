@@ -10,93 +10,6 @@ function hazards_block(){
     wrapper.appendChild(create_hazards());
 }
 
-function create_hazards_OLD(){
-    const wrapper = document.createElement('div');
-    wrapper.classList.add('vertical-wrapper');
-
-    // create row by row
-    // starting with the headers
-    
-    // row 1
-    const row_headers = document.createElement('div');
-    row_headers.classList.add('horizontal-wrapper');
-    wrapper.appendChild(row_headers);
-
-    const label_tasks = document.createElement('label');
-    label_tasks.textContent = 'Tasks';
-    label_tasks.classList.add('hazards-label');
-    row_headers.appendChild(label_tasks);
-
-    const label_hazards = document.createElement('label');
-    label_hazards.textContent = 'Hazards';
-    label_hazards.classList.add('hazards-label');
-    row_headers.appendChild(label_hazards);
-
-    const label_controls = document.createElement('label');
-    label_controls.textContent = 'Controls';
-    label_controls.classList.add('hazards-label');
-    row_headers.appendChild(label_controls);
-
-    // row 2
-    wrapper.appendChild(create_hazard_row());
-
-    return wrapper;
-}
-
-function create_hazard_row_OLD(){
-    const index = hazard_row_wrappers.length;
-    
-    // create row wrapper
-    const wrapper_row = document.createElement('div');
-    wrapper_row.id = `wrapper-hazardRow${index}`;
-    wrapper_row.classList.add('hazard-wrapper');
-    hazard_row_wrappers.push(wrapper_row);
-
-    // create task wrapper
-    // const wrapper_task = document.createElement('div');
-    // wrapper_task.classList.add('hazard-task-wrapper');
-    // wrapper_task.id = `wrapper-hazard-task${index}`;
-    // wrapper_row.appendChild(wrapper_task);
-
-    // create task input
-    const task = document.createElement('input');
-    task.classList.add('hazard-task-input');
-    task.type = 'text';
-    task.id = `input-task${index}`;
-    wrapper_row.appendChild(task);
-
-    // create hazard wrapper
-    const wrapper_hazard = document.createElement('div');
-    wrapper_hazard.classList.add('hazard-hazard-wrapper');
-    wrapper_hazard.id = `wrapper-hazard-hazard${index}`;
-    wrapper_row.appendChild(wrapper_hazard);
-
-    // create hazard input
-    let hazard_index = 0
-    const hazard = document.createElement('input');
-    hazard.classList.add('hazard-hazard-input');
-    hazard.type = 'text';
-    hazard.id = `input-task${index}-hazard${hazard_index}`;
-    wrapper_hazard.appendChild(hazard);
-
-    // create control wrapper
-    const wrapper_control = document.createElement('div');
-    wrapper_control.classList.add('hazard-control-wrapper');
-    wrapper_control.id = `wrapper-hazard-control${index}`;
-    wrapper_hazard.appendChild(wrapper_control);
-
-    // create control input
-    const control = document.createElement('input');
-    control.classList.add('hazard-control-input');
-    control.type = 'text';
-    control.id = `input-task${index}-hazard${hazard_index}-control0`;
-    wrapper_control.appendChild(control);
-
-
-
-    return wrapper_row;
-}
-
 function create_hazards(){
     const wrapper = document.createElement('div');
 
@@ -308,4 +221,7 @@ function correctHazardSpacing(){
 
 hazards_block();
 create_hazard_row();
-correctHazardSpacing();
+
+window.addEventListener('load', function() {
+    correctHazardSpacing();
+})
