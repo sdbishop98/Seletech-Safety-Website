@@ -14,15 +14,54 @@ body {
     margin: 0 auto;
 }
 
+div {
+    background-color: $primary;
+    padding: 10px;
+}
+
 .red-text {
     color: $accent;
 }
 
 table {
+    width: 100%;
+    background-color: $primary;
     input {
         width: 100%;
+        box-sizing: border-box;
+    }
+    td {
+        div {
+            padding: 0;
+            display: flex;
+        }
     }
 }
 h1 {
     text-align: center;
+}
+
+
+input{
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    .class {
+        color: black;
+    }
+    &.radio{
+        box-sizing: border-box;
+        width: 1em;
+        height: 1em;
+    }
+    &.dateTime {
+        max-width: 7rem;
+    }
+    &.error {
+        color: $accent;
+        border-color: $accent;
+        &:focus {
+            outline-color: $accent;
+        }
+    }
 }
