@@ -3,15 +3,15 @@ $secondary: #a8a8a8;
 $accent: #d32f2f;
 $background: #e8e8e8;
 $text-color: #333333;
-$desktop-font-size: medium;
-$mobile-font-size: 1.3rem;
 
 @font-face {
     font-family: 'brush-script';
-    src: url('../fonts/BRUSHSCI.TTF');
+    src: url('/fonts/BRUSHSCI.TTF') format(ttf);
 }
 
 html {
+    font-size: 100%;
+    width: 100%;
     -webkit-text-size-adjust: 100%; /* For Safari and Chrome */
     -moz-text-size-adjust: 100%;    /* For Firefox */
     -ms-text-size-adjust: 100%;     /* For Internet Explorer */
@@ -21,44 +21,27 @@ html {
 body {
     color: $text-color;
     background-color: $background;
-    max-width: 800px;
+    box-sizing: border-box;
     margin: 0 auto;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: $desktop-font-size;
     width: 100%;
-    @media (max-width: 600px) {
-        font-size: $mobile-font-size;  
-    }
+    font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 div {
-    margin: 1rem auto;
-    margin-top: 0;
-    margin-bottom: 0;
     background-color: $primary;
-    padding: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    @media (max-width: 600px){
-        background-color: $background;
-        max-width: 100%;
-        padding: 1rem;
-        margin: 1rem auto;
-        border-radius: 6px;
-        background-color: $primary;
-        width: 90%;
-    }
+    padding: 50px;
 }
 
-p {
-    margin: 0;
+.red-text {
+    color: $accent;
+    font-family: 'brush-script';
 }
 
 table {
-    border-radius: 6px;
-    padding: 0.2rem;
+    background-color: $primary;
+    border-collapse: collapse;
     table-layout: auto;
-    max-width: 100%;
     input {
         width: 100%;
         box-sizing: border-box;
@@ -69,22 +52,11 @@ table {
         }
     }
 }
-
 h1 {
     text-align: center;
+    font-size: 1.5rem;
+    width: 100%;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: x-large;
-    // make it a banner
-    position: -webkit-sticky; /* For Safari */
-    position: sticky;
-    top: 0;
-    background-color: $background;
-    z-index: 1000;
-    margin: 0;
-    padding: 1rem;
-    @media (max-width: 600px) {
-        font-size: x-large;   
-    }
     .seletech{
         font-family: 'brush-script';
         font-size: 1.5em;
@@ -94,27 +66,17 @@ h1 {
 input{
     border: 1px solid black;
     border-radius: 3px;
-    @media (max-width: 600px){
-        font-size: large;
-    }
     &:focus{
         outline-color: cornflowerblue;
         outline-width: 2px;
     }
     &.radio{
         box-sizing: border-box;
-        width: 0.9rem;
-        height: 0.9rem;
-        @media (max-width: 600px) {
-            width: 1rem;
-            height: 1rem;
-        }
+        width: 1em;
+        height: 1em;
     }
     &.dateTime {
         max-width: 7rem;
-        @media (max-width: 600px) {
-            max-width: 8rem;
-        }
     }
     &.error {
         color: $accent;
@@ -128,12 +90,6 @@ input{
 select {
     border: 1px solid black;
     border-radius: 3px;
-    font-size: $desktop-font-size;
-    // max-width: 80%;
-    @media (max-width: 600px){
-        font-size: $mobile-font-size;
-    }
-
 }
 
 label.unit {
@@ -155,8 +111,4 @@ label.unit {
             outline: none;
         }
     }
-}
-
-.red-text {
-    color: $accent;
 }

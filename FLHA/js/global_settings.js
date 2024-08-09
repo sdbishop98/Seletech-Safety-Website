@@ -1,0 +1,1 @@
+const deviceType = detectDeviceType();

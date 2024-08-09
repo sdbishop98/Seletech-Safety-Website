@@ -4,14 +4,15 @@ function header_html(){
     // utilizes helper functions in order to keep things tidy
     // INPUT:   none
     // RETURN:  none
-    link_stylesheet('style/main.css');
+
+    
+
+    const title = document.createElement('h1');
+    title.innerHTML = '<span class="seletech">Seletech</span> FIELD LEVEL HAZARD ASSESSMENT';
+    document.body.appendChild(title);
 
     const wrapper = document.createElement('div');
     document.body.appendChild(wrapper);
-
-    const title = document.createElement('h1');
-    title.textContent = 'SELETECH FIELD LEVEL HAZARD ASSESSMENT';
-    wrapper.appendChild(title);
 
     // const header = document.createElement('p');
     // header.innerHTML = 'this is a <b>test</b><br> of javascript';

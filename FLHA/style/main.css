@@ -1,53 +1,119 @@
+@font-face {
+  font-family: "brush-script";
+  src: url("../fonts/BRUSHSCI.TTF");
+}
+html {
+  -webkit-text-size-adjust: 100%; /* For Safari and Chrome */
+  -moz-text-size-adjust: 100%; /* For Firefox */ /* For Internet Explorer */
+  text-size-adjust: 100%; /* For other browsers */
+}
+
 body {
   color: #333333;
   background-color: #e8e8e8;
-  font-size: 1rem;
-  box-sizing: border-box;
   max-width: 800px;
   margin: 0 auto;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: medium;
+  width: 100%;
+}
+@media (max-width: 600px) {
+  body {
+    font-size: 1.3rem;
+  }
 }
 
 div {
+  margin: 1rem auto;
+  margin-top: 0;
+  margin-bottom: 0;
   background-color: #f5f5f5;
-  padding: 10px;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+@media (max-width: 600px) {
+  div {
+    background-color: #e8e8e8;
+    max-width: 100%;
+    padding: 1rem;
+    margin: 1rem auto;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+    width: 90%;
+  }
 }
 
-.red-text {
-  color: #d32f2f;
+p {
+  margin: 0;
 }
 
 table {
-  width: 100%;
-  background-color: #f5f5f5;
+  border-radius: 6px;
+  padding: 0.2rem;
+  table-layout: auto;
+  max-width: 100%;
 }
 table input {
   width: 100%;
   box-sizing: border-box;
 }
-table td div {
-  padding: 0;
-  display: flex;
+table td.input {
+  padding-right: 1rem;
 }
 
 h1 {
   text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: x-large; /* For Safari */
+  position: sticky;
+  top: 0;
+  background-color: #e8e8e8;
+  z-index: 1000;
+  margin: 0;
+  padding: 1rem;
+}
+@media (max-width: 600px) {
+  h1 {
+    font-size: x-large;
+  }
+}
+h1 .seletech {
+  font-family: "brush-script";
+  font-size: 1.5em;
 }
 
 input {
-  border-style: solid;
-  border-width: 1px;
+  border: 1px solid black;
   border-radius: 3px;
 }
-input .class {
-  color: black;
+@media (max-width: 600px) {
+  input {
+    font-size: large;
+  }
+}
+input:focus {
+  outline-color: cornflowerblue;
+  outline-width: 2px;
 }
 input.radio {
   box-sizing: border-box;
-  width: 1em;
-  height: 1em;
+  width: 0.9rem;
+  height: 0.9rem;
+}
+@media (max-width: 600px) {
+  input.radio {
+    width: 1rem;
+    height: 1rem;
+  }
 }
 input.dateTime {
   max-width: 7rem;
+}
+@media (max-width: 600px) {
+  input.dateTime {
+    max-width: 8rem;
+  }
 }
 input.error {
   color: #d32f2f;
@@ -55,4 +121,40 @@ input.error {
 }
 input.error:focus {
   outline-color: #d32f2f;
+}
+
+select {
+  border: 1px solid black;
+  border-radius: 3px;
+  font-size: medium;
+}
+@media (max-width: 600px) {
+  select {
+    font-size: 1.3rem;
+  }
+}
+
+label.unit {
+  display: flex;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  width: calc(100% - 0.85rem);
+}
+label.unit input {
+  border: none;
+  text-align: right;
+  width: calc(100% - 1.2rem);
+}
+label.unit:focus-within {
+  outline-color: cornflowerblue;
+  outline-width: 2px;
+  outline-style: solid;
+}
+label.unit:focus-within input {
+  outline: none;
+}
+
+.red-text {
+  color: #d32f2f;
 }/*# sourceMappingURL=main.css.map */
