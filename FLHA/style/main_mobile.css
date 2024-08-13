@@ -1,8 +1,10 @@
 @font-face {
   font-family: "brush-script";
-  src: url("../fonts/BRUSHSCI.TTF");
+  src: url("/fonts/BRUSHSCI.TTF") format(ttf);
 }
 html {
+  font-size: 100%;
+  width: 100%;
   -webkit-text-size-adjust: 100%; /* For Safari and Chrome */
   -moz-text-size-adjust: 100%; /* For Firefox */ /* For Internet Explorer */
   text-size-adjust: 100%; /* For other browsers */
@@ -11,48 +13,27 @@ html {
 body {
   color: #333333;
   background-color: #e8e8e8;
-  max-width: 800px;
+  box-sizing: border-box;
   margin: 0 auto;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: medium;
   width: 100%;
-}
-@media (max-width: 600px) {
-  body {
-    font-size: 1.3rem;
-  }
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 div {
-  margin: 1rem auto;
-  margin-top: 0;
-  margin-bottom: 0;
   background-color: #f5f5f5;
-  padding: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-}
-@media (max-width: 600px) {
-  div {
-    background-color: #e8e8e8;
-    max-width: 100%;
-    padding: 1rem;
-    margin: 1rem auto;
-    border-radius: 6px;
-    background-color: #f5f5f5;
-    width: 90%;
-  }
+  padding: 50px;
 }
 
-p {
-  margin: 0;
+.red-text {
+  color: #d32f2f;
+  font-family: "brush-script";
 }
 
 table {
-  border-radius: 6px;
-  padding: 0.2rem;
+  background-color: #f5f5f5;
+  border-collapse: collapse;
   table-layout: auto;
-  max-width: 100%;
 }
 table input {
   width: 100%;
@@ -64,19 +45,9 @@ table td.input {
 
 h1 {
   text-align: center;
+  font-size: 1.5rem;
+  width: 100%;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: x-large; /* For Safari */
-  position: sticky;
-  top: 0;
-  background-color: #e8e8e8;
-  z-index: 1000;
-  margin: 0;
-  padding: 1rem;
-}
-@media (max-width: 600px) {
-  h1 {
-    font-size: x-large;
-  }
 }
 h1 .seletech {
   font-family: "brush-script";
@@ -87,33 +58,17 @@ input {
   border: 1px solid black;
   border-radius: 3px;
 }
-@media (max-width: 600px) {
-  input {
-    font-size: large;
-  }
-}
 input:focus {
   outline-color: cornflowerblue;
   outline-width: 2px;
 }
 input.radio {
   box-sizing: border-box;
-  width: 0.9rem;
-  height: 0.9rem;
-}
-@media (max-width: 600px) {
-  input.radio {
-    width: 1rem;
-    height: 1rem;
-  }
+  width: 1em;
+  height: 1em;
 }
 input.dateTime {
   max-width: 7rem;
-}
-@media (max-width: 600px) {
-  input.dateTime {
-    max-width: 8rem;
-  }
 }
 input.error {
   color: #d32f2f;
@@ -126,14 +81,6 @@ input.error:focus {
 select {
   border: 1px solid black;
   border-radius: 3px;
-  font-size: medium;
-  box-sizing: border-box;
-}
-@media (max-width: 600px) {
-  select {
-    font-size: 1.3rem;
-    width: 100%;
-  }
 }
 
 label.unit {
@@ -142,12 +89,6 @@ label.unit {
   border: 1px solid black;
   border-radius: 3px;
   width: calc(100% - 0.85rem);
-  box-sizing: border-box;
-}
-@media (max-width: 600px) {
-  label.unit {
-    width: 100%;
-  }
 }
 label.unit input {
   border: none;
@@ -161,8 +102,4 @@ label.unit:focus-within {
 }
 label.unit:focus-within input {
   outline: none;
-}
-
-.red-text {
-  color: #d32f2f;
-}/*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main_mobile.css.map */

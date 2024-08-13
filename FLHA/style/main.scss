@@ -129,9 +129,11 @@ select {
     border: 1px solid black;
     border-radius: 3px;
     font-size: $desktop-font-size;
+    box-sizing: border-box;
     // max-width: 80%;
     @media (max-width: 600px){
         font-size: $mobile-font-size;
+        width: 100%;
     }
 
 }
@@ -142,6 +144,10 @@ label.unit {
     border: 1px solid black;
     border-radius: 3px;
     width: calc(100% - 0.85rem);
+    box-sizing: border-box;
+    @media (max-width: 600px){
+        width: 100%;
+    }
     input {
         border: none;
         text-align: right;

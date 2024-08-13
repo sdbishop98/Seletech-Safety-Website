@@ -20,15 +20,15 @@ function weather_html(){
     if(isMobileDevice()){
         mobile();
     } else {
-        // desktop();
-        mobile();
+        desktop();
     }
 
     function mobile(){
         // CREATE ROWS
         const row_weatherAffect_yes = table.insertRow();
         const row_weatherAffect_no = table.insertRow();
-        // const row_currentWeather = table.insertRow();
+        const row_currentWeather_question = table.insertRow();
+        const row_currentWeather_answer = table.insertRow();
         const row_temp = table.insertRow();
 
         // CREATE CELLS
@@ -38,7 +38,7 @@ function weather_html(){
         cell_weatherAffected_question.textContent = 'Is the work affected by the weather?';
         cell_weatherAffected_question.style.maxWidth = '10rem'; 
 
-        const weatherAffected = makeRaioInputLabelPairs('weather-affected', ['Yes', 'No'], ['Yes', 'No']);
+        const weatherAffected = makeRaioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
         
         const cell_weatherAffected_yes = row_weatherAffect_yes.insertCell();
         cell_weatherAffected_yes.classList.add('input');
@@ -49,9 +49,16 @@ function weather_html(){
         cell_weatherAffected_no.appendChild(weatherAffected[1].input);
         cell_weatherAffected_no.appendChild(weatherAffected[1].label);
 
-        // make_dropdown_tableHtml(row_currentWeather, 'currentWeather', 'Current weather conditions', weatherConditions);
-        
-        make_numericInput_tableHtml(row_temp, 'current-temperature', 'Temperature', '&deg;C');
+        // make_dropdown_tableHtml(row_currentWeather, 'current-weather', 'Current weather conditions', weatherConditions);
+        const currentWeather = makeDropdownLabelPair('currentWeather', 'Current weather conditions', weatherConditions);
+        const cell_currentWeather_question = row_currentWeather_question.insertCell();
+        cell_currentWeather_question.colSpan = 2;
+        cell_currentWeather_question.appendChild(currentWeather.label);
+        const cell_currentWeather_answer = row_currentWeather_answer.insertCell();
+        cell_currentWeather_answer.colSpan = 2;
+        cell_currentWeather_answer.appendChild(currentWeather.input);
+
+        make_numericInput_tableHtml(row_temp, 'currentTemperature', 'Temperature', '&deg;C');
     }
 
     function desktop(){
@@ -66,8 +73,7 @@ function weather_html(){
         cell_weatherAffected_question.textContent = 'Is the work affected by the weather?';
         cell_weatherAffected_question.style.maxWidth = '9rem';
 
-        const weatherAffected_yesNo = ['Yes', 'No'];
-        const weatherAffected = makeRaioInputLabelPairs('weather-affected', weatherAffected_yesNo, weatherAffected_yesNo);
+        const weatherAffected = makeRaioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
         
         const cell_weatherAffected_yes = row1.insertCell();
         cell_weatherAffected_yes.classList.add('input');
@@ -82,7 +88,7 @@ function weather_html(){
         
         make_dropdown_tableHtml(row1, 'currentWeather', 'Current weather conditions', weatherConditions);
         
-        make_numericInput_tableHtml(row2, 'current-temperature', 'Temperature', '&deg;C');
+        make_numericInput_tableHtml(row2, 'currentTemperature', 'Temperature', '&deg;C');
     }
     
 }

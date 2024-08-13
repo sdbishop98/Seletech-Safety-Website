@@ -145,40 +145,37 @@ function make_dropdown_tableHtml(row, identifier, label_str, options){
     const content = makeDropdownLabelPair(identifier, label_str, options);
     cell_label.appendChild(content.label);
     cell_input.appendChild(content.input);
+}
+function makeDropdownLabelPair(identifier, label_str, options){ 
+    // Helper function for make_dropdown_tableHtml
+    // creates dropdown selector element with corresponing label
+    // does not place these elements on the graph
+    // INPUT:   identifier - string - unique identifier
+    //          label_str - string - text for the label element
+    //          options - list - the different options available for selection
+    // RETURN:  tuple -  input/label pair
+    const dropdown = document.createElement('select');
+    dropdown.id = `input-dropdown-${identifier}`;
 
-    function makeDropdownLabelPair(identifier, label_str, options){
-        // Helper function for make_dropdown_tableHtml
-        // creates dropdown selector element with corresponing label
-        // does not place these elements on the graph
-        // INPUT:   identifier - string - unique identifier
-        //          label_str - string - text for the label element
-        //          options - list - the different options available for selection
-        // RETURN:  tuple -  input/label pair
-        const dropdown = document.createElement('select');
-        dropdown.id = `input-dropdown-${identifier}`;
+    const undecided = document.createElement('option');
+    undecided.value = '';
+    undecided.selected = true;
+    undecided.disabled = true;
+    undecided.hidden = true;
+    undecided.textContent = 'Please select an option';
+    undecided.classList.add('placeholder');
+    dropdown.appendChild(undecided);
+    options.forEach(option_str => {
+        const option = document.createElement('option');
+        option.textContent = option_str;
+        dropdown.appendChild(option);
+    });
 
-        const undecided = document.createElement('option');
-        undecided.value = '';
-        undecided.selected = true;
-        undecided.disabled = true;
-        undecided.hidden = true;
-        undecided.textContent = 'Please select an option';
-        undecided.classList.add('placeholder');
-        dropdown.appendChild(undecided);
-        options.forEach(option_str => {
-            const option = document.createElement('option');
-            option.textContent = option_str;
-            dropdown.appendChild(option);
-        });
+    const label = document.createElement('label');
+    label.textContent = `${label_str}:`;
+    label.htmlFor = dropdown.id;
 
-        const label = document.createElement('label');
-        label.textContent = `${label_str}:`;
-        label.htmlFor = dropdown.id;
-    
-        return {input: dropdown, label: label};
-
-    }
-    
+    return {input: dropdown, label: label};
 }
 
 function makeRaioInputLabelPairs(name, identifiers, labels){
@@ -210,4 +207,21 @@ function makeRaioInputLabelPairs(name, identifiers, labels){
         radios.push({input: input, label: label});
     })
     return radios;
+}
+
+function makeTextareaInputLabelPair(identifier, label_str){
+    // creates textarea input element with corresponing label
+    // does not place these elements on the graph
+    // INPUT:   identifier - string - unique identifier
+    //          label_str - string - text for the label element
+    // RETURN:  tuple -  input/label pair
+    const textarea = document.createElement('textarea');
+    textarea.id = `input-textarea-${identifier}`;
+
+    const label = document.createElement('label');
+    label.textContent = label_str;
+    label.htmlFor = textarea.id;
+
+    return {input: textarea, label: label};
+
 }
