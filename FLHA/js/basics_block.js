@@ -74,7 +74,6 @@ function basics_html(){
     
 }
 
-
 function makeDateTimeHtml(){
     // Helper function for basics_html
     // creates date and time input elements with corresponding labels
@@ -130,5 +129,35 @@ function makeTimeHtml(now){
     return {input: input, label: label};
 }
 
+function getPDF_basics(){
+    const date = document.getElementById('input-date').value;
+    let time = document.getElementById('input-time').value;
+    const location = document.getElementById('input-text-location').value;
+    const jobNumber = document.getElementById('input-number-jobNumber').value;
+    
+    // adjust time
+    let [hours, minutes] = time.split(':');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; 
+    time = `${hours}:${minutes} ${ampm}`;
 
+    let tableBody = [
+        ['Date:', date, 'Location:', location],
+        ['Time:', time, 'Job Number:', jobNumber]
+    ]
+    tableBody = tableBody.map((row) => {
+        return row.map(cell => ({
+            text: cell
+        }));
+    });
+
+    const table = {
+        table: {
+            widths: '*',
+            body: tableBody
+        }
+    }
+
+    return table;
+}
 basics_html();

@@ -73,7 +73,7 @@ function weather_html(){
         cell_weatherAffected_question.textContent = 'Is the work affected by the weather?';
         cell_weatherAffected_question.style.maxWidth = '9rem';
 
-        const weatherAffected = makeRaioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
+        const weatherAffected = makeRadioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
         
         const cell_weatherAffected_yes = row1.insertCell();
         cell_weatherAffected_yes.classList.add('input');
@@ -92,5 +92,44 @@ function weather_html(){
     }
     
 }
+
+function getPDF_weather(){
+    const workAffected = getRadioInput('weather-affected');
+    const currentWeather = document.getElementById('input-dropdown-currentWeather').value;
+    const temperature = `${document.getElementById('input-number-currentTemperature').value}\u00B0C`;
+    
+    let workAffected_statement
+    if(workAffected === 'Yes'){
+        workAffected_statement = [
+            'The work ',
+            {text: 'is ', bold: true},
+            'affected by the weather'
+        ]
+    } else {
+        workAffected_statement = [
+            'The work ',
+            {text: 'isn\'t ', bold: true},
+            'affected by the weather'
+        ]
+    }
+
+    let tableBody = [
+        [
+            {text: workAffected_statement, rowSpan: 2},
+            'Current weather condition:',
+            currentWeather
+        ],
+        ['', 'Temperature', temperature]
+    ]
+
+    return {
+        table: {
+            widths: '*',
+            body: tableBody
+        }
+    }
+}
+
+
 
 weather_html();

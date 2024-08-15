@@ -85,7 +85,6 @@ function make_numericInput_tableHtml(row, identifier, label_str, unit = null) { 
     cell_label.appendChild(content.label);
     cell_input.appendChild(content.input);
 }
-
 function makeNumericInputLabelPair(identifier, label_str, unit_str=null) {
     // Helper function for make_numberInput_tableHtml
     // creates number input element with corresponing label
@@ -124,7 +123,6 @@ function makeNumericInputLabelPair(identifier, label_str, unit_str=null) {
     } 
     return {input: input, label: label}
 }
-
 function validateNumericInputs() { // wip
     const inputs = document.querySelectorAll('input.numeric');
 }
@@ -168,6 +166,7 @@ function makeDropdownLabelPair(identifier, label_str, options){
     options.forEach(option_str => {
         const option = document.createElement('option');
         option.textContent = option_str;
+        option.value = option_str;
         dropdown.appendChild(option);
     });
 
@@ -178,7 +177,7 @@ function makeDropdownLabelPair(identifier, label_str, options){
     return {input: dropdown, label: label};
 }
 
-function makeRaioInputLabelPairs(name, identifiers, labels){
+function makeRadioInputLabelPairs(name, identifiers, labels){
     // Helper function
     // creates radio input elements with corresponing label
     // all created elements will share the same name
@@ -196,6 +195,7 @@ function makeRaioInputLabelPairs(name, identifiers, labels){
     identifiers.forEach((identifier_str, index) => {
         const input = document.createElement('input');
         input.type = 'radio';
+        input.value = labels[index];
         input.id = `input-radio-${identifier_str}`;
         input.classList.add('radio');
         input.name = name;
@@ -207,6 +207,22 @@ function makeRaioInputLabelPairs(name, identifiers, labels){
         radios.push({input: input, label: label});
     })
     return radios;
+}
+
+function getRadioInput(name){
+    // gets value of selected radio input with matching name
+    // INPUT:   name - string - unique name for the radio elements
+    // RETURN:  string - value of selected radio element
+    const radios = document.getElementsByName(name);
+    let selectedValue;
+    for (const radio of radios) {
+        if (radio.checked) {
+            selectedValue = radio.value;
+            break;
+        }
+    }
+
+    return selectedValue;
 }
 
 function makeTextareaInputLabelPair(identifier, label_str){
