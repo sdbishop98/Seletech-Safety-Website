@@ -30,6 +30,18 @@ function detectDeviceType() {
 function isMobileDevice(){
     return detectDeviceType() === 'mobile';
 }
+
+function toCamelCase(str){
+    const words = str.trim().split(/\s+/);
+
+    let camelCaseStr = words[0].toLowerCase();
+
+    words.forEach(word => {
+        camelCaseStr += word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+
+    return camelCaseStr;
+}   
 // HTML CREATION //
 function make_textInput_tableHtml(row, identifier, label_str){ // done
     // Helper function
@@ -239,5 +251,4 @@ function makeTextareaInputLabelPair(identifier, label_str){
     label.htmlFor = textarea.id;
 
     return {input: textarea, label: label};
-
 }

@@ -17,6 +17,7 @@ function basics_html(){
         mobile();
     } else {
         desktop();
+        // mobile();
     }
 
     function mobile(){

@@ -56,14 +56,39 @@ p {
 
 table {
     border-radius: 6px;
-    padding: 0.2rem;
     table-layout: auto;
     max-width: 100%;
+    border-collapse: collapse;
+    @media (max-width: 600px){
+        border-collapse: separate;
+        border-spacing: 0 5px;
+        tr.long-question {
+            td{
+                padding: 0.3rem;
+                background-color: rgba($background, 0.5);
+                position: relative;
+                box-sizing: border-box;
+            }
+            td.td-radio {
+                background-color: rgba($background, 1.0);
+            }
+            td:last-child {
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                padding-right: 10px;
+            }
+            td:first-child {
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+        }
+    }
     input {
-        // width: 100%;
         box-sizing: border-box;
+        
     }
     td {
+        padding: 0.2rem;
         &.input{
             padding-right: 1rem;
         }
@@ -91,7 +116,7 @@ h1 {
     }
 }
 
-input{
+input {
     border: 1px solid black;
     border-radius: 3px;
     @media (max-width: 600px){
@@ -125,13 +150,9 @@ input{
     }
 }
 
-label {
-    input {
-        &.text {
-            margin-left: 1rem;
-            // width: 100%;
-        }
-        
+textarea {
+    @media (max-width: 600px) {
+        font-size: $mobile-font-size;
     }
 }
 
@@ -147,8 +168,9 @@ select { // css for drop down menus
     }
 }
 
-label.unit { // adds units to inputs
-    display: flex;
+label {
+    &.unit { // adds units to inputs
+        display: flex;
     background-color: white;
     border: 1px solid black;
     border-radius: 3px;
@@ -170,8 +192,19 @@ label.unit { // adds units to inputs
             outline: none;
         }
     }
+    }
+    &.label-w-radio{
+        display: inline-block;
+        white-space: nowrap;
+    }
+    input {
+        &.text {
+            margin-left: 1rem;
+        }
+    }
 }
 
 .red-text { // makes text red
     color: $accent;
 }
+
