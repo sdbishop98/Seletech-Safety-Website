@@ -21,6 +21,7 @@ function weather_html(){
         mobile();
     } else {
         desktop();
+        // mobile();
     }
 
     function mobile(){
@@ -38,7 +39,7 @@ function weather_html(){
         cell_weatherAffected_question.textContent = 'Is the work affected by the weather?';
         cell_weatherAffected_question.style.maxWidth = '10rem'; 
 
-        const weatherAffected = makeRaioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
+        const weatherAffected = makeRadioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
         
         const cell_weatherAffected_yes = row_weatherAffect_yes.insertCell();
         cell_weatherAffected_yes.classList.add('input');

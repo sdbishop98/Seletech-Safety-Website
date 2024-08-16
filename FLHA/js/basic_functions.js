@@ -46,25 +46,25 @@ function make_textInput_tableHtml(row, identifier, label_str){ // done
     const content = makeTextInputLabelPair(identifier, label_str);
     cell_label.appendChild(content.label);
     cell_input.appendChild(content.input);
+}
 
-    function makeTextInputLabelPair(identifier, label_str){
-        // Helper function for make_textInput_tableHtml
-        // creates text input element with corresponing label
-        // does not place these elements on the graph
-        // INPUT:   identifier - string - unique identifier
-        //          label_str - string - text for the label element
-        // RETURN:  tuple - input/label pair
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.id = `input-text-${identifier}`;
-        input.classList.add('text');
-    
-        const label = document.createElement('label');
-        label.textContent = `${label_str}:`;
-        label.htmlFor = input.id;
-    
-        return {input: input, label: label};
-    }
+function makeTextInputLabelPair(identifier, label_str){
+    // Helper function for make_textInput_tableHtml
+    // creates text input element with corresponing label
+    // does not place these elements on the graph
+    // INPUT:   identifier - string - unique identifier
+    //          label_str - string - text for the label element
+    // RETURN:  tuple - input/label pair
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = `input-text-${identifier}`;
+    input.classList.add('text');
+
+    const label = document.createElement('label');
+    label.textContent = `${label_str}:`;
+    label.htmlFor = input.id;
+
+    return {input: input, label: label};
 }
 
 function make_numericInput_tableHtml(row, identifier, label_str, unit = null) { // done
