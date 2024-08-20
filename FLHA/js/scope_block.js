@@ -7,6 +7,7 @@ function scope_html(){
 
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-scopeOfWork';
+    wrapper.classList.add('block-wrapper');
     document.body.appendChild(wrapper);
 
     const table = document.createElement('table');

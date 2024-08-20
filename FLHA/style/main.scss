@@ -32,26 +32,48 @@ body {
 }
 
 div {
-    margin: 1rem auto;
-    margin-top: 0;
-    margin-bottom: 0;
-    background-color: $primary;
-    padding: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-    @media (max-width: 600px){
-        background-color: $background;
-        max-width: 100%;
-        padding: 1rem;
+    &.block-wrapper {
         margin: 1rem auto;
-        border-radius: 6px;
+        margin-top: 0;
+        margin-bottom: 0;
         background-color: $primary;
-        width: 90%;
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+        @media (max-width: 600px){
+            background-color: $background;
+            max-width: 100%;
+            padding: 1rem;
+            margin: 1rem auto;
+            border-radius: 6px;
+            background-color: $primary;
+            width: 90%;
+        }
     }
-}
-
-p {
-    margin: 0;
+    &.collapsible-header {
+        padding: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+    }
+    &.collapsible-content { // note - hidden by default
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.2s ease-out;
+    }
+    &.wrapper-task {
+        background-color: $secondary;
+        border-radius: 10px;
+    }
+    &.wrapper-hazard {
+        background-color: $background;
+        border-radius: 10px;
+    }
+    &.wrapper-control {
+        background-color: $primary;
+        border-radius: 10px;
+    }
 }
 
 table {
@@ -85,7 +107,6 @@ table {
     }
     input {
         box-sizing: border-box;
-        
     }
     td {
         padding: 0.2rem;
@@ -95,6 +116,9 @@ table {
     }
 }
 
+p {
+    margin: 0;
+}
 h1 {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
@@ -115,57 +139,11 @@ h1 {
         font-size: 1.5em;
     }
 }
-
-input {
-    border: 1px solid black;
-    border-radius: 3px;
-    @media (max-width: 600px){
-        font-size: large;
-    }
-    &:focus{
-        outline-color: cornflowerblue;
-        outline-width: 2px;
-    }
-    &.radio{
-        box-sizing: border-box;
-        width: 0.9rem;
-        height: 0.9rem;
-        @media (max-width: 600px) {
-            width: 1rem;
-            height: 1rem;
-        }
-    }
-    &.dateTime {
-        max-width: 7rem;
-        @media (max-width: 600px) {
-            max-width: 8rem;
-        }
-    }
-    &.error {
-        color: $accent;
-        border-color: $accent;
-        &:focus {
-            outline-color: $accent;
-        }
-    }
-}
-
-textarea {
-    @media (max-width: 600px) {
-        font-size: $mobile-font-size;
-    }
-}
-
-select { // css for drop down menus
-    border: 1px solid black;
-    border-radius: 3px;
+h6 {
     font-size: $desktop-font-size;
-    box-sizing: border-box;
-    // max-width: 80%;
-    @media (max-width: 600px){
-        font-size: $mobile-font-size;
-        width: 100%;
-    }
+    font-weight: normal;
+    margin: 0;
+    display: inline;
 }
 
 label {
@@ -203,8 +181,85 @@ label {
         }
     }
 }
+input {
+    border: 1px solid black;
+    border-radius: 3px;
+    @media (max-width: 600px){
+        font-size: large;
+    }
+    &:focus{
+        outline-color: cornflowerblue;
+        outline-width: 2px;
+    }
+    &.radio{
+        box-sizing: border-box;
+        width: 0.9rem;
+        height: 0.9rem;
+        @media (max-width: 600px) {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+    &.dateTime {
+        max-width: 7rem;
+        @media (max-width: 600px) {
+            max-width: 8rem;
+        }
+    }
+    &.error {
+        color: $accent;
+        border-color: $accent;
+        &:focus {
+            outline-color: $accent;
+        }
+    }
+}
+textarea { // text boxes
+    @media (max-width: 600px) {
+        font-size: $mobile-font-size;
+    }
+}
+select { // drop down menus
+    border: 1px solid black;
+    border-radius: 3px;
+    font-size: $desktop-font-size;
+    box-sizing: border-box;
+    // max-width: 80%;
+    @media (max-width: 600px){
+        font-size: $mobile-font-size;
+        width: 100%;
+    }
+}
 
+button{
+    cursor: pointer;
+    &.collapsible-expand {
+        border: none;
+        outline: none;
+        background-color: transparent;
+        &:after {
+            content: '\02795'; // unicode character for 'plus' sign (+)
+            font-size: 1rem;       
+        }  
+    }
+    &.collapsible-active:after {
+        content: '\2796'; // unicode character for 'minus' sign (-)
+    }
+    &.banner {
+        width: 100%;
+        background-color: mediumpurple;
+        color: $primary;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        margin: 0;
+    }
+}
+
+
+// classes
 .red-text { // makes text red
     color: $accent;
 }
+
 

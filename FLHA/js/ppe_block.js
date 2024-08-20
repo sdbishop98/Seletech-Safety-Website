@@ -7,6 +7,7 @@ function ppe_html(){
 
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-ppe';
+    wrapper.classList.add('block-wrapper');
     document.body.appendChild(wrapper);
 
     const table = document.createElement('table');

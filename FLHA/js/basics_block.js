@@ -7,6 +7,7 @@ function basics_html(){
 
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-basicInfo';
+    wrapper.classList.add('block-wrapper');
     wrapper.classList.add('table-wrapper');
     document.body.appendChild(wrapper);
 

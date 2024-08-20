@@ -12,6 +12,7 @@ function header_html(){
     document.body.appendChild(title);
 
     const wrapper = document.createElement('div');
+    wrapper.classList.add('block-wrapper');
     document.body.appendChild(wrapper);
 
     // const header = document.createElement('p');

@@ -12,6 +12,7 @@ function weather_html(){
 
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-weather';
+    wrapper.classList.add('block-wrapper');
     document.body.appendChild(wrapper);
 
     const table = document.createElement('table');
