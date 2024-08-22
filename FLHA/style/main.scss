@@ -4,7 +4,7 @@ $accent: #d32f2f;
 $background: #e8e8e8;
 $text-color: #333333;
 $desktop-font-size: medium;
-$mobile-font-size: 1.3rem;
+$mobile-font-size: 1.2rem;
 
 @font-face {
     font-family: 'brush-script';
@@ -50,29 +50,51 @@ div {
             width: 90%;
         }
     }
+    &.collapsible-root {
+        @media (max-width: 600px) {
+            padding: 1rem;
+        }
+    }
+    &.collapsible-wrapper {
+        border-radius: 10px;
+        background-color: rgba($text-color, 0.1);
+        border: 1px solid $secondary;
+        margin-top: 5px;
+    }
     &.collapsible-header {
         padding: 18px;
         width: 100%;
         box-sizing: border-box;
         display: flex;
         justify-content: space-between;
+        border-radius: 10px;
+        @media (max-width: 600px) {
+            flex-direction: column;
+        }
     }
     &.collapsible-content { // note - hidden by default
         overflow: hidden;
         max-height: 0;
         transition: max-height 0.2s ease-out;
-    }
-    &.wrapper-task {
-        background-color: $secondary;
+        background-color: rgba($background, 0.1);
         border-radius: 10px;
+        margin-left: 10px;
+        margin-right: 3px;
+        box-sizing: border-box;
+        @media (max-width: 600px) {
+            margin-left: 2px;
+            margin-right: 1px;
+        }
     }
-    &.wrapper-hazard {
-        background-color: $background;
+    &.collapsible-leaf {
+        padding: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
         border-radius: 10px;
-    }
-    &.wrapper-control {
-        background-color: $primary;
-        border-radius: 10px;
+        background-color: rgba($text-color, 0.1);
+        margin-top: 5px;
     }
 }
 
@@ -232,6 +254,9 @@ select { // drop down menus
 }
 
 button{
+    @media (max-width: 600px) {
+        font-size: $mobile-font-size;
+    }
     cursor: pointer;
     &.collapsible-expand {
         border: none;
@@ -239,20 +264,45 @@ button{
         background-color: transparent;
         &:after {
             content: '\02795'; // unicode character for 'plus' sign (+)
-            font-size: 1rem;       
+            font-size: 1rem;    
+            @media (max-width: 600px) {
+                content: '[expand section]';
+                font-size: $mobile-font-size
+            }   
         }  
     }
     &.collapsible-active:after {
         content: '\2796'; // unicode character for 'minus' sign (-)
+        @media (max-width: 600px) {
+            content: '[collapse section]';
+            font-size: $mobile-font-size
+        }
     }
-    &.banner {
+    &.fill {
         width: 100%;
         background-color: mediumpurple;
         color: $primary;
-        border-radius: 10px;
         border: none;
         outline: none;
-        margin: 0;
+        margin: 3px 1px 3px 1px;
+        box-sizing: border-box;
+        @media (max-width: 600px) {
+            margin: 1px 0 1px 0;
+        }
+        &:first-child {
+            border-top-left-radius: 7px;
+            border-bottom-left-radius: 7px;
+            @media (max-width: 600px) {
+                border-radius: 10px 10px 0 0;
+            }
+        }
+        &:last-child {
+            border-top-right-radius: 7px;
+            border-bottom-right-radius: 7px;
+            @media (max-width: 600px) {
+                border-radius: 0 0 10px 10px;
+            }
+        }
     }
 }
 

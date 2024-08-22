@@ -42,6 +42,17 @@ function toCamelCase(str){
 
     return camelCaseStr;
 }   
+
+function getAncestorsWithClass(element, className) {
+    const ancestors = [];
+    while (element) {
+        if (element.classList && element.classList.contains(className)){
+            ancestors.push(element);
+        }
+        element = element.parentElement;
+    }
+    return ancestors;
+}
 // HTML CREATION //
 function make_textInput_tableHtml(row, identifier, label_str){ // done
     // Helper function
@@ -251,4 +262,56 @@ function makeTextareaInputLabelPair(identifier, label_str){
     label.htmlFor = textarea.id;
 
     return {input: textarea, label: label};
+}
+
+function create_collapsible(id = null) {
+    // creates the html for a collapsible menu
+    // does not place in the graph
+    // INPUT:   id - string - an optional identifier to be applied to the wrapper
+    // RETURN:  collapsible - object -  contains the collapsible and easy access to the 
+    //                                  header and body for the later insertion of content
+    const collapsible = {};
+    collapsible.wrapper = document.createElement('div');
+    collapsible.wrapper.classList.add('collapsible-wrapper');
+    if (id) {
+        collapsible.wrapper.id = `collapsible-${id}`
+    }
+
+    const header = document.createElement('div');
+    header.classList.add('collapsible-header');
+    collapsible.wrapper.appendChild(header);
+
+    collapsible.header = document.createElement('div');
+    header.appendChild(collapsible.header);
+
+    const btn_expand = document.createElement('button');
+    btn_expand.classList.add('collapsible-expand');
+    header.appendChild(btn_expand);
+
+    btn_expand.addEventListener('click', function() {
+        this.classList.toggle('collapsible-active');
+        const content = this.parentElement.nextElementSibling;
+        const header = this.parentElement;
+        const ancestors = getAncestorsWithClass(this, 'collapsible-content');
+        if (content.style.maxHeight) {
+            header.style.borderRadius = '10px';
+            content.style.maxHeight = null;
+            ancestors.forEach(ancestor => {
+                ancestor.style.maxHeight = `${ancestor.scrollHeight - content.scrollHeight}px`;
+            });
+        } else {
+            header.style.borderBottomRightRadius = '0';
+            header.style.borderBottomLeftRadius = '0';
+            content.style.maxHeight = content.scrollHeight + 'px';
+            ancestors.forEach(ancestor => {
+                ancestor.style.maxHeight = `${ancestor.scrollHeight + content.scrollHeight}px`;
+            });
+        }
+    });
+
+    collapsible.content = document.createElement('div');
+    collapsible.content.classList.add('collapsible-content');
+    collapsible.wrapper.appendChild(collapsible.content);
+
+    return collapsible;
 }

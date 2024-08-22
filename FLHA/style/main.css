@@ -20,7 +20,7 @@ body {
 }
 @media (max-width: 600px) {
   body {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -44,29 +44,55 @@ div.block-wrapper {
     width: 90%;
   }
 }
+@media (max-width: 600px) {
+  div.collapsible-root {
+    padding: 1rem;
+  }
+}
+div.collapsible-wrapper {
+  border-radius: 10px;
+  background-color: rgba(51, 51, 51, 0.1);
+  border: 1px solid #a8a8a8;
+  margin-top: 5px;
+}
 div.collapsible-header {
   padding: 18px;
   width: 100%;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
+  border-radius: 10px;
+}
+@media (max-width: 600px) {
+  div.collapsible-header {
+    flex-direction: column;
+  }
 }
 div.collapsible-content {
   overflow: hidden;
   max-height: 0;
   transition: max-height 0.2s ease-out;
-}
-div.wrapper-task {
-  background-color: #a8a8a8;
+  background-color: rgba(232, 232, 232, 0.1);
   border-radius: 10px;
+  margin-left: 10px;
+  margin-right: 3px;
+  box-sizing: border-box;
 }
-div.wrapper-hazard {
-  background-color: #e8e8e8;
-  border-radius: 10px;
+@media (max-width: 600px) {
+  div.collapsible-content {
+    margin-left: 2px;
+    margin-right: 1px;
+  }
 }
-div.wrapper-control {
-  background-color: #f5f5f5;
+div.collapsible-leaf {
+  padding: 18px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
   border-radius: 10px;
+  background-color: rgba(51, 51, 51, 0.1);
+  margin-top: 5px;
 }
 
 table {
@@ -217,7 +243,7 @@ input.error:focus {
 
 @media (max-width: 600px) {
   textarea {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -229,13 +255,18 @@ select {
 }
 @media (max-width: 600px) {
   select {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     width: 100%;
   }
 }
 
 button {
   cursor: pointer;
+}
+@media (max-width: 600px) {
+  button {
+    font-size: 1.2rem;
+  }
 }
 button.collapsible-expand {
   border: none;
@@ -246,17 +277,52 @@ button.collapsible-expand:after {
   content: "➕";
   font-size: 1rem;
 }
+@media (max-width: 600px) {
+  button.collapsible-expand:after {
+    content: "[expand section]";
+    font-size: 1.2rem;
+  }
+}
 button.collapsible-active:after {
   content: "➖";
 }
-button.banner {
+@media (max-width: 600px) {
+  button.collapsible-active:after {
+    content: "[collapse section]";
+    font-size: 1.2rem;
+  }
+}
+button.fill {
   width: 100%;
   background-color: mediumpurple;
   color: #f5f5f5;
-  border-radius: 10px;
   border: none;
   outline: none;
-  margin: 0;
+  margin: 3px 1px 3px 1px;
+  box-sizing: border-box;
+}
+@media (max-width: 600px) {
+  button.fill {
+    margin: 1px 0 1px 0;
+  }
+}
+button.fill:first-child {
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+@media (max-width: 600px) {
+  button.fill:first-child {
+    border-radius: 10px 10px 0 0;
+  }
+}
+button.fill:last-child {
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+@media (max-width: 600px) {
+  button.fill:last-child {
+    border-radius: 0 0 10px 10px;
+  }
 }
 
 .red-text {

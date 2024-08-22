@@ -147,11 +147,22 @@ function ppe_html(){
             options
         )
         const cell_input = row.insertCell();
-        inputLabels.forEach(item => {
-            // const cell_input = row.insertCell();
-            cell_input.appendChild(item.label);
-            item.label.insertBefore(item.input, item.label.firstChild);
-        })
+
+        if(isMobileDevice()) {
+            const wrapper_input = document.createElement('div');
+            cell_input.appendChild(wrapper_input);
+            inputLabels.forEach(item => {
+                wrapper_input.appendChild(item.label);
+                item.label.insertBefore(item.input, item.label.firstChild);
+            });
+            wrapper_input.style.display = 'flex';
+            wrapper_input.style.flexDirection = 'column';
+        } else {
+            inputLabels.forEach(item => {
+                cell_input.appendChild(item.label);
+                item.label.insertBefore(item.input, item.label.firstChild);
+            })
+        }
         
         return row;
     }

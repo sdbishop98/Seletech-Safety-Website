@@ -8,122 +8,196 @@ function hazards_html(){
 
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-hazards';
-    wrapper.classList.add('block-wrapper');
+    if (!isMobileDevice()) {
+        wrapper.classList.add('block-wrapper');
+    }
+    wrapper.classList.add('collapsible-root')
     document.body.appendChild(wrapper);
 
     const task = create_task_segment();
     wrapper.appendChild(task);
 
-    const btn_add_task = document.createElement('button');
-    btn_add_task.classList.add('banner', 'add');
-    btn_add_task.textContent = 'Add Task';
-    task.appendChild(btn_add_task);
+    const wrapper_buttons = document.createElement('div');
+    wrapper_buttons.style.display = 'flex';
+    if (isMobileDevice()) {
+        wrapper_buttons.style.flexDirection = 'column';
+    } else {
+        wrapper_buttons.style.flexDirection = 'row';
+    }
+    wrapper.appendChild(wrapper_buttons);
+
+    const btn_add = document.createElement('button');
+    btn_add.classList.add('fill');
+    btn_add.textContent = 'ADD TASK';
+    wrapper_buttons.appendChild(btn_add);
+
+    btn_add.addEventListener('click', function() {
+        const task = create_task_segment();
+        wrapper.insertBefore(task, this.parentElement);
+    });
+
+    const btn_remove = document.createElement('button');
+    btn_remove.classList.add('fill');
+    btn_remove.textContent = 'REMOVE TASK';
+    wrapper_buttons.appendChild(btn_remove);
+
+    btn_remove.addEventListener('click', function () {
+        const tasks = document.getElementsByClassName('wrapper-task');
+        if (tasks.length > 1) {
+            tasks[tasks.length-1].remove();
+        } else {
+            console.log('Error: there must be at least one task');
+        }
+    });
 
 
     function create_task_segment() {
         const index = document.getElementsByClassName('wrapper-task').length;
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('wrapper-task');
-        wrapper.id = `wrapper-task${index}`;
+        const id = `task${index}`;
+        const collapsable = create_collapsible(id)
+        collapsable.wrapper.classList.add('wrapper-task');
 
-        const header = document.createElement('div');
-        header.classList.add('collapsible-header');
-        wrapper.appendChild(header);
+        const content = makeTextInputLabelPair(id, 'TASK');
+        content.input.classList.add('task');
+        content.input.style.marginLeft = '10px';
 
-        const task = makeTextInputLabelPair(`task${index}`, 'TASK');
-        task.input.classList.add('task');
-        task.input.style.marginLeft = '10px';
-        const data_wrapper = document.createElement('div');
-        data_wrapper.appendChild(task.label);
-        data_wrapper.appendChild(task.input);
-        header.appendChild(data_wrapper);
+        collapsable.header.appendChild(content.label);
+        collapsable.header.appendChild(content.input);
+        
+        if(isMobileDevice()) {
+            collapsable.header.style.display = 'flex';
+            collapsable.header.style.flexDirection = 'column';
+        }
 
-        const btn_expand = document.createElement('button');
-        btn_expand.classList.add('collapsible-expand');
-        header.appendChild(btn_expand);
+        collapsable.content.appendChild(create_hazard_segment(collapsable.wrapper, id));
 
-        btn_expand.addEventListener('click', function() {
-            this.classList.toggle('collapsible-active');
-            // console.log('expand tasks');
-            // console.log(this.parentElement.nextElementSibling);
-            const content = this.parentElement.nextElementSibling;
-            if(content.style.maxHeight) {
-                content.style.maxHeight = null;
+        const wrapper_buttons = document.createElement('div');
+        wrapper_buttons.style.display = 'flex';
+        if (isMobileDevice()) {
+            wrapper_buttons.style.flexDirection = 'column';
+        } else {
+            wrapper_buttons.style.flexDirection = 'row';
+        }
+        collapsable.content.appendChild(wrapper_buttons);
+
+        const btn_add = document.createElement('button');
+        btn_add.classList.add('fill');
+        btn_add.textContent = 'ADD HAZARD';
+        wrapper_buttons.appendChild(btn_add);
+
+        btn_add.addEventListener('click', function () {
+            const hazard = create_hazard_segment(collapsable.wrapper, id);
+            collapsable.content.insertBefore(hazard, this.parentElement);
+            const ancestors = getAncestorsWithClass(this, 'collapsible-content');
+            const content = this.parentElement;
+            ancestors.forEach(ancestor => {
+                console.log(ancestor);
+                ancestor.style.maxHeight = `${ancestor.scrollHeight + content.scrollHeight}px`;
+            })
+        });
+
+        const btn_remove = document.createElement('button');
+        btn_remove.classList.add('fill');
+        btn_remove.textContent = 'REMOVE HAZARD';
+        wrapper_buttons.appendChild(btn_remove);
+
+        btn_remove.addEventListener('click', function () {
+            const hazards = this.parentElement.parentElement.getElementsByClassName('wrapper-hazard');
+            if (hazards.length > 1) {
+                hazards[hazards.length-1].remove()
             } else {
-                content.style.maxHeight = content.scrollHeight + 'px';
+                console.log('Error: there must be at least one hazard');
             }
         });
 
-        const content = create_hazard_segment(wrapper, `task${index}`);
-        content.classList.add('collapsible-content');
-        wrapper.appendChild(content);
-
-        return wrapper;
+        return collapsable.wrapper;
     }
 
     function create_hazard_segment(parent, parent_id) {
         const index = parent.getElementsByClassName('wrapper-hazard').length;
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('wrapper-hazard');
-        wrapper.id = `wrapper-${parent_id}-hazard${index}`;
+        const id = `${parent_id}-hazard${index}`
+        const collapsable = create_collapsible(id);
+        collapsable.wrapper.classList.add('wrapper-hazard');
 
-        const header = document.createElement('div');
-        header.classList.add('collapsible-header');
-        wrapper.appendChild(header);
+        const content = makeTextInputLabelPair(id, 'HAZARD');
+        content.input.classList.add('hazard');
+        content.input.style.marginLeft = '10px';
 
-        const hazard = makeTextInputLabelPair(`${parent_id}-hazard${index}`, 'HAZARD');
-        hazard.input.classList.add('hazard');
-        hazard.input.style.marginLeft = '10px';
-        const data_wrapper = document.createElement('div');
-        data_wrapper.appendChild(hazard.label);
-        data_wrapper.appendChild(hazard.input);
-        header.appendChild(data_wrapper);
+        collapsable.header.appendChild(content.label);
+        collapsable.header.appendChild(content.input);
 
-        const btn_expand = document.createElement('button');
-        btn_expand.classList.add('collapsible-expand');
-        header.appendChild(btn_expand);
+        if(isMobileDevice()) {
+            collapsable.header.style.display = 'flex';
+            collapsable.header.style.flexDirection = 'column';
+        }
 
-        btn_expand.addEventListener('click', function() {
-            this.classList.toggle('collapsible-active');
-            const grandparent = this.parentElement.parentElement;
-            const content = this.parentElement.nextElementSibling;
-            if(content.style.maxHeight) {
-                content.style.maxHeight = null;
-                grandparent.style.maxHeight = `${grandparent.scrollHeight - content.scrollHeight}px`
+        collapsable.content.appendChild(create_control_segment(collapsable.wrapper, id));
+
+        const wrapper_buttons = document.createElement('div');
+        wrapper_buttons.style.display = 'flex';
+        if (isMobileDevice()) {
+            wrapper_buttons.style.flexDirection = 'column';
+        } else {
+            wrapper_buttons.style.flexDirection = 'row';
+        }
+        collapsable.content.appendChild(wrapper_buttons);
+        
+        const btn_add = document.createElement('button');
+        btn_add.classList.add('fill');
+        btn_add.textContent = 'ADD CONTROL';
+        wrapper_buttons.appendChild(btn_add);
+
+        btn_add.addEventListener('click', function () {
+            const control = create_control_segment(collapsable.wrapper, id);
+            collapsable.content.insertBefore(control, this.parentElement);
+            const ancestors = getAncestorsWithClass(this, 'collapsible-content');
+            const content = this.parentElement.parentElement;
+            content.style.maxHeight = content.scrollHeight + 'px';
+            ancestors.forEach(ancestor => {
+                ancestor.style.maxHeight = `${ancestor.scrollHeight + content.scrollHeight*2}px`;
+            })
+        });
+
+        const btn_remove = document.createElement('button');
+        btn_remove.classList.add('fill');
+        btn_remove.textContent = 'REMOVE CONTROL';
+        wrapper_buttons.appendChild(btn_remove);
+
+        btn_remove.addEventListener('click', function () {
+            const controls = this.parentElement.parentElement.getElementsByClassName('wrapper-control');
+            if (controls.length > 1) {
+                controls[controls.length-1].remove()
             } else {
-                content.style.maxHeight = content.scrollHeight + 'px';
-                grandparent.style.maxHeight = `${grandparent.scrollHeight + content.scrollHeight}px`
+                console.log('Error: there must be at least one control');
             }
         });
 
-        const content = create_control_segment(wrapper, `${parent_id}-hazard${index}`);
-        content.classList.add('collapsible-content');
-        wrapper.appendChild(content);
-
-        return wrapper;
+        return collapsable.wrapper;
     }
 
     function create_control_segment(parent, parent_id) {
         const index = parent.getElementsByClassName('wrapper-control').length;
+        const id = `${parent_id}-control${index}`
         const wrapper = document.createElement('div');
-        wrapper.classList.add('wrapper-control');
-        wrapper.id = `wrapper-${parent_id}-control${index}`;
+        wrapper.classList.add('collapsible-leaf', 'wrapper-control')
 
-        const header = document.createElement('div');
-        header.classList.add('collapsible-header');
-        wrapper.appendChild(header);
+        const content = makeTextInputLabelPair(id, 'CONTROL');
+        content.input.classList.add('control');
+        content.input.style.marginLeft = '10px';
 
-        const control = makeTextInputLabelPair(`${parent_id}-control${index}`, 'CONTROL');
-        control.input.classList.add('control');
-        control.input.style.marginLeft = '10px';
-        const data_wrapper = document.createElement('div');
-        data_wrapper.appendChild(control.label);
-        data_wrapper.appendChild(control.input);
-        header.appendChild(data_wrapper);
+        const data = document.createElement('div');
+        wrapper.appendChild(data);
+        data.appendChild(content.label);
+        data.appendChild(content.input);
+
+        if(isMobileDevice()) {
+            data.style.display = 'flex';
+            data.style.flexDirection = 'column';
+        }
 
         return wrapper;
-
     }
+    
 }
 
 
