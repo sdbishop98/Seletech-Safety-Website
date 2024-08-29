@@ -211,11 +211,11 @@ function getPDF_hazards() {
     Array.from(task_wrappers).forEach(wrapper => {
         let row = []
         const blank = {text: '', border: [true, false, true, false]}
-        const task = wrapper.getElementsByClassName('task')[0].value;
+        const task = wrapper.getElementsByClassName('task')[0].value.trim();
         row.push({text: task, border: [true, true, true, false]});
         const hazard_wrappers = wrapper.getElementsByClassName('wrapper-hazard');
         Array.from(hazard_wrappers).forEach((wrapper, index) => {
-            const hazard = wrapper.getElementsByClassName('hazard')[0].value;
+            const hazard = wrapper.getElementsByClassName('hazard')[0].value.trim();
             data = {text: hazard, border: [false, true, true, false]}
             if (index === 0) {
                 row.push(data);
@@ -224,7 +224,7 @@ function getPDF_hazards() {
             }
             const control_wrappers = wrapper.getElementsByClassName('wrapper-control');
             Array.from(control_wrappers).forEach((wrapper, index) => {
-                const control = wrapper.getElementsByClassName('control')[0].value;
+                const control = wrapper.getElementsByClassName('control')[0].value.trim();
                 data = {text: control, border: [true, true, true, true]}
                 if (index === 0) {
                     row.push(data);

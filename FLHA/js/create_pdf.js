@@ -53,7 +53,11 @@ function createPDF(){
         }
     };
 
-    pdfMake.createPdf(doc).download('DEMO.pdf');
+    const pdf = pdfMake.createPdf(doc)
+
+    console.log(upload_PDF(pdf, make_fileName()));
+
+    pdf.download(make_fileName());
 
     function getData(){
         const data = {}
@@ -102,6 +106,36 @@ function createPDF(){
         }
     }
 
+    function make_fileName(){
+        const jobNumber = document.getElementById('input-number-jobNumber').value;
+        const date = document.getElementById('input-date').value;
+        const time = document.getElementById('input-time').value;
+
+        return `FLHA_${jobNumber}_${date}_${time}`;
+    }
+
+    function upload_PDF(pdf, fileName){
+        console.log('uploading pdf');
+        pdf.getBase64(function(base64) {
+            uploadToDrive(base64, fileName);
+        });
+
+
+
+        function uploadToDrive(base64, fileName) {
+            fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    type: 'pdf',
+                    name: fileName,
+                    content: base64
+                })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            console.log('PDF sent to google services')
+        }
+    }
 }
 
 
@@ -111,11 +145,45 @@ function submit_html(){
     // utilizes helper functions in order to keep things tidy
     // INPUT:   none
     // RETURN:  none
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('block-wrapper');
+    document.body.appendChild(wrapper);
+
+    const wrapper_download = document.createElement('div');
+    wrapper_download.style.display = 'flex';
+    wrapper_download.style.flexDirection = 'row';
+    wrapper_download.style.padding = '3px';
+    
+    wrapper.appendChild(wrapper_download);
+
+    const question = document.createElement('p');
+    question.textContent = 'Do you wish to download a copy for yourself?'
+    wrapper_download.appendChild(question);
+
+    const downloadyn = makeRadioInputLabelPairs(
+        'download', 
+        ['download-yes', 'download-no'],
+        ['Yes', 'No'],
+        false
+    );
+    downloadyn[0].label.appendChild(downloadyn[0].input);
+    downloadyn[0].label.classList.add('label-w-radio');
+    downloadyn[1].label.appendChild(downloadyn[1].input);
+    downloadyn[1].label.classList.add('label-w-radio');
+    const wrapper_radio = document.createElement('div');
+    wrapper_radio.style.marginLeft = '10px';
+    wrapper_download.appendChild(wrapper_radio);
+    wrapper_radio.appendChild(downloadyn[0].label);
+    wrapper_radio.appendChild(downloadyn[1].label);
 
     const btn_submit = document.createElement('button');
-    btn_submit.textContent = 'Submit';
+    btn_submit.textContent = 'SUBMIT';
+    btn_submit.classList.add('fill');
+    btn_submit.style.padding = '5px';
+    btn_submit.style.borderRadius = '10px';
     btn_submit.onclick = () => createPDF();
-    document.body.appendChild(btn_submit);
+    wrapper.appendChild(btn_submit);
+    
 }
 
 submit_html();
