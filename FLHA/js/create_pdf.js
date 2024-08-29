@@ -113,8 +113,10 @@ function createPDF(){
         const jobNumber = document.getElementById('input-number-jobNumber').value;
         const date = document.getElementById('input-date').value;
         const time = document.getElementById('input-time').value;
+        const location  = document.getElementById('input-text-location').value;
+        const name = document.getElementById('input-text-name-assessor').value;
 
-        return `FLHA_${jobNumber}_${date}_${time}`;
+        return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
     }
 
     function upload_PDF(pdf, fileName){
