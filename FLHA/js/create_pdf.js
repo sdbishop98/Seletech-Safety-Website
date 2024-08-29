@@ -57,7 +57,10 @@ function createPDF(){
 
     console.log(upload_PDF(pdf, make_fileName()));
 
-    pdf.download(make_fileName());
+    const download = getRadioInput('download');
+    if(download === 'Yes') {
+        pdf.download(make_fileName());
+    }
 
     function getData(){
         const data = {}
@@ -166,6 +169,7 @@ function submit_html(){
         ['Yes', 'No'],
         false
     );
+    downloadyn[1].input.checked = true;
     downloadyn[0].label.appendChild(downloadyn[0].input);
     downloadyn[0].label.classList.add('label-w-radio');
     downloadyn[1].label.appendChild(downloadyn[1].input);
