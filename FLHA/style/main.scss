@@ -26,8 +26,8 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: $desktop-font-size;
     width: 100%;
-    @media (max-width: 600px) {
-        font-size: $mobile-font-size;  
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+        font-size: $mobile-font-size; 
     }
 }
 
@@ -40,7 +40,7 @@ div {
         padding: 1rem;
         width: 100%;
         box-sizing: border-box;
-        @media (max-width: 600px){
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
             background-color: $background;
             max-width: 100%;
             padding: 1rem;
@@ -50,8 +50,47 @@ div {
             width: 90%;
         }
     }
+    &.signatureBlock-wrapper {
+        div.name-wrapper {
+            padding: 5px 0;
+            padding-left: 5px;
+            label {
+                background-color: $text-color;
+                color: $background;
+                padding: 4px;
+                border-top-left-radius: 10px;
+            }
+            input {
+                background-color: $background;
+                color: $text-color;
+                padding: 4px;
+                box-sizing: border-box;
+                border: none;
+                border-radius: 0;
+                border-bottom-left-radius: 10px;
+            }
+        }
+        div.signatureModal-wrapper {
+            padding: 5px 0;
+            button.signature {
+                border: 0;
+                background-color: $background;
+                color: $text-color;
+                box-sizing: border-box;
+                border-radius: 0 10px 10px 0;
+                margin: 0;
+                padding: 0;
+            }
+            
+        }
+    }
+    &.fill{
+        width: 100%;
+        height: 100%;
+        // background-color: $accent;
+    }
     &.collapsible-root {
-        @media (max-width: 600px) {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
             padding: 1rem;
         }
     }
@@ -68,7 +107,7 @@ div {
         display: flex;
         justify-content: space-between;
         border-radius: 10px;
-        @media (max-width: 600px) {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
             flex-direction: column;
         }
     }
@@ -81,7 +120,7 @@ div {
         margin-left: 10px;
         margin-right: 3px;
         box-sizing: border-box;
-        @media (max-width: 600px) {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
             margin-left: 2px;
             margin-right: 1px;
         }
@@ -103,7 +142,7 @@ table {
     table-layout: auto;
     max-width: 100%;
     border-collapse: collapse;
-    @media (max-width: 600px){
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
         border-collapse: separate;
         border-spacing: 0 5px;
         tr.long-question {
@@ -136,6 +175,47 @@ table {
             padding-right: 1rem;
         }
     }
+    &.signature {
+        border-radius: 10px;
+        background-color: rgba($secondary, 0.5);
+        border-collapse: collapse;
+        thead {
+            font-weight: bold;
+        }
+        button.signature {
+            border: 0;
+            background-color: transparent;
+            color: $text-color;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0 5px;
+        }
+        input {
+            border: none;
+            width: 100%;
+            height: 100%;
+            background-color: $primary;
+            // margin-left: 0.3rem;
+        }
+        label {
+            padding-left: 0.1rem;
+            position: relative;
+            top: 5px;
+            left: 0.2rem;
+        }
+        td {
+            padding: .3rem;
+        }
+        td.accent {
+            background-color: $text-color;
+            color: $primary;
+            border: none;
+        }
+        td.secondary {
+            background-color: $background;
+        }
+    }
+
 }
 
 p {
@@ -153,7 +233,7 @@ h1 {
     z-index: 1000;
     margin: 0;
     padding: 1rem;
-    @media (max-width: 600px) {
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
         font-size: x-large;   
     }
     .seletech{
@@ -176,7 +256,7 @@ label {
     border-radius: 3px;
     width: calc(100% - 0.85rem);
     box-sizing: border-box;
-    @media (max-width: 600px){
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
         width: 100%;
     }
     input {
@@ -206,7 +286,7 @@ label {
 input {
     border: 1px solid black;
     border-radius: 3px;
-    @media (max-width: 600px){
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
         font-size: large;
     }
     &:focus{
@@ -217,28 +297,41 @@ input {
         box-sizing: border-box;
         width: 0.9rem;
         height: 0.9rem;
-        @media (max-width: 600px) {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
             width: 1rem;
             height: 1rem;
         }
     }
     &.dateTime {
         max-width: 7rem;
-        @media (max-width: 600px) {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
             max-width: 8rem;
         }
     }
     &.error {
         color: $accent;
-        border-color: $accent;
+        border: 2px dashed $accent;
+        border-radius: 4px;
+        // accent-color: $accent;
+        box-shadow: inset 0 0 0 1px red;
         &:focus {
             outline-color: $accent;
         }
     }
 }
 textarea { // text boxes
-    @media (max-width: 600px) {
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
         font-size: $mobile-font-size;
+    }
+    &.error {
+        color: $accent;
+        border: 2px dashed $accent;
+        border-radius: 4px;
+        // accent-color: $accent;
+        box-shadow: inset 0 0 0 1px red;
+        &:focus {
+            outline-color: $accent;
+        }
     }
 }
 select { // drop down menus
@@ -247,14 +340,25 @@ select { // drop down menus
     font-size: $desktop-font-size;
     box-sizing: border-box;
     // max-width: 80%;
-    @media (max-width: 600px){
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
         font-size: $mobile-font-size;
         width: 100%;
+    }
+    &.error {
+        color: $accent;
+        border: 2px dashed $accent;
+        border-radius: 4px;
+        // accent-color: $accent;
+        box-shadow: inset 0 0 0 1px red;
+        &:focus {
+            outline-color: $accent;
+        }
     }
 }
 
 button{
-    @media (max-width: 600px) {
+    font-size: $desktop-font-size;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
         font-size: $mobile-font-size;
     }
     cursor: pointer;
@@ -265,7 +369,7 @@ button{
         &:after {
             content: '\02795'; // unicode character for 'plus' sign (+)
             font-size: 1rem;    
-            @media (max-width: 600px) {
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
                 content: '[expand section]';
                 font-size: $mobile-font-size
             }   
@@ -273,7 +377,7 @@ button{
     }
     &.collapsible-active:after {
         content: '\2796'; // unicode character for 'minus' sign (-)
-        @media (max-width: 600px) {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
             content: '[collapse section]';
             font-size: $mobile-font-size
         }
@@ -286,30 +390,66 @@ button{
         outline: none;
         margin: 3px 1px 3px 1px;
         box-sizing: border-box;
-        @media (max-width: 600px) {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
             margin: 1px 0 1px 0;
         }
         &:first-child {
             border-top-left-radius: 7px;
             border-bottom-left-radius: 7px;
-            @media (max-width: 600px) {
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
                 border-radius: 10px 10px 0 0;
             }
         }
         &:last-child {
             border-top-right-radius: 7px;
             border-bottom-right-radius: 7px;
-            @media (max-width: 600px) {
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
                 border-radius: 0 0 10px 10px;
             }
         }
     }
 }
 
-
 // classes
 .red-text { // makes text red
     color: $accent;
 }
 
-
+// Signature Pad
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 90%;
+        background-color: $primary;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        canvas.signaturePad {
+            aspect-ratio: 2/1;
+            width: 100%;
+            max-width: calc(80vh * 2);
+            max-height: 80vh;
+            border: 1px solid #000;
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+                max-width: calc(70vh * 2);
+                max-height: 70vh;
+            }
+        }
+    }
+}

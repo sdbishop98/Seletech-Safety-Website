@@ -8,7 +8,7 @@ function scope_html(){
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-scopeOfWork';
     wrapper.classList.add('block-wrapper');
-    document.body.appendChild(wrapper);
+    document.currentScript.parentElement.appendChild(wrapper);
 
     const table = document.createElement('table');
     wrapper.appendChild(table);
@@ -20,7 +20,7 @@ function scope_html(){
     
     // CREATE CELLS
     // work description
-    const workDescription = makeTextareaInputLabelPair('workDescription', 'Work Description');
+    const workDescription = makeTextareaInputLabelPair('workDescription', 'Work Description', true);
     workDescription.input.rows = 4;
     if(isMobileDevice()){
         workDescription.input.cols = 23;
@@ -144,7 +144,8 @@ function scope_html(){
         const inputLabel = makeRadioInputLabelPairs(
             name,
             [`${identifier}-yes`, `${identifier}-no`],
-            ['Yes', 'No']
+            ['Yes', 'No'],
+            true
         )
         const cell_input = row.insertCell();
         if(isMobileDevice()){
@@ -162,6 +163,83 @@ function scope_html(){
 
         return row;
     }
+}
+
+function getPDF_scope(){
+    let issue = false;
+
+    let description;
+    try {
+        description = {
+            text: [
+                {text: 'Work Description:\n', bold: true},
+                getInputValue('input-textarea-workDescription')
+            ]
+        }
+    } catch (e) {
+        issue = true
+    }
+
+    let permit;
+    try {
+        permit = {
+            table: {
+                body: [
+                    ['Permit Required:', getRadioInput('permit-required')]
+                ]
+            }, 
+            layout: 'noBorders'
+        }
+    } catch (e) {
+        issue = true;
+    }
+    let clearUnderstanding;
+    try{
+        clearUnderstanding = getRadioInput('clear-understanding');
+    } catch (e) {
+        issue = true;
+    }
+    let review;
+    try{
+        review = getRadioInput('safety-review');
+    } catch (e) {
+        issue = true;
+    }
+    let tools;
+    try{
+        tools = getRadioInput('correct-tools');
+    } catch (e) {
+        issue = true;
+    }
+    let highRisk;
+    try{
+        highRisk = getRadioInput('high-risk');
+    } catch (e) {
+        issue = true;
+    }
+    let taskReady = {
+        table: {
+            body: [
+                ['Do you have a clear understanding of your scope of work for the day?', clearUnderstanding],
+                ['Have all workers reviewed any applicable safe work procedures and Safety Data Sheets that apply to this work?', review],
+                ['Are the correct tools and equipment for the task available, in good condition, and ready to be used by a competent worker?', tools],
+                ['Is this a high-risk task, such as working at heights, working in a confined space, working alone, live electrical work, working near power lines, or working near energized equipment', highRisk]
+            ]
+        },
+        layout: 'noBorders'
+    }
+    
+    if(issue) {
+        throw new Error('Missing Data - scope');
+    }
+    
+    return [
+        {text: ' '},
+        description,
+        permit,
+        '\nTASK READY:',
+        taskReady
+    ]
 }
 
 scope_html();
@@ -189,5 +267,3 @@ document.querySelectorAll('input[name="high-risk"]').forEach((radio) => {
         }
     })
 })
-
-

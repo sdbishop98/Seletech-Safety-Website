@@ -18,7 +18,7 @@ body {
   font-size: medium;
   width: 100%;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   body {
     font-size: 1.2rem;
   }
@@ -33,7 +33,7 @@ div.block-wrapper {
   width: 100%;
   box-sizing: border-box;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   div.block-wrapper {
     background-color: #e8e8e8;
     max-width: 100%;
@@ -44,7 +44,42 @@ div.block-wrapper {
     width: 90%;
   }
 }
-@media (max-width: 600px) {
+div.signatureBlock-wrapper div.name-wrapper {
+  padding: 5px 0;
+  padding-left: 5px;
+}
+div.signatureBlock-wrapper div.name-wrapper label {
+  background-color: #333333;
+  color: #e8e8e8;
+  padding: 4px;
+  border-top-left-radius: 10px;
+}
+div.signatureBlock-wrapper div.name-wrapper input {
+  background-color: #e8e8e8;
+  color: #333333;
+  padding: 4px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 0;
+  border-bottom-left-radius: 10px;
+}
+div.signatureBlock-wrapper div.signatureModal-wrapper {
+  padding: 5px 0;
+}
+div.signatureBlock-wrapper div.signatureModal-wrapper button.signature {
+  border: 0;
+  background-color: #e8e8e8;
+  color: #333333;
+  box-sizing: border-box;
+  border-radius: 0 10px 10px 0;
+  margin: 0;
+  padding: 0;
+}
+div.fill {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   div.collapsible-root {
     padding: 1rem;
   }
@@ -63,7 +98,7 @@ div.collapsible-header {
   justify-content: space-between;
   border-radius: 10px;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   div.collapsible-header {
     flex-direction: column;
   }
@@ -78,7 +113,7 @@ div.collapsible-content {
   margin-right: 3px;
   box-sizing: border-box;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   div.collapsible-content {
     margin-left: 2px;
     margin-right: 1px;
@@ -101,7 +136,7 @@ table {
   max-width: 100%;
   border-collapse: collapse;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   table {
     border-collapse: separate;
     border-spacing: 0 5px;
@@ -134,6 +169,45 @@ table td {
 table td.input {
   padding-right: 1rem;
 }
+table.signature {
+  border-radius: 10px;
+  background-color: rgba(168, 168, 168, 0.5);
+  border-collapse: collapse;
+}
+table.signature thead {
+  font-weight: bold;
+}
+table.signature button.signature {
+  border: 0;
+  background-color: transparent;
+  color: #333333;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0 5px;
+}
+table.signature input {
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
+}
+table.signature label {
+  padding-left: 0.1rem;
+  position: relative;
+  top: 5px;
+  left: 0.2rem;
+}
+table.signature td {
+  padding: 0.3rem;
+}
+table.signature td.accent {
+  background-color: #333333;
+  color: #f5f5f5;
+  border: none;
+}
+table.signature td.secondary {
+  background-color: #e8e8e8;
+}
 
 p {
   margin: 0;
@@ -150,7 +224,7 @@ h1 {
   margin: 0;
   padding: 1rem;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   h1 {
     font-size: x-large;
   }
@@ -175,7 +249,7 @@ label.unit {
   width: calc(100% - 0.85rem);
   box-sizing: border-box;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   label.unit {
     width: 100%;
   }
@@ -205,7 +279,7 @@ input {
   border: 1px solid black;
   border-radius: 3px;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   input {
     font-size: large;
   }
@@ -219,7 +293,7 @@ input.radio {
   width: 0.9rem;
   height: 0.9rem;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   input.radio {
     width: 1rem;
     height: 1rem;
@@ -228,23 +302,34 @@ input.radio {
 input.dateTime {
   max-width: 7rem;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   input.dateTime {
     max-width: 8rem;
   }
 }
 input.error {
   color: #d32f2f;
-  border-color: #d32f2f;
+  border: 2px dashed #d32f2f;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px red;
 }
 input.error:focus {
   outline-color: #d32f2f;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   textarea {
     font-size: 1.2rem;
   }
+}
+textarea.error {
+  color: #d32f2f;
+  border: 2px dashed #d32f2f;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px red;
+}
+textarea.error:focus {
+  outline-color: #d32f2f;
 }
 
 select {
@@ -253,17 +338,27 @@ select {
   font-size: medium;
   box-sizing: border-box;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   select {
     font-size: 1.2rem;
     width: 100%;
   }
 }
+select.error {
+  color: #d32f2f;
+  border: 2px dashed #d32f2f;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px red;
+}
+select.error:focus {
+  outline-color: #d32f2f;
+}
 
 button {
+  font-size: medium;
   cursor: pointer;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   button {
     font-size: 1.2rem;
   }
@@ -277,7 +372,7 @@ button.collapsible-expand:after {
   content: "➕";
   font-size: 1rem;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   button.collapsible-expand:after {
     content: "[expand section]";
     font-size: 1.2rem;
@@ -286,7 +381,7 @@ button.collapsible-expand:after {
 button.collapsible-active:after {
   content: "➖";
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   button.collapsible-active:after {
     content: "[collapse section]";
     font-size: 1.2rem;
@@ -301,7 +396,7 @@ button.fill {
   margin: 3px 1px 3px 1px;
   box-sizing: border-box;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   button.fill {
     margin: 1px 0 1px 0;
   }
@@ -310,7 +405,7 @@ button.fill:first-child {
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   button.fill:first-child {
     border-radius: 10px 10px 0 0;
   }
@@ -319,7 +414,7 @@ button.fill:last-child {
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
 }
-@media (max-width: 600px) {
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
   button.fill:last-child {
     border-radius: 0 0 10px 10px;
   }
@@ -327,4 +422,44 @@ button.fill:last-child {
 
 .red-text {
   color: #d32f2f;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+.modal .modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  height: 90%;
+  background-color: #f5f5f5;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.modal .modal-content canvas.signaturePad {
+  aspect-ratio: 2/1;
+  width: 100%;
+  max-width: 160vh;
+  max-height: 80vh;
+  border: 1px solid #000;
+}
+@media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+  .modal .modal-content canvas.signaturePad {
+    max-width: 140vh;
+    max-height: 70vh;
+  }
 }/*# sourceMappingURL=main.css.map */

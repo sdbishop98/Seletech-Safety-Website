@@ -9,7 +9,7 @@ function basics_html(){
     wrapper.id = 'wrapper-basicInfo';
     wrapper.classList.add('block-wrapper');
     wrapper.classList.add('table-wrapper');
-    document.body.appendChild(wrapper);
+    document.currentScript.parentElement.appendChild(wrapper);
 
     const table = document.createElement('table');
     wrapper.appendChild(table);
@@ -18,7 +18,6 @@ function basics_html(){
         mobile();
     } else {
         desktop();
-        // mobile();
     }
 
     function mobile(){
@@ -44,9 +43,9 @@ function basics_html(){
         cell_time_input.appendChild(dateTime.time.input);
 
         // location
-        make_textInput_tableHtml(row_location, 'location', 'Location');
+        make_textInput_tableHtml(row_location, 'location', 'Location', true);
         // job number
-        make_numericInput_tableHtml(row_jobNum, 'jobNumber', 'Job Number');
+        make_numericInput_tableHtml(row_jobNum, 'jobNumber', 'Job Number', true);
 
     }
 
@@ -69,11 +68,10 @@ function basics_html(){
         cell_time_label.appendChild(dateTime.time.label);
         cell_time_input.appendChild(dateTime.time.input);
         // location
-        make_textInput_tableHtml(row1, 'location', 'Location');
+        make_textInput_tableHtml(row1, 'location', 'Location', true);
         // job number
-        make_numericInput_tableHtml(row2, 'jobNumber', 'Job Number');
+        make_numericInput_tableHtml(row2, 'jobNumber', 'Job Number', true);
     }
-    
 }
 
 function makeDateTimeHtml(){
@@ -131,21 +129,42 @@ function makeTimeHtml(now){
     return {input: input, label: label};
 }
 
-function getPDF_basics(){
-    const date = document.getElementById('input-date').value;
-    let time = document.getElementById('input-time').value;
-    const location = document.getElementById('input-text-location').value;
-    const jobNumber = document.getElementById('input-number-jobNumber').value;
-    
-    // adjust time
-    let [hours, minutes] = time.split(':');
+function getPDF_basics() {
+    let issue = false;
+
+    const date = { element: document.getElementById('input-date') };
+    date.value = date.element.value;
+
+    const time = { element: document.getElementById('input-time') };
+    time.value = time.element.value;
+    let [hours, minutes] = time.value.split(':');
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12; 
-    time = `${hours}:${minutes} ${ampm}`;
+    time.value = `${hours}:${minutes} ${ampm}`;
+
+
+    
+    let location;
+    try {
+        location = getInputValue('input-text-location');
+    } catch (e) {
+        issue = true;
+    }
+
+    let jobNumber;
+    try {
+        jobNumber = getNumericValue('input-number-jobNumber');
+    } catch (e) {
+        issue = true;
+    }
+
+    if(issue) {
+        throw new Error('Missing Data');
+    }
 
     let tableBody = [
-        ['Date:', date, 'Location:', location],
-        ['Time:', time, 'Job Number:', jobNumber]
+        ['Date:', date.value, 'Location:', location],
+        ['Time:', time.value, 'Job Number:', jobNumber]
     ]
     tableBody = tableBody.map((row) => {
         return row.map(cell => ({
@@ -161,5 +180,6 @@ function getPDF_basics(){
     }
 
     return table;
+
 }
 basics_html();

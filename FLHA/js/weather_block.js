@@ -13,7 +13,7 @@ function weather_html(){
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-weather';
     wrapper.classList.add('block-wrapper');
-    document.body.appendChild(wrapper);
+    document.currentScript.parentElement.appendChild(wrapper);
 
     const table = document.createElement('table');
     wrapper.appendChild(table);;
@@ -40,7 +40,7 @@ function weather_html(){
         cell_weatherAffected_question.textContent = 'Is the work affected by the weather?';
         cell_weatherAffected_question.style.maxWidth = '10rem'; 
 
-        const weatherAffected = makeRadioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
+        const weatherAffected = makeRadioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No'], true);
         
         const cell_weatherAffected_yes = row_weatherAffect_yes.insertCell();
         cell_weatherAffected_yes.classList.add('input');
@@ -52,7 +52,7 @@ function weather_html(){
         cell_weatherAffected_no.appendChild(weatherAffected[1].label);
 
         // make_dropdown_tableHtml(row_currentWeather, 'current-weather', 'Current weather conditions', weatherConditions);
-        const currentWeather = makeDropdownLabelPair('currentWeather', 'Current weather conditions', weatherConditions);
+        const currentWeather = makeDropdownLabelPair('currentWeather', 'Current weather conditions', weatherConditions, true);
         const cell_currentWeather_question = row_currentWeather_question.insertCell();
         cell_currentWeather_question.colSpan = 2;
         cell_currentWeather_question.appendChild(currentWeather.label);
@@ -60,7 +60,7 @@ function weather_html(){
         cell_currentWeather_answer.colSpan = 2;
         cell_currentWeather_answer.appendChild(currentWeather.input);
 
-        make_numericInput_tableHtml(row_temp, 'currentTemperature', 'Temperature', '&deg;C');
+        make_numericInput_tableHtml(row_temp, 'currentTemperature', 'Temperature', true, '&deg;C');
     }
 
     function desktop(){
@@ -75,7 +75,7 @@ function weather_html(){
         cell_weatherAffected_question.textContent = 'Is the work affected by the weather?';
         cell_weatherAffected_question.style.maxWidth = '9rem';
 
-        const weatherAffected = makeRadioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No']);
+        const weatherAffected = makeRadioInputLabelPairs('weather-affected', ['weatherAffected-yes', 'weatherAffected-no'], ['Yes', 'No'], true);
         
         const cell_weatherAffected_yes = row1.insertCell();
         cell_weatherAffected_yes.classList.add('input');
@@ -88,17 +88,39 @@ function weather_html(){
         
         // current weather
         
-        make_dropdown_tableHtml(row1, 'currentWeather', 'Current weather conditions', weatherConditions);
+        make_dropdown_tableHtml(row1, 'currentWeather', 'Current weather conditions', weatherConditions, true);
         
-        make_numericInput_tableHtml(row2, 'currentTemperature', 'Temperature', '&deg;C');
+        make_numericInput_tableHtml(row2, 'currentTemperature', 'Temperature', true, '&deg;C');
     }
-    
 }
 
 function getPDF_weather(){
-    const workAffected = getRadioInput('weather-affected');
-    const currentWeather = document.getElementById('input-dropdown-currentWeather').value;
-    const temperature = `${document.getElementById('input-number-currentTemperature').value}\u00B0C`;
+    let issue = false;
+
+    let workAffected;
+    try {
+        workAffected = getRadioInput('weather-affected');
+    } catch (e) {
+        issue = true;
+    }
+
+    let currentWeather;
+    try {
+        currentWeather = getInputValue('input-dropdown-currentWeather');
+    } catch (e) {
+        issue = true;
+    }
+
+    let temperature;
+    try {
+        temperature = getNumericValue('input-number-currentTemperature');
+    } catch (e) {
+        issue = true;
+    }
+
+    if(issue) {
+        throw new Error('Missing Data');
+    }
     
     let workAffected_statement
     if(workAffected === 'Yes'){
@@ -110,7 +132,7 @@ function getPDF_weather(){
     } else {
         workAffected_statement = [
             'The work ',
-            {text: 'isn\'t ', bold: true},
+            {text: 'is not ', bold: true},
             'affected by the weather'
         ]
     }
@@ -131,7 +153,5 @@ function getPDF_weather(){
         }
     }
 }
-
-
 
 weather_html();

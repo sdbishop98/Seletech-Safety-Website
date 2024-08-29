@@ -15,16 +15,25 @@ function createPDF(){
             bolditalics: "timesbi.ttf"
         }
     }
-
-    const basics = getPDF_basics();
-    const weather = getPDF_weather();
-
+    
+    let data;
+    try {
+        data = getData()
+    } catch (e) {
+        console.log(e);
+        return
+    }
+    
     const doc = {
         pageSize: 'A4',
         pageMargins: [30, 30, 30, 30],
         content: [
-            basics,
-            weather
+            data.basics,
+            data.weather,
+            data.scope,
+            data.ppe,
+            data.hazards,
+            data.signatures
         ],
         defaultStyle: {
             font: 'timesNewRoman'
@@ -45,6 +54,53 @@ function createPDF(){
     };
 
     pdfMake.createPdf(doc).download('DEMO.pdf');
+
+    function getData(){
+        const data = {}
+        let issue = false;
+
+        try {
+            data.basics = getPDF_basics();
+        } catch (e) {
+            issue = true;
+            console.log('MISSING - basics')
+        }
+        try {
+            data.weather = getPDF_weather();
+        } catch (e) {
+            issue = true;
+            console.log('MISSING - weathet')
+        }
+        try {
+            data.scope = getPDF_scope();
+        } catch (e) {
+            issue = true;
+            console.log('MISSING - scope')
+        }
+        try {
+            data.ppe = getPDF_ppe(); 
+        } catch (e) {
+            issue = true;
+            console.log('MISSING - ppe')
+        }
+        try {
+            data.hazards = getPDF_hazards();
+        } catch (e) {
+            issue = true;
+            console.log('MISSING - hazards')
+        }
+        try {
+            data.signatures = getPDF_signatures();
+        } catch (e) {
+            issue = true;
+            console.log('MISSING - signatures')
+        }
+        if(issue) {
+            throw new Error('missing data');
+        } else {
+            return data;
+        }
+    }
 
 }
 

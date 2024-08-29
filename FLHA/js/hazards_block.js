@@ -91,7 +91,6 @@ function hazards_html(){
             const ancestors = getAncestorsWithClass(this, 'collapsible-content');
             const content = this.parentElement;
             ancestors.forEach(ancestor => {
-                console.log(ancestor);
                 ancestor.style.maxHeight = `${ancestor.scrollHeight + content.scrollHeight}px`;
             })
         });
@@ -200,5 +199,55 @@ function hazards_html(){
     
 }
 
+function getPDF_hazards() {
+    const tableBody = [];
+    tableBody.push([
+        {text: 'Tasks', style: 'tableHeader', alignment: 'center'},
+        {text: 'Hazards', style: 'tableHeader', alignment: 'center'},
+        {text: 'Controls', style: 'tableHeader', alignment: 'center'},
+    ]);
+
+    const task_wrappers = document.getElementsByClassName('wrapper-task');
+    Array.from(task_wrappers).forEach(wrapper => {
+        let row = []
+        const blank = {text: '', border: [true, false, true, false]}
+        const task = wrapper.getElementsByClassName('task')[0].value;
+        row.push({text: task, border: [true, true, true, false]});
+        const hazard_wrappers = wrapper.getElementsByClassName('wrapper-hazard');
+        Array.from(hazard_wrappers).forEach((wrapper, index) => {
+            const hazard = wrapper.getElementsByClassName('hazard')[0].value;
+            data = {text: hazard, border: [false, true, true, false]}
+            if (index === 0) {
+                row.push(data);
+            } else {
+                row = [JSON.parse(JSON.stringify(blank)), data];
+            }
+            const control_wrappers = wrapper.getElementsByClassName('wrapper-control');
+            Array.from(control_wrappers).forEach((wrapper, index) => {
+                const control = wrapper.getElementsByClassName('control')[0].value;
+                data = {text: control, border: [true, true, true, true]}
+                if (index === 0) {
+                    row.push(data);
+                    // row[1].border[1] = true;
+                } else {
+                    row = [JSON.parse(JSON.stringify(blank)), JSON.parse(JSON.stringify(blank)), data];
+                }
+                tableBody.push(row);
+            }); // end of control loop
+        }); // end of hazard loop
+    }) // end of task loop
+    tableBody[tableBody.length - 1][0].border[3] = true;
+    tableBody[tableBody.length - 1][1].border[3] = true;
+    return {
+        table: {
+            widths: '*',
+            headerRows: 1,
+            body: tableBody
+        },
+        layout: {
+            defaultBorder: false
+        }
+    }
+}
 
 hazards_html();

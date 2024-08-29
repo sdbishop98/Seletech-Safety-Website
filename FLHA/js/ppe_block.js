@@ -133,18 +133,21 @@ function ppe_html(){
         const cell_label = row.insertCell();
         cell_label.textContent = question;
 
+
         const identifiers = options.map(option => {
             const match = option.match(/\((.*?)\)/);
             if(match){
-                return `${identifier}-${match[1]}`
+                return `${identifier}-${toCamelCase(match[1])}`;
             } else {
                 return `${identifier}-${option.toLowerCase()}`;
             }
-        })
+        });
+        
         const inputLabels = makeRadioInputLabelPairs(
             name,
             identifiers,
-            options
+            options,
+            true
         )
         const cell_input = row.insertCell();
 
@@ -166,6 +169,126 @@ function ppe_html(){
         
         return row;
     }
+}
+
+function getPDF_ppe() {
+    let issue = false;
+
+    let hardHat;
+    try {
+        hardHat = getRadioInput('ppe-hardHat');
+    } catch (e) {
+        issue = true;
+    }
+    let hardHatTether;
+    try {
+        hardHatTether = getRadioInput('ppe-hardHatTether');
+    } catch (e) {
+        issue = true;
+    }
+    let safetyGlasses;
+    try {
+        safetyGlasses = getRadioInput('ppe-safetyGlasses');
+    } catch (e) {
+        issue = true;
+    }
+    let faceShield;
+    try {
+        faceShield = getRadioInput('ppe-faceShield');
+    } catch (e) {
+        issue = true;
+    }
+    let respirator;
+    try {
+        respirator = getRadioInput('ppe-respirator');
+    } catch (e) {
+        issue = true;
+    }
+    let hearingProtection;
+    try {
+        hearingProtection = getRadioInput('ppe-hearingProtection');
+    } catch (e) {
+        issue = true;
+    }
+    let hiVis;
+    try {
+        hiVis = getRadioInput('ppe-hiVis');
+    } catch (e) {
+        issue = true;
+    }
+    let longPants;
+    try {
+        longPants = getRadioInput('ppe-longPants');
+    } catch (e) {
+        issue = true;
+    }
+    let fr;
+    try {
+        fr = getRadioInput('ppe-FR');
+    } catch (e) {
+        issue = true;
+    }
+    let arc;
+    try {
+        arc = getRadioInput('ppe-arc');
+    } catch (e) {
+        issue = true;
+    }
+    let insulatedGloves;
+    try {
+        insulatedGloves = getRadioInput('ppe-insulatedGloves');
+    } catch (e) {
+        issue = true;
+    }
+    let insulatedTools;
+    try {
+        insulatedTools = getRadioInput('ppe-insulatedTools');
+    } catch (e) {
+        issue = true;
+    }
+    let workGloves;
+    try {
+        workGloves = getRadioInput('ppe-workGloves');
+    } catch (e) {
+        issue = true;
+    }
+    let footwear;
+    try {
+        footwear = getRadioInput('ppe-footwear');
+    } catch (e) {
+        issue = true;
+    }
+
+    if(issue) {
+        throw new Error('Missing Data - PPE');;
+    }
+
+    return [
+        {text: ' '},
+        'PPE REQUIRED',
+        {
+            table: {
+                widths: '*',
+                body: [
+                    ['Hard Hat', hardHat],
+                    ['Hard Hat Tether', hardHatTether],
+                    ['CSA Safety Glasses', safetyGlasses],
+                    ['Face Shield', faceShield],
+                    ['Respiratory Protection / Mask', respirator],
+                    ['Hearing protection', hearingProtection],
+                    ['High Visibility Clothing', hiVis],
+                    ['Long Pants', longPants],
+                    ['FR Clothing', fr],
+                    ['Arc Flash Suit', arc],
+                    ['Insulated Gloves', insulatedGloves],
+                    ['Insulated Tools', insulatedTools],
+                    ['Work Gloves', workGloves],
+                    ['CSA footwear (steel toes)', footwear]
+                ]
+            },
+            layout: 'noBorders'
+        }
+    ]   
 }
 
 ppe_html();
