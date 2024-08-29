@@ -228,6 +228,29 @@ function getPDF_scope(){
         },
         layout: 'noBorders'
     }
+
+    if(review === 'No'){
+        const identifyMissing = document.getElementById('input-text-identify-missing').value.trim();
+        const newItem = [
+            {
+                text:`Identify what was missing and review with all applicable workers: ${identifyMissing}`, 
+                colSpan: 2, 
+                margin: [20, 0, 0, 0]
+            }, 
+            {}
+        ]
+        taskReady.table.body.splice(2, 0, newItem);
+    }
+    if(highRisk === 'Yes'){
+        const newItem = [
+            {
+                text: 'Ensure that these risks are specifically identified and discuss the plan before proceeding.',
+                colSpan: 2,
+                margin: [20, 0, 0, 0]
+            },
+            {}
+        ]
+    }
     
     if(issue) {
         throw new Error('Missing Data - scope');
