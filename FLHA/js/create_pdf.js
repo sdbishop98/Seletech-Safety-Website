@@ -53,7 +53,11 @@ function createPDF(){
         }
     };
 
-    pdfMake.createPdf(doc).download('DEMO.pdf');
+    const pdf = pdfMake.createPdf(doc)
+
+    console.log(upload_PDF(pdf, make_fileName()));
+
+    pdf.download(make_fileName());
 
     function getData(){
         const data = {}
@@ -102,6 +106,36 @@ function createPDF(){
         }
     }
 
+    function make_fileName(){
+        const jobNumber = document.getElementById('input-number-jobNumber').value;
+        const date = document.getElementById('input-date').value;
+        const time = document.getElementById('input-time').value;
+
+        return `FLHA_${jobNumber}_${date}_${time}`;
+    }
+
+    function upload_PDF(pdf, fileName){
+        console.log('uploading pdf');
+        pdf.getBase64(function(base64) {
+            uploadToDrive(base64, fileName);
+        });
+
+
+
+        function uploadToDrive(base64, fileName) {
+            fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    type: 'pdf',
+                    name: fileName,
+                    content: base64
+                })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            console.log('PDF sent to google services')
+        }
+    }
 }
 
 
