@@ -1,0 +1,455 @@
+$primary: #f5f5f5;
+$secondary: #a8a8a8;
+$accent: #d32f2f;
+$background: #e8e8e8;
+$text-color: #333333;
+$desktop-font-size: medium;
+$mobile-font-size: 1.2rem;
+
+@font-face {
+    font-family: 'brush-script';
+    src: url('../fonts/BRUSHSCI.TTF');
+}
+
+html {
+    -webkit-text-size-adjust: 100%; /* For Safari and Chrome */
+    -moz-text-size-adjust: 100%;    /* For Firefox */
+    -ms-text-size-adjust: 100%;     /* For Internet Explorer */
+    text-size-adjust: 100%;         /* For other browsers */
+}
+
+body {
+    color: $text-color;
+    background-color: $background;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: $desktop-font-size;
+    width: 100%;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+        font-size: $mobile-font-size; 
+    }
+}
+
+div {
+    &.block-wrapper {
+        margin: 1rem auto;
+        margin-top: 0;
+        margin-bottom: 0;
+        background-color: $primary;
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+            background-color: $background;
+            max-width: 100%;
+            padding: 1rem;
+            margin: 1rem auto;
+            border-radius: 6px;
+            background-color: $primary;
+            width: 90%;
+        }
+    }
+    &.signatureBlock-wrapper {
+        div.name-wrapper {
+            padding: 5px 0;
+            padding-left: 5px;
+            label {
+                background-color: $text-color;
+                color: $background;
+                padding: 4px;
+                border-top-left-radius: 10px;
+            }
+            input {
+                background-color: $background;
+                color: $text-color;
+                padding: 4px;
+                box-sizing: border-box;
+                border: none;
+                border-radius: 0;
+                border-bottom-left-radius: 10px;
+            }
+        }
+        div.signatureModal-wrapper {
+            padding: 5px 0;
+            button.signature {
+                border: 0;
+                background-color: $background;
+                color: $text-color;
+                box-sizing: border-box;
+                border-radius: 0 10px 10px 0;
+                margin: 0;
+                padding: 0;
+            }
+            
+        }
+    }
+    &.fill{
+        width: 100%;
+        height: 100%;
+        // background-color: $accent;
+    }
+    &.collapsible-root {
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+            padding: 1rem;
+        }
+    }
+    &.collapsible-wrapper {
+        border-radius: 10px;
+        background-color: rgba($text-color, 0.1);
+        border: 1px solid $secondary;
+        margin-top: 5px;
+    }
+    &.collapsible-header {
+        padding: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 10px;
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+            flex-direction: column;
+        }
+    }
+    &.collapsible-content { // note - hidden by default
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.2s ease-out;
+        background-color: rgba($background, 0.1);
+        border-radius: 10px;
+        margin-left: 10px;
+        margin-right: 3px;
+        box-sizing: border-box;
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+            margin-left: 2px;
+            margin-right: 1px;
+        }
+    }
+    &.collapsible-leaf {
+        padding: 18px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 10px;
+        background-color: rgba($text-color, 0.1);
+        margin-top: 5px;
+    }
+}
+
+table {
+    border-radius: 6px;
+    table-layout: auto;
+    max-width: 100%;
+    border-collapse: collapse;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+        border-collapse: separate;
+        border-spacing: 0 5px;
+        tr.long-question {
+            td{
+                padding: 0.3rem;
+                background-color: rgba($background, 0.5);
+                position: relative;
+                box-sizing: border-box;
+            }
+            td.td-radio {
+                background-color: rgba($background, 1.0);
+            }
+            td:last-child {
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                padding-right: 10px;
+            }
+            td:first-child {
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+        }
+    }
+    input {
+        box-sizing: border-box;
+    }
+    td {
+        padding: 0.2rem;
+        &.input{
+            padding-right: 1rem;
+        }
+    }
+    &.signature {
+        border-radius: 10px;
+        background-color: rgba($secondary, 0.5);
+        border-collapse: collapse;
+        thead {
+            font-weight: bold;
+        }
+        button.signature {
+            border: 0;
+            background-color: transparent;
+            color: $text-color;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0 5px;
+        }
+        input {
+            border: none;
+            width: 100%;
+            height: 100%;
+            background-color: $primary;
+            // margin-left: 0.3rem;
+        }
+        label {
+            padding-left: 0.1rem;
+            position: relative;
+            top: 5px;
+            left: 0.2rem;
+        }
+        td {
+            padding: .3rem;
+        }
+        td.accent {
+            background-color: $text-color;
+            color: $primary;
+            border: none;
+        }
+        td.secondary {
+            background-color: $background;
+        }
+    }
+
+}
+
+p {
+    margin: 0;
+}
+h1 {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: x-large;
+    // make it a banner
+    position: -webkit-sticky; /* For Safari */
+    position: sticky;
+    top: 0;
+    background-color: $background;
+    z-index: 1000;
+    margin: 0;
+    padding: 1rem;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+        font-size: x-large;   
+    }
+    .seletech{
+        font-family: 'brush-script';
+        font-size: 1.5em;
+    }
+}
+h6 {
+    font-size: $desktop-font-size;
+    font-weight: normal;
+    margin: 0;
+    display: inline;
+}
+
+label {
+    &.unit { // adds units to inputs
+        display: flex;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 3px;
+    width: calc(100% - 0.85rem);
+    box-sizing: border-box;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+        width: 100%;
+    }
+    input {
+        border: none;
+        text-align: right;
+        width: calc(100% - 1.2rem);
+    }
+    &:focus-within {
+        outline-color: cornflowerblue;
+        outline-width: 2px;
+        outline-style: solid;
+        input {
+            outline: none;
+        }
+    }
+    }
+    &.label-w-radio{
+        display: inline-block;
+        white-space: nowrap;
+    }
+    input {
+        &.text {
+            margin-left: 1rem;
+        }
+    }
+}
+input {
+    border: 1px solid black;
+    border-radius: 3px;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+        font-size: large;
+    }
+    &:focus{
+        outline-color: cornflowerblue;
+        outline-width: 2px;
+    }
+    &.radio{
+        box-sizing: border-box;
+        width: 0.9rem;
+        height: 0.9rem;
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+            width: 1rem;
+            height: 1rem;
+        }
+    }
+    &.dateTime {
+        max-width: 7rem;
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+            max-width: 8rem;
+        }
+    }
+    &.error {
+        color: $accent;
+        border: 2px dashed $accent;
+        border-radius: 4px;
+        // accent-color: $accent;
+        box-shadow: inset 0 0 0 1px red;
+        &:focus {
+            outline-color: $accent;
+        }
+    }
+}
+textarea { // text boxes
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+        font-size: $mobile-font-size;
+    }
+    &.error {
+        color: $accent;
+        border: 2px dashed $accent;
+        border-radius: 4px;
+        // accent-color: $accent;
+        box-shadow: inset 0 0 0 1px red;
+        &:focus {
+            outline-color: $accent;
+        }
+    }
+}
+select { // drop down menus
+    border: 1px solid black;
+    border-radius: 3px;
+    font-size: $desktop-font-size;
+    box-sizing: border-box;
+    // max-width: 80%;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+        font-size: $mobile-font-size;
+        width: 100%;
+    }
+    &.error {
+        color: $accent;
+        border: 2px dashed $accent;
+        border-radius: 4px;
+        // accent-color: $accent;
+        box-shadow: inset 0 0 0 1px red;
+        &:focus {
+            outline-color: $accent;
+        }
+    }
+}
+
+button{
+    font-size: $desktop-font-size;
+    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+        font-size: $mobile-font-size;
+    }
+    cursor: pointer;
+    &.collapsible-expand {
+        border: none;
+        outline: none;
+        background-color: transparent;
+        &:after {
+            content: '\02795'; // unicode character for 'plus' sign (+)
+            font-size: 1rem;    
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+                content: '[expand section]';
+                font-size: $mobile-font-size
+            }   
+        }  
+    }
+    &.collapsible-active:after {
+        content: '\2796'; // unicode character for 'minus' sign (-)
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+            content: '[collapse section]';
+            font-size: $mobile-font-size
+        }
+    }
+    &.fill {
+        width: 100%;
+        background-color: mediumpurple;
+        color: $primary;
+        border: none;
+        outline: none;
+        margin: 3px 1px 3px 1px;
+        box-sizing: border-box;
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+            margin: 1px 0 1px 0;
+        }
+        &:first-child {
+            border-top-left-radius: 7px;
+            border-bottom-left-radius: 7px;
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+                border-radius: 10px 10px 0 0;
+            }
+        }
+        &:last-child {
+            border-top-right-radius: 7px;
+            border-bottom-right-radius: 7px;
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px) {
+                border-radius: 0 0 10px 10px;
+            }
+        }
+    }
+}
+
+// classes
+.red-text { // makes text red
+    color: $accent;
+}
+
+// Signature Pad
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 90%;
+        background-color: $primary;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        canvas.signaturePad {
+            aspect-ratio: 2/1;
+            width: 100%;
+            max-width: calc(80vh * 2);
+            max-height: 80vh;
+            border: 1px solid #000;
+            @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+                max-width: calc(70vh * 2);
+                max-height: 70vh;
+            }
+        }
+    }
+}
