@@ -158,7 +158,13 @@ function getPDF_signatures(){
             const fit = [100, 100];
             this.modal = modal;
             this.sp = modal.getSignaturePad();
-            this.png = this.sp.getPNG_URL(true);
+            try {
+                this.png = this.sp.getPNG_URL();
+            } catch (e) {
+                console.log(modal.getHTML());
+                modal.getHTML().classList.add('error');
+                throw new Error('Missing signature');
+            }
             this.wrapper = getAncestorWithTag(modal.getHTML(), 'tbody');
             this.name = this.wrapper.querySelector('input').value;
             this.table = {
