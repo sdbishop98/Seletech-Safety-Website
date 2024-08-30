@@ -178,85 +178,141 @@ function getPDF_ppe() {
     try {
         hardHat = getRadioInput('ppe-hardHat');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            hardHat = 'test';
+        } else {
+            issue = true;
+        }
     }
     let hardHatTether;
     try {
         hardHatTether = getRadioInput('ppe-hardHatTether');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            hardHatTether = 'test';
+        } else {
+            issue = true;
+        }
     }
     let safetyGlasses;
     try {
         safetyGlasses = getRadioInput('ppe-safetyGlasses');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            safetyGlasses = 'test';
+        } else {
+            issue = true;
+        }
     }
     let faceShield;
     try {
         faceShield = getRadioInput('ppe-faceShield');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            faceShield = 'test';
+        } else {
+            issue = true;
+        }
     }
     let respirator;
     try {
         respirator = getRadioInput('ppe-respirator');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            respirator = 'test';
+        } else {
+            issue = true;
+        }
     }
     let hearingProtection;
     try {
         hearingProtection = getRadioInput('ppe-hearingProtection');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            hearingProtection = 'test';
+        } else {
+            issue = true;
+        }
     }
     let hiVis;
     try {
         hiVis = getRadioInput('ppe-hiVis');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            hiVis = 'test';
+        } else {
+            issue = true;
+        }
     }
     let longPants;
     try {
         longPants = getRadioInput('ppe-longPants');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            longPants = 'test';
+        } else {
+            issue = true;
+        }
     }
     let fr;
     try {
         fr = getRadioInput('ppe-FR');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            fr = 'test';
+        } else {
+            issue = true;
+        }
     }
     let arc;
     try {
         arc = getRadioInput('ppe-arc');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            arc = 'test';
+        } else {
+            issue = true;
+        }
     }
     let insulatedGloves;
     try {
         insulatedGloves = getRadioInput('ppe-insulatedGloves');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            insulatedGloves = 'test';
+        } else {
+            issue = true;
+        }
     }
     let insulatedTools;
     try {
         insulatedTools = getRadioInput('ppe-insulatedTools');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            insulatedTools = 'test';
+        } else {
+            issue = true;
+        }
     }
     let workGloves;
     try {
         workGloves = getRadioInput('ppe-workGloves');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            workGloves = 'test';
+        } else {
+            issue = true;
+        }
     }
     let footwear;
     try {
         footwear = getRadioInput('ppe-footwear');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            footwear = 'test';
+        } else {
+            issue = true;
+        }
     }
 
     if(issue) {
