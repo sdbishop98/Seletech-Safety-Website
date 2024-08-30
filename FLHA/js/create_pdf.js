@@ -154,7 +154,7 @@ function createPDF(){
             console.log('PDF sent to google services');
 
             const download = getRadioInput('download');
-            if(download === 'Yes' && proceed) {
+            if(download === 'Yes') {
                 pdf.download(make_fileName());
             }
         }
