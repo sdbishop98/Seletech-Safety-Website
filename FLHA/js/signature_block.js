@@ -87,6 +87,7 @@ function signatures_html() {
     }
 
     function removeReviewer(reviewers, body) {
+        // console.log(Modal_SignaturePad.getInstances())
         if(reviewers.length <=1) {
             alert('Error: Must have at least one reviewer');
             return;
@@ -104,6 +105,8 @@ function signatures_html() {
             }
         }
         reviewers.pop();
+        Modal_SignaturePad.removeLast();
+        // console.log(Modal_SignaturePad.getInstances())
     }
 
     /** creates a table body containing a text input and signature modal input
@@ -154,12 +157,12 @@ function signatures_html() {
 
 function getPDF_signatures(){
     class SignatureBlock {
-        constructor(modal) {
+        constructor(modal, suppress = false) {
             const fit = [100, 100];
             this.modal = modal;
             this.sp = modal.getSignaturePad();
             try {
-                this.png = this.sp.getPNG_URL();
+                this.png = this.sp.getPNG_URL(suppress);
             } catch (e) {
                 console.log(modal.getHTML());
                 modal.getHTML().classList.add('error');
@@ -198,7 +201,7 @@ function getPDF_signatures(){
             tableBody.push([assessor.getTable(), {}]);
             tableBody.push([{text: 'Reviewed By:', colSpan: 2}, {text: ' '}])
         } else {
-            const reviewer = new SignatureBlock(modal);
+            const reviewer = new SignatureBlock(modal, true);
             const table = reviewer.getTable();
             if(index % 2 === 1) {
                 tableBody.push(

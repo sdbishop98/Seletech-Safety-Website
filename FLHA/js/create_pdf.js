@@ -106,13 +106,14 @@ function createPDF(){
             console.log('MISSING - hazards')
         }
         try {
-            if(bypass){
-                data.signatures = {}
-            } else {
-                data.signatures = getPDF_signatures();
-            }
+            // if(bypass){
+            //     data.signatures = {}
+            // } else {
+            //     data.signatures = getPDF_signatures();
+            // }
+            data.signatures = getPDF_signatures();
         } catch (e) {
-            issue = true;
+            // issue = true;
             console.log('MISSING - signatures')
         }
         if(issue && !bypass) {

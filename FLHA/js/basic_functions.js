@@ -108,7 +108,9 @@ class Modal {
     static getInstances(){
         return Modal.#instances;
     }
-    
+    static removeLast(){
+        Modal.#instances.pop()
+    }
 
     #init_buttons(){
         const open = document.createElement('button');
