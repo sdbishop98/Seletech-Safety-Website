@@ -177,7 +177,16 @@ function getPDF_scope(){
             ]
         }
     } catch (e) {
-        issue = true
+        if(bypass){
+            description = {
+                text: [
+                    {text: 'Work Description:\n', bold: true},
+                    'test'
+                ]
+            }
+        } else {
+            issue = true;
+        }
     }
 
     let permit;
@@ -191,32 +200,60 @@ function getPDF_scope(){
             layout: 'noBorders'
         }
     } catch (e) {
-        issue = true;
+        if(bypass){
+            permit = {
+                table: {
+                    body: [
+                        ['Permit Required:', 'test']
+                    ]
+                }, 
+                layout: 'noBorders'
+            }
+        } else {
+            issue = true;
+        }
     }
     let clearUnderstanding;
     try{
         clearUnderstanding = getRadioInput('clear-understanding');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            clearUnderstanding = 'test';
+        } else {
+            issue = true;
+        }
     }
     let review;
     try{
         review = getRadioInput('safety-review');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            review = 'test';
+        } else {
+            issue = true;
+        }
     }
     let tools;
     try{
         tools = getRadioInput('correct-tools');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            tools = 'test';
+        } else {
+            issue = true;
+        }
     }
     let highRisk;
     try{
         highRisk = getRadioInput('high-risk');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            highRisk = 'test';
+        } else {
+            issue = true;
+        }
     }
+
     let taskReady = {
         table: {
             body: [

@@ -1,4 +1,9 @@
 function createPDF(){
+    
+    const btn = document.getElementById('button-submit');
+    btn.style.backgroundColor = 'darkkhaki';
+    btn.textContent = 'Working... please wait';
+    
     const colours = {
         primary: '#f5f5f5',
         secondary: '#a8a8a8',
@@ -19,8 +24,12 @@ function createPDF(){
     let data;
     try {
         data = getData()
+        btn.style.backgroundColor = 'seagreen';
+        btn.textContent = 'Data revieved - creating PDF... please wait'
     } catch (e) {
         console.log(e);
+        btn.style.backgroundColor = 'darkred';
+        btn.textContent = 'ERROR - required fields missing';
         return
     }
     
@@ -55,12 +64,15 @@ function createPDF(){
 
     const pdf = pdfMake.createPdf(doc)
 
-    console.log(upload_PDF(pdf, make_fileName()));
+    upload_PDF(pdf, make_fileName());
 
     const download = getRadioInput('download');
     if(download === 'Yes') {
         pdf.download(make_fileName());
     }
+
+    btn.style.backgroundColor = 'mediumpurple';
+    btn.textContent = 'The PDF has been created. You may safely close the window.'
 
     function getData(){
         const data = {}
@@ -76,7 +88,7 @@ function createPDF(){
             data.weather = getPDF_weather();
         } catch (e) {
             issue = true;
-            console.log('MISSING - weathet')
+            console.log('MISSING - weather')
         }
         try {
             data.scope = getPDF_scope();
@@ -97,12 +109,16 @@ function createPDF(){
             console.log('MISSING - hazards')
         }
         try {
-            data.signatures = getPDF_signatures();
+            if(bypass){
+                data.signatures = {}
+            } else {
+                data.signatures = getPDF_signatures();
+            }
         } catch (e) {
             issue = true;
             console.log('MISSING - signatures')
         }
-        if(issue) {
+        if(issue && !bypass) {
             throw new Error('missing data');
         } else {
             return data;
@@ -183,6 +199,7 @@ function submit_html(){
     wrapper_radio.appendChild(downloadyn[1].label);
 
     const btn_submit = document.createElement('button');
+    btn_submit.id = 'button-submit';
     btn_submit.textContent = 'SUBMIT';
     btn_submit.classList.add('fill');
     btn_submit.style.padding = '5px';

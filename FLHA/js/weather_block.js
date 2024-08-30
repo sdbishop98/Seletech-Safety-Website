@@ -101,21 +101,33 @@ function getPDF_weather(){
     try {
         workAffected = getRadioInput('weather-affected');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            workAffected = 'test';
+        } else {
+            issue = true;
+        }
     }
 
     let currentWeather;
     try {
         currentWeather = getInputValue('input-dropdown-currentWeather');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            currentWeather = 'test';
+        } else {
+            issue = true;
+        }
     }
 
     let temperature;
     try {
         temperature = getNumericValue('input-number-currentTemperature');
     } catch (e) {
-        issue = true;
+        if(bypass){
+            temperature = 'test';
+        } else {
+            issue = true;
+        }
     }
 
     if(issue) {
