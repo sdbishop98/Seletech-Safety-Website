@@ -66,10 +66,7 @@ function createPDF(){
 
     upload_PDF(pdf, make_fileName());
 
-    const download = getRadioInput('download');
-    if(download === 'Yes') {
-        pdf.download(make_fileName());
-    }
+    
 
     btn.style.backgroundColor = 'mediumpurple';
     btn.textContent = 'The PDF has been created. You may safely close the window.'
@@ -141,7 +138,7 @@ function createPDF(){
             uploadToDrive(base64, fileName);
         });
 
-
+        
 
         function uploadToDrive(base64, fileName) {
             fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
@@ -154,7 +151,12 @@ function createPDF(){
             })
             .then(response => response.text())
             .then(data => console.log(data))
-            console.log('PDF sent to google services')
+            console.log('PDF sent to google services');
+
+            const download = getRadioInput('download');
+            if(download === 'Yes' && proceed) {
+                pdf.download(make_fileName());
+            }
         }
     }
 }
