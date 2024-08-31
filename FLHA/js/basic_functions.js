@@ -302,7 +302,37 @@ class SignaturePad {
     }
 }
 
-
+class Input_Collection{
+    static #objects = [];
+    static #instances = []
+    constructor (obj) {
+        this.obj = obj;
+        Input_Collection.#objects.push(this.obj);
+        Input_Collection.#instances.push(this);
+    }
+    static getObjects(){
+        const instances = this.getInstances();
+        const objects = instances.map(instance => instance.getObject());
+        return objects;
+    }
+    static getInstances(){
+        const instances = Input_Collection.#instances;
+        const filtered = instances.filter(instance => {
+            return instance.constructor.name === this.name;
+        });
+        return filtered;
+    }
+    
+    getObject(){
+        return this.obj;
+    }
+    getLabel(){
+        return this.obj.getLabelValue();
+    }
+    getValue(){
+        return this.obj.getInputValue();
+    }
+}
 // INPUT CLASSES
 class AbstractInput {
     static #instances = []
@@ -312,41 +342,55 @@ class AbstractInput {
      * @param {string} [label_str = null] - textContent for optional label element
      * @param {boolean} [required = false]  affects the required property of input element
      */
-    constructor(identifier, label_str = null, required = false) {
-        this.input = document.createElement('input');
-        this.input.id = identifier;
-        this.input.required = required
+    constructor(identifier, label_str = null, required = false, ...rest) {
+        this._createInput(identifier, required, ...rest);
 
         this._editListener();
 
         if(label_str){
-            this.label = this.#create_label(label_str);
+            this.label = this._createLabel(label_str);
         }
 
         AbstractInput.#instances.push(this);
     }
-
-    #create_label(label_str) {
-        const label = document.createElement('label');
-        label.textContent = label_str;
-        label.htmlFor = this.input.id;
-        return label;
-    }
-
-    getLabelHTML(){
-        return this.label;
-    }
-
-    getLabelValue(){
-        return this.label.textContent;
-    }
-
+    // CONSTRUCTOR HELPERS
     _editListener(){
         this.input.addEventListener('input', () => {
             this.input.classList.remove('error');
         })
     }
-
+    _elementType(){
+        return document.createElement('input');
+    }
+    _createInput(identifier, required){
+        this.input = this._elementType();
+        this.input.id = identifier;
+        this.input.required = required;
+    }
+    _createLabel(label_str) {
+        const label = document.createElement('label');
+        label.textContent = label_str;
+        label.htmlFor = this.input.id;
+        return label;
+    }
+    // STATIC METHODS
+    static getInstances() {
+        const instances = AbstractInput.getSuperInstances();
+        const filtered = instances.filter(instance => {
+            return instance.constructor.name === this.name;
+        })
+        return filtered;
+    }
+    static getSuperInstances(){
+        return AbstractInput.#instances;
+    }
+    // GETTERS
+    getLabelHTML(){
+        return this.label;
+    }
+    getLabelValue(){
+        return this.label.textContent;
+    }
     getInputValue(){
         if(this.input.required && !this.input.value){
             this.input.classList.add('error');
@@ -355,26 +399,8 @@ class AbstractInput {
         return this.input.value;
 
     }
-
     getInputHTML() {
         return this.input;
-    }
-
-    static getInstances() {
-        const instances = AbstractInput.getSuperInstances();
-        const filtered = instances.filter(instance => {
-            return instance.constructor.name === this.name;
-        })
-        console.log(filtered);
-        return filtered;
-    }
-
-    static getThis() {
-        return this;
-    }
-
-    static getSuperInstances(){
-        return AbstractInput.#instances;
     }
 }
 class TextInput extends AbstractInput {
@@ -391,7 +417,7 @@ class TextInput extends AbstractInput {
     }
 }
 class NumericTextInput extends TextInput {
-    constructor(identifier, label_str, required = false, unit_str = null){
+    constructor(identifier, label_str, required = false){
         identifier = `numeric-${identifier}`;
         super(identifier, label_str, required);
         this.input.inputMode = 'numeric';
@@ -406,6 +432,18 @@ class NumericTextInput extends TextInput {
                 this.input.classList.remove('error');
             }
         })
+    }
+    getInputHTML(unit_str = null){
+        if(unit_str){
+            const label = document.createElement('label');
+            label.classList.add('unit');
+            label.appendChild(this.input);
+            const unit = document.createElement('span');
+            unit.innerHTML = unit_str;
+            label.appendChild(unit);
+            return label;
+        }
+        return this.input;
     }
 }
 class DateInput extends TextInput {
@@ -470,7 +508,127 @@ class TimeInput extends TextInput {
 
         this.input.value = `${hours}:${minutes}`;
     }
+
+    getInputValue(){
+        const value = this.input.value;
+        let [hours, minutes] = value.split(':');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes} ${ampm}`;
+    }
 }
+class SelectInput extends AbstractInput {
+    /** creates a select element and optional corresponding label
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {string[]} options - the options available for selection
+     * @param {boolean} [start_blank = true] - if true, inserts a blank default element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor (identifier, options, start_blank = true, label_str = null, required = false) {
+        identifier = `input-select-${identifier}`;
+        super(identifier, label_str, required);
+
+        if (start_blank) {
+            const undecided = document.createElement('option');
+            undecided.value = '';
+            undecided.selected = true;
+            undecided.disabled = true;
+            undecided.hidden = true;
+            undecided.textContent = 'Please select an option';
+            undecided.classList.add('placeholder');
+            this.input.appendChild(undecided);
+        }
+        options.forEach(option_str => {
+            const option = document.createElement('option');
+            option.textContent = option_str;
+            option.value = option_str;
+            this.input.appendChild(option);
+        })
+    }
+    _editListener() {
+        this.input.addEventListener('change', () => {
+            this.input.classList.remove('error');
+        })
+    }
+    _elementType() {
+        return document.createElement('select');
+    }
+}
+class RadioInput extends AbstractInput {
+    /**
+     * 
+     * @param {string} name 
+     * @param {string[]} options 
+     * @param {string} label_str 
+     * @param {boolean} required 
+     */
+    #required
+    constructor (name, options, label_str = null, required = false) {
+        super(options, label_str, required, name)
+        this.#required = required;
+    }
+    _createInput(options, required, name) {
+        // const identifiers = options.map((option) => toCamelCase(option));
+        this.input = [];
+        this.radios = []
+        options.forEach((option, index) => {
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.value = option;
+            radio.id = `input-radio-${toCamelCase(option)}`;
+            radio.name = name;
+            radio.required = required;
+            radio.addEventListener('input', () => {
+                this.removeClass('error')
+            });
+            this.radios.push(radio);
+
+            const label = document.createElement('label');
+            label.textContent = option;
+            label.htmlFor = radio.id;
+
+            label.insertBefore(radio, label.firstChild)
+
+            this.input.push(label);
+        })
+    }
+    _editListener(){
+        return;
+    }
+    _createLabel(label_str){
+        const p = document.createElement('p');
+        p.textContent = label_str;
+        return p;
+    }
+    // GETTERS
+    getInputValue(){
+        let selectedValue = null;
+        for(const radio of this.radios) {
+            if(radio.checked){
+                selectedValue = radio.value;
+            }
+        }
+        if(this.#required && !selectedValue) {
+            this.addClass('error');
+            throw new Error('required input not provided');
+        }
+        return selectedValue;
+    }
+    // SETTERS
+    removeClass(className){
+        this.radios.forEach(radio => {
+            radio.classList.remove(className)
+        })
+    }
+    addClass(className){
+        this.radios.forEach(radio => {
+            radio.classList.add(className);
+        })
+    }
+}
+
 /** links a stylesheet to the html 
  * @param {string} href - a link in href format eg: 'css/signature_block.css'
  */

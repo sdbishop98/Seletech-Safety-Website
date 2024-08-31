@@ -1,6 +1,6 @@
 let bypass = false;
 
-function getPDF_basics() {
+function getPDF_basics_OLD() {
     let issue = false;
     
 
@@ -64,32 +64,32 @@ function getPDF_basics() {
 
 }
 
-class Basics_Input{
-    static instances = []
-    static objects = []
-    constructor(obj){
-        this.obj = obj;
-        Basics_Input.objects.push(this.obj);
-        Basics_Input.instances.push(this);
-    }
-    static getObjects(){
-        return Basics_Input.objects;
-    }
-    static getInstances(){
-        return Basics_Input.instances
-    }
+// class Basics_Input{
+//     static objects = [];
+//     constructor(obj){
+//         this.obj = obj;
+//         Basics_Input.objects.push(this.obj);
+//     }
+//     static getObjects(){
+//         return Basics_Input.objects;
+//     }
 
-    getLabel(){
-        return this.obj.getLabelValue();
-    }
-    getValue(){
-        return this.obj.getInputValue();
+//     getLabel(){
+//         return this.obj.getLabelValue();
+//     }
+//     getValue(){
+//         return this.obj.getInputValue();
+//     }
+// }
+class Basics_Input extends Input_Collection{
+    constructor (obj) {
+        super(obj);
     }
 }
 
 /** modular package that generates html
  * 
- * gathers basic information: date, time, location, job number
+ * gathers: date, time, location, job number
  */
 function basics_html(){
     const wrapper = document.createElement('div');
@@ -123,7 +123,7 @@ function basics_html(){
     })
 }
 
-function getPDF_basics_NEW() {
+function getPDF_basics() {
     const objects = Basics_Input.getObjects();
     let issue = false;
     let tableBody = [];
@@ -147,7 +147,18 @@ function getPDF_basics_NEW() {
         if(index % 2 == 0){
             tableBody.push([])
         }
+        tableBody[tableBody.length-1].push({text: `${obj.getLabelValue()}:`});
+        tableBody[tableBody.length-1].push({text: value});
     })
+
+    const table = {
+        table: {
+            widths: '*',
+            body: tableBody
+        }
+    }
+
+    return table
 }
 
 basics_html();

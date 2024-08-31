@@ -106,12 +106,12 @@ function createPDF(){
             console.log('MISSING - hazards')
         }
         try {
-            // if(bypass){
-            //     data.signatures = {}
-            // } else {
-            //     data.signatures = getPDF_signatures();
-            // }
-            data.signatures = getPDF_signatures();
+            if(bypass){
+                data.signatures = {}
+            } else {
+                data.signatures = getPDF_signatures();
+            }
+            // data.signatures = getPDF_signatures();
         } catch (e) {
             // issue = true;
             console.log('MISSING - signatures')
@@ -124,13 +124,19 @@ function createPDF(){
     }
 
     function make_fileName(){
-        const jobNumber = document.getElementById('input-number-jobNumber').value;
         const date = document.getElementById('input-date').value;
         const time = document.getElementById('input-time').value;
-        const location  = document.getElementById('input-text-location').value;
-        const name = document.getElementById('input-text-name-assessor').value;
+        if (!bypass) {
+            const jobNumber = document.getElementById('input-number-jobNumber').value;
+            
+            const location  = document.getElementById('input-text-location').value;
+            const name = document.getElementById('input-text-name-assessor').value;
 
-        return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
+            return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
+        } else {
+            return `TEST-DISREGARD_${date}_${time}`;
+        }
+        
     }
 
     function upload_PDF(pdf, fileName){
