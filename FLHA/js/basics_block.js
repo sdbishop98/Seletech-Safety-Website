@@ -1,136 +1,5 @@
 let bypass = false;
 
-function basics_html(){
-    // modular package that generates html
-    // gathers basic information
-    // utilizes helper functions in order to keep things tidy
-    // INPUT:   none
-    // RETURN:  none
-
-    const wrapper = document.createElement('div');
-    wrapper.id = 'wrapper-basicInfo';
-    wrapper.classList.add('block-wrapper');
-    wrapper.classList.add('table-wrapper');
-    document.currentScript.parentElement.appendChild(wrapper);
-
-    const table = document.createElement('table');
-    wrapper.appendChild(table);
-    
-    if(isMobileDevice()){
-        mobile();
-    } else {
-        desktop();
-    }
-
-    function mobile(){
-        // CREATE ROWS
-        const row_date = table.insertRow();
-        const row_time = table.insertRow();
-        const row_location = table.insertRow();
-        const row_jobNum = table.insertRow();
-
-        // CREATE CELLS
-        // date
-        const dateTime = makeDateTimeHtml();
-        const cell_date_label = row_date.insertCell();
-        const cell_date_input = row_date.insertCell();
-        cell_date_input.classList.add('input');
-        cell_date_label.appendChild(dateTime.date.label);
-        cell_date_input.appendChild(dateTime.date.input);
-        // time
-        const cell_time_label = row_time.insertCell();
-        const cell_time_input = row_time.insertCell();
-        cell_time_input.classList.add('input');
-        cell_time_label.appendChild(dateTime.time.label);
-        cell_time_input.appendChild(dateTime.time.input);
-
-        // location
-        make_textInput_tableHtml(row_location, 'location', 'Location', true);
-        // job number
-        make_numericInput_tableHtml(row_jobNum, 'jobNumber', 'Job Number', true);
-
-    }
-
-    function desktop(){
-        // CREATE ROWS
-        const row1 = table.insertRow();
-        const row2 = table.insertRow();
-
-        // CREATE CELLS
-        // date and time
-        const cell_date_label = row1.insertCell();
-        const cell_date_input = row1.insertCell();
-        cell_date_input.classList.add('input');
-        const cell_time_label = row2.insertCell();
-        const cell_time_input = row2.insertCell();
-        cell_time_input.classList.add('input');
-        const dateTime = makeDateTimeHtml();
-        cell_date_label.appendChild(dateTime.date.label);
-        cell_date_input.appendChild(dateTime.date.input);
-        cell_time_label.appendChild(dateTime.time.label);
-        cell_time_input.appendChild(dateTime.time.input);
-        // location
-        make_textInput_tableHtml(row1, 'location', 'Location', true);
-        // job number
-        make_numericInput_tableHtml(row2, 'jobNumber', 'Job Number', true);
-    }
-}
-
-function makeDateTimeHtml(){
-    // Helper function for basics_html
-    // creates date and time input elements with corresponding labels
-    // does not place these elements on the graph
-    // INPUT:   none
-    // RETURN:  tuple - contains date and time input/label pairs
-    const now = new Date();
-
-    date = makeDateHtml(now);
-    time = makeTimeHtml(now);
-
-    return{date: date, time: time};
-}
-
-function makeDateHtml(now){
-    // Helper function for getDateTimeHtml
-    // creates date input element with corresponing label
-    // does not place these elements on the graph
-    // INPUT:   now - the current Date()
-    // RETURN:  tuple - date input/label pair
-    const input = document.createElement('input');
-    input.type = 'date';
-    input.id = 'input-date';
-    input.value = now.toISOString().split('T')[0];
-    input.classList.add('date', 'dateTime');
-
-    const label = document.createElement('label');
-    label.textContent = 'Date:';
-    label.htmlFor = input.id;
-
-    return {input: input, label: label};
-}
-
-function makeTimeHtml(now){
-    // Helper function for getDateTimeHtml
-    // creates time input element with corresponing label
-    // does not place these elements on the graph
-    // INPUT:   now - the current Date()
-    // RETURN:  tuple - time input/label pair
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-
-    const input = document.createElement('input');
-    input.type = 'time';
-    input.id = 'input-time';
-    input.value = `${hours}:${minutes}`;
-    input.classList.add('time', 'dateTime');
-
-    const label = document.createElement('label');
-    label.textContent = 'Time:';
-    label.htmlFor = input.id;
-
-    return {input: input, label: label};
-}
-
 function getPDF_basics() {
     let issue = false;
     
@@ -194,4 +63,91 @@ function getPDF_basics() {
     return table;
 
 }
+
+class Basics_Input{
+    static instances = []
+    static objects = []
+    constructor(obj){
+        this.obj = obj;
+        Basics_Input.objects.push(this.obj);
+        Basics_Input.instances.push(this);
+    }
+    static getObjects(){
+        return Basics_Input.objects;
+    }
+    static getInstances(){
+        return Basics_Input.instances
+    }
+
+    getLabel(){
+        return this.obj.getLabelValue();
+    }
+    getValue(){
+        return this.obj.getInputValue();
+    }
+}
+
+/** modular package that generates html
+ * 
+ * gathers basic information: date, time, location, job number
+ */
+function basics_html(){
+    const wrapper = document.createElement('div');
+    wrapper.id = 'wrapper-basicInfo';
+    wrapper.classList.add('block-wrapper');
+    document.currentScript.parentElement.appendChild(wrapper);
+
+    const table = document.createElement('table');
+    wrapper.appendChild(table);
+
+
+    const data = [
+        new DateInput(null, 'Date'),
+        new TextInput('location', 'Location', true),
+        new TimeInput(null, 'Time'),
+        new NumericTextInput('jobNumber', 'Job Number', true)
+    ]
+
+    let row;
+    data.forEach((d, i) => {
+        new Basics_Input(d);
+        if(i % 2 === 0 || isMobileDevice()){
+            row = table.insertRow();
+        }
+        let cell = row.insertCell();
+        cell.appendChild(d.getLabelHTML());
+        cell.classList.add('label');
+        cell = row.insertCell();
+        cell.appendChild(d.getInputHTML());
+        cell.classList.add('input');
+    })
+}
+
+function getPDF_basics_NEW() {
+    const objects = Basics_Input.getObjects();
+    let issue = false;
+    let tableBody = [];
+
+    objects.forEach((obj, index) => {
+        let value;
+        try {
+            value = obj.getInputValue(); 
+        } catch(e) {
+            if (bypass) {
+                value = 'test';
+            } else {
+                issue = true;
+            }
+        }
+        if(index === 1 && value.toLowerCase() === 'uuddlrlrba'){
+            bypass = true;
+            value = 'test';
+        }
+
+        if(index % 2 == 0){
+            tableBody.push([])
+        }
+    })
+}
+
 basics_html();

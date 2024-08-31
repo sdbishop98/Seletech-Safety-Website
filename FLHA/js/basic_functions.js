@@ -149,7 +149,6 @@ class Modal {
         this.#modal.style.display = 'none';
     }
 }
-
 class Modal_SignaturePad extends Modal {
     #sp
     constructor(id = null, thumbnail_height = 50) {
@@ -303,6 +302,175 @@ class SignaturePad {
     }
 }
 
+
+// INPUT CLASSES
+class AbstractInput {
+    static #instances = []
+    /** 
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [required = false]  affects the required property of input element
+     */
+    constructor(identifier, label_str = null, required = false) {
+        this.input = document.createElement('input');
+        this.input.id = identifier;
+        this.input.required = required
+
+        this._editListener();
+
+        if(label_str){
+            this.label = this.#create_label(label_str);
+        }
+
+        AbstractInput.#instances.push(this);
+    }
+
+    #create_label(label_str) {
+        const label = document.createElement('label');
+        label.textContent = label_str;
+        label.htmlFor = this.input.id;
+        return label;
+    }
+
+    getLabelHTML(){
+        return this.label;
+    }
+
+    getLabelValue(){
+        return this.label.textContent;
+    }
+
+    _editListener(){
+        this.input.addEventListener('input', () => {
+            this.input.classList.remove('error');
+        })
+    }
+
+    getInputValue(){
+        if(this.input.required && !this.input.value){
+            this.input.classList.add('error');
+            throw new Error('required input not provided');
+        }
+        return this.input.value;
+
+    }
+
+    getInputHTML() {
+        return this.input;
+    }
+
+    static getInstances() {
+        const instances = AbstractInput.getSuperInstances();
+        const filtered = instances.filter(instance => {
+            return instance.constructor.name === this.name;
+        })
+        console.log(filtered);
+        return filtered;
+    }
+
+    static getThis() {
+        return this;
+    }
+
+    static getSuperInstances(){
+        return AbstractInput.#instances;
+    }
+}
+class TextInput extends AbstractInput {
+    /** creates a text input element and optional corresponding label
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor(identifier, label_str = null, required = false){
+        identifier = `input-text-${identifier}`;
+        super(identifier, label_str, required);
+        this.input.type = 'text';
+    }
+}
+class NumericTextInput extends TextInput {
+    constructor(identifier, label_str, required = false, unit_str = null){
+        identifier = `numeric-${identifier}`;
+        super(identifier, label_str, required);
+        this.input.inputMode = 'numeric';
+        this.input.pattern = '[0-9]*';
+        this.input.classList.add('numeric');
+    }
+    _editListener(){
+        this.input.addEventListener('input', () => {
+            if(isNaN(this.input.value)){
+                this.input.classList.add('error');
+            } else if (this.input.classList.contains('error')){
+                this.input.classList.remove('error');
+            }
+        })
+    }
+}
+class DateInput extends TextInput {
+    /**creates a date input element and optional corresponding label
+     * 
+     * @param {string} [identifier = null] - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [populate = true] - if true, autopopulates field with current date
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor(identifier = null, label_str = null, populate = true, required = false){
+        super('', label_str, required);
+        if(identifier){
+            this.input.id = `input-date-${identifier}`
+        } else {
+            this.input.id = 'input-date';
+        }
+        this.input.type = 'date';
+        this.input.classList.add('dateTime');
+        if(populate){
+            this.#setCurrentDate()
+        }
+        if(label_str){
+            this.label.htmlFor = this.input.id;
+        }
+    }
+    #setCurrentDate(){
+        const now = new Date();
+        this.input.value = now.toISOString().split('T')[0];
+    }
+    
+}
+class TimeInput extends TextInput {
+    /**creates a time input element and optional corresponding label
+     * 
+     * @param {string} [identifier = null] - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [populate = true] - if true, autopopulates field with current time
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor(identifier = null, label_str = null, populate = true, required = false){
+        super('', label_str, required);
+        if(identifier){
+            this.input.id = `input-time-${identifier}`
+        } else {
+            this.input.id = 'input-time';
+        }
+        this.input.type = 'time';
+        this.input.classList.add('dateTime');
+        if(populate){
+            this.#setCurrentTime()
+        }
+        if(label_str){
+            this.label.htmlFor = this.input.id;
+        }
+    }
+
+    #setCurrentTime(){
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        this.input.value = `${hours}:${minutes}`;
+    }
+}
 /** links a stylesheet to the html 
  * @param {string} href - a link in href format eg: 'css/signature_block.css'
  */
