@@ -577,7 +577,7 @@ class RadioInput extends AbstractInput {
             const radio = document.createElement('input');
             radio.type = 'radio';
             radio.value = option;
-            radio.id = `input-radio-${toCamelCase(option)}`;
+            radio.id = `input-radio-${name}-${toCamelCase(option)}`;
             radio.name = name;
             radio.required = required;
             radio.addEventListener('input', () => {
@@ -626,6 +626,25 @@ class RadioInput extends AbstractInput {
         this.radios.forEach(radio => {
             radio.classList.add(className);
         })
+    }
+}
+class TextAreaInput extends AbstractInput {
+    /**
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {number} rows - how many rows (height) should the textarea have
+     * @param {number} cols - how many cols (width) should the textarea have
+     * @param {string} label_str - textContent for optional label element
+     * @param {boolean} required - affects the required property of input element
+     */
+    constructor (identifier, rows, cols, label_str = null, required = false) {
+        identifier = `input-textArea-${identifier}`;
+        super(identifier, label_str, required);
+        this.input.rows = rows;
+        this.input.cols = cols;
+    }
+    _elementType(){
+        return document.createElement('textarea');
     }
 }
 
@@ -955,7 +974,7 @@ function removeRadioClass(name, className){
     })
 }
 
-/** creates the HTML for a collapsible menu
+/** creates the HTML for a textarea
  * 
  * DOES NOT insert html
  * @param {string} identifier - a unique identifer for the html
