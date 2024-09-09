@@ -302,6 +302,11 @@ function getPDF_scope_OLD(){
     ]
 }
 
+class Scope_Input extends Input_Collection{
+    constructor (obj) {
+        super(obj)
+    }
+}
 function scope_html(){
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-scopeOfWork';
@@ -317,6 +322,7 @@ function scope_html(){
         cols = 23;
     }
     const workDescription = new TextAreaInput('workDescription', 4, cols, 'Work Description', true);
+    new Scope_Input(workDescription);
 
     let row = table.insertRow();
     let cell = row.insertCell();
@@ -333,6 +339,7 @@ function scope_html(){
         'Permit Required', 
         true
     );
+    new Scope_Input(permitRequired);
 
     row = table.insertRow();
     cell = row.insertCell();
@@ -366,6 +373,8 @@ function scope_html(){
         'IdentifyMissing', 
         'Identify what was missing and review with all applicable workers:'
     )
+    new Scope_Input(identifyMissing);
+
     row = table.insertRow();
     row.hidden = true;
     row.id = 'row-identifyMissing';
@@ -420,6 +429,7 @@ function scope_html(){
             label_str,
             true
         )
+        new Scope_Input(radio);
 
         let row = document.createElement('tr');
         row.classList.add('long-question');
@@ -443,6 +453,64 @@ function scope_html(){
         
         return row;
     }
+}
+
+function getPDF_scope(){
+    const objects = Scope_Input.getObjects();
+    let issue = false;
+    let pdfContent = [];
+
+    // Work Description
+    try {
+        pdfContent.push({
+            text: [
+                {text: `${objects[0].getLabelValue()}:\n`, bold: true},
+                {text: `${objects[0].getInputValue()}`}
+            ]
+        })
+    } catch (e) {
+        if (bypass) {
+            pdfContent.push({
+                text: [
+                    {text: `${objects[0].getLabelValue()}:\n`, bold: true},
+                    {text: 'test'}
+                ]
+            })
+        } else {
+            issue = true;
+        }
+    }
+
+    // Permit Required
+    try {
+        console.log(objects[1].getInputValue());
+        pdfContent.push({
+            table: {
+                body: [
+                    {text: `${objects[1].getLabelValue()}`},
+                    {text: `${objects[1].getInputValue()}`}
+                ]
+            },
+            layout: 'noBorders'
+        })
+    } catch (e) {
+        if(bypass){
+            pdfContent.push({
+                table: {
+                    body: [
+                        {text: `${objects[1].getLabelValue()}`},
+                        {text: `test`}
+                    ]
+                },
+                layout: 'noBorders'
+            })
+        } else {
+            issue = true;
+        }
+    }
+    console.log(pdfContent);
+
+    return pdfContent;
 }
 
 scope_html();

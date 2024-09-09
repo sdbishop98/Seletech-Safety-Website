@@ -65,7 +65,6 @@ function createPDF(){
     const pdf = pdfMake.createPdf(doc)
 
     upload_PDF(pdf, make_fileName());
-
     
 
     btn.style.backgroundColor = 'mediumpurple';
@@ -127,7 +126,7 @@ function createPDF(){
         const date = document.getElementById('input-date').value;
         const time = document.getElementById('input-time').value;
         if (!bypass) {
-            const jobNumber = document.getElementById('input-number-jobNumber').value;
+            const jobNumber = document.getElementById('input-text-numeric-jobNumber').value;
             
             const location  = document.getElementById('input-text-location').value;
             const name = document.getElementById('input-text-name-assessor').value;
@@ -148,18 +147,20 @@ function createPDF(){
         
 
         function uploadToDrive(base64, fileName) {
-            fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    type: 'pdf',
-                    name: fileName,
-                    content: base64
+            if(!bypass){
+                fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        type: 'pdf',
+                        name: fileName,
+                        content: base64
+                    })
                 })
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            console.log('PDF sent to google services');
-
+                .then(response => response.text())
+                .then(data => console.log(data))
+                console.log('PDF sent to google services');
+            }
+            
             const download = getRadioInput('download');
             if(download === 'Yes') {
                 pdf.download(make_fileName());
