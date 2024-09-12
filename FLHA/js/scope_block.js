@@ -371,7 +371,8 @@ function scope_html(){
     // Identify Missing
     const identifyMissing = new TextInput(
         'IdentifyMissing', 
-        'Identify what was missing and review with all applicable workers:'
+        'Identify what was missing and review with all applicable workers:',
+        true
     )
     new Scope_Input(identifyMissing);
 
@@ -461,18 +462,19 @@ function getPDF_scope(){
     let pdfContent = [];
 
     // Work Description
+    let active = objects.shift();
     try {
         pdfContent.push({
             text: [
-                {text: `${objects[0].getLabelValue()}:\n`, bold: true},
-                {text: `${objects[0].getInputValue()}`}
+                {text: `${active.getLabelValue()}:\n`, bold: true},
+                {text: `${active.getInputValue()}`}
             ]
         })
     } catch (e) {
         if (bypass) {
             pdfContent.push({
                 text: [
-                    {text: `${objects[0].getLabelValue()}:\n`, bold: true},
+                    {text: `${active.getLabelValue()}:\n`, bold: true},
                     {text: 'test'}
                 ]
             })
@@ -482,13 +484,13 @@ function getPDF_scope(){
     }
 
     // Permit Required
+    active = objects.shift();
     try {
-        console.log(objects[1].getInputValue());
         pdfContent.push({
             table: {
                 body: [
-                    {text: `${objects[1].getLabelValue()}`},
-                    {text: `${objects[1].getInputValue()}`}
+                    {text: `${active.getLabelValue()}`},
+                    {text: `${active.getInputValue()}`}
                 ]
             },
             layout: 'noBorders'
@@ -498,7 +500,7 @@ function getPDF_scope(){
             pdfContent.push({
                 table: {
                     body: [
-                        {text: `${objects[1].getLabelValue()}`},
+                        {text: `${active.getLabelValue()}`},
                         {text: `test`}
                     ]
                 },
@@ -508,6 +510,91 @@ function getPDF_scope(){
             issue = true;
         }
     }
+
+
+    let taskReady = {
+        table: {
+            body: []
+        },
+        layout: 'noBorders'
+    }
+    while (objects.length >= 1){
+        const active = objects.shift();
+        try {
+            const label = active.getLabelValue();
+            const input = active.getInputValue();
+            taskReady.table.body.push([label, input]);
+            if (label === 'Have all workers reviewed any and all applicable safe work procedures and Safety Data Sheets (SDS) that apply to this work?') {
+                if (input.toLowerCase() === 'no') {
+                    const active = objects.shift();
+                    try {
+                        const label = active.getLabelValue();
+                        const input = active.getInputValue();
+                        taskReady.table.body.push (
+                            [
+                                {
+                                    text: `${label} ${input}`,
+                                    colSpan: 2,
+                                    margin: [20, 0, 0, 0]
+                                },
+                                {}
+                            ]
+                        )
+                    } catch (e) {
+                        if(bypass) {
+                            const label = active.getLabelValue();
+                            const input = 'test';
+                            taskReady.table.body.push(
+                                [
+                                    {
+                                        text: `${label} ${input}`,
+                                        colSpan: 2,
+                                        margin: [20, 0, 0, 0]
+                                    },
+                                    {}
+                                ]
+                            )
+                        } else {
+                            issue = true;
+                        }
+                    }
+                } else {
+                    objects.shift();
+                }
+            }
+            if (label === 'Is this a high-risk task, such as working at heights, working in a confined space, working alone, live electrical work, working near power lines, or working near energized equipment?') {
+                console.log('made it A');
+                if (input.toLowerCase() === 'yes') {
+                    console.log('made it B');
+                    taskReady.table.body.push ([
+                        {
+                            text: 'Ensure that these risks are specifically identified and discuss the plan before proceeding.',
+                            colSpan: 2,
+                            margin: [20, 0, 0, 0]
+                        },
+                        {}
+                    ])
+                    console.log('made it C');
+                }
+            }
+        } catch (e) {
+            if(bypass) {
+                const label = active.getLabelValue();
+                const input = 'test';
+                taskReady.table.body.push([label, input]);
+            } else {
+                issue = true;
+            }
+        }
+    }
+
+    pdfContent.push(taskReady);
+
+
+    if(issue && !bypass) {
+        throw new Error('Missing Data');
+    }
+
     console.log(pdfContent);
 
     return pdfContent;

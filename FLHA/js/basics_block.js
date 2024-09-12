@@ -64,23 +64,6 @@ function getPDF_basics_OLD() {
 
 }
 
-// class Basics_Input{
-//     static objects = [];
-//     constructor(obj){
-//         this.obj = obj;
-//         Basics_Input.objects.push(this.obj);
-//     }
-//     static getObjects(){
-//         return Basics_Input.objects;
-//     }
-
-//     getLabel(){
-//         return this.obj.getLabelValue();
-//     }
-//     getValue(){
-//         return this.obj.getInputValue();
-//     }
-// }
 class Basics_Input extends Input_Collection{
     constructor (obj) {
         super(obj);
@@ -139,7 +122,8 @@ function getPDF_basics() {
                 issue = true;
             }
         }
-        if(index === 1 && value.toLowerCase() === 'uuddlrlrba'){
+
+        if(index === 1 && value && value.toLowerCase() === 'uuddlrlrba'){
             bypass = true;
             value = 'test';
         }
@@ -151,12 +135,18 @@ function getPDF_basics() {
         tableBody[tableBody.length-1].push({text: value});
     })
 
+    if(issue && !bypass) {
+        throw new Error('Missing Data');
+    }
+
     const table = {
         table: {
             widths: '*',
             body: tableBody
         }
     }
+
+    
 
     return table
 }

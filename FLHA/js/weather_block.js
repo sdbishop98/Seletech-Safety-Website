@@ -257,6 +257,10 @@ function getPDF_weather(){
         ])
     })
 
+    if(issue && !bypass) {
+        throw new Error('Missing Data');
+    }
+
     return {
         table: {
             widths: '*',
