@@ -1,5 +1,5 @@
 // I think it will be best to use collapsable menus
-function hazards_html(){
+function hazards_html_OLD(){
     // modular package that generates html
     // gathers scope of work
     // utilizes helper functions in order to keep things tidy
@@ -11,7 +11,7 @@ function hazards_html(){
     if (!isMobileDevice()) {
         wrapper.classList.add('block-wrapper');
     }
-    wrapper.classList.add('collapsible-root')
+    wrapper.classList.add('collapsible-root');
     document.body.appendChild(wrapper);
 
     const task = create_task_segment();
@@ -250,4 +250,21 @@ function getPDF_hazards() {
     }
 }
 
+function hazards_html(){
+    const wrapper = document.createElement('div');
+    wrapper.id = 'wrapper-hazards';
+    if (!isMobileDevice()) {
+        wrapper.classList.add('block-wrapper');
+    }
+    wrapper.classList.add('collapsible-root');
+    document.currentScript.parentElement.appendChild(wrapper);
+
+    const collapsible = new Collapsible();
+    wrapper.appendChild(collapsible.getHTML());
+
+    const task = new TextInput('test', 'TEST', false);
+    collapsible.setHeader(task.getLabelHTML());
+}
+
+hazards_html_OLD();
 hazards_html();

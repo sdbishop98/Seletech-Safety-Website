@@ -1,58 +1,4 @@
 // CLASSES
-class Table { // I don't think I used this one
-    constructor() {
-        this.element = document.createElement('table');
-        this.head = {
-            parent: this,
-            element: document.createElement('thead'),
-            rows: [],
-            addRow: function() {
-                const row = new this.parent.Row(this.element);
-                this.rows.push(row);
-                return row;
-            }
-        }
-        this.element.appendChild(this.head.element);
-
-        this.body = {
-            parent: this,
-            element: document.createElement('tbody'),
-            rows: [],
-            addRow: function() {
-                const row = new this.parent.Row(this.element);
-                this.rows.push(row);
-                return row;
-            }
-        }
-        this.element.appendChild(this.body.element);
-    }
-
-    /**
-     * Places a title in the table header
-     * @param {string} title - what the title should read
-     * @param {number} colSpan - optional - colSpan for the title cell
-     */
-    setTitle(title, colSpan = null) {
-        const cell = this.head.addRow().addCell();
-        if (colSpan) {
-            cell.colSpan = colSpan;
-        }
-        cell.textContent = title;
-    }
-
-    Row = class {
-        constructor(parent) {
-            this.element = parent.insertRow();
-            this.cells = [];
-        }
-        addCell() {
-            const cell = this.element.insertCell();
-            this.cells.push(cell);
-            return cell;
-        }
-    }
-}
-
 class Modal {
     // static #modals = []
     static #instances = []
@@ -299,6 +245,74 @@ class SignaturePad {
         }));
 
         this.getPad().fromData(scale.data);
+    }
+}
+
+class Collapsible {
+    #wrapper;
+    #header;
+    #header_con;
+    #body;
+    #btn_expand;
+    #ancestors;
+    constructor(){
+        this.#wrapper = document.createElement('div');
+        this.#wrapper.classList.add('collapsible-wrapper');
+        this.#header = document.createElement('div');
+        this.#header.classList.add('collapsible-header');
+        this.#body = document.createElement('div');
+        this.#body.classList.add('collapsible-content');
+        this.#wrapper.appendChild(this.#header);
+        this.#wrapper.appendChild(this.#body);
+
+        this.#header_con = document.createElement('div');
+        this.#header.appendChild(this.#header_con);
+
+        this.#btn_expand = document.createElement('button');
+        this.#btn_expand.classList.add('collapsible-expand');
+        this.#header.appendChild(this.#btn_expand);
+        this.#btn_expand.onclick = this.#expand;
+    }
+
+    #expand(){
+        this.#btn_expand.classList.toggle('collapsible-active');
+        this.#getAncestors();
+        if (this.#body.style.maxHeight) {
+            this.#header.style.borderRadius = '10px';
+            this.#body.style.maxHeight = null;
+            this.#ancestors.forEach(ancestor => {
+                ancestor.style.maxHeight = `${ancestor.scrollHeight - this.#body.scrollHeight}px`
+            });
+        } else {
+            this.#header.style.borderBottomRightRadius = '0';
+            this.#header.style.borderBottomLeftRadius = '0';
+            this.#body.style.maxHeight = this.#body.scrollHeight = 'px';
+            this.#ancestors.forEach(ancestor => {
+                ancestor.style.maxHeight = `${ancestor.scrollHeight + this.#body.scrollHeight}px`;
+            });
+        }
+    }
+
+    #getAncestors(){
+        let element = this.#wrapper.parentElement;
+        while (element) {
+            if (element.classList && element.classList.contains('collapsible-content')){
+                this.#ancestors.push(element);
+            }
+            element = element.parentElement;
+        }
+    }
+
+    getHTML(){
+        return this.#wrapper;
+    }
+
+    setHeader(html) {
+        this.#header_con.appendChild(html);
+    }
+
+    setContent(html) {
+        this.#body.appendChild(html);
     }
 }
 
@@ -728,7 +742,7 @@ function make_textInput_tableHtml(row, identifier, label_str, required = false){
     cell_input.appendChild(content.input);
 }
 
-/** creates the HTML for a collapsible menu
+/** creates the HTML for a Text Input Label Pair
  * 
  * DOES NOT insert html
  * @param {string} identifier - a unique identifer for the html
