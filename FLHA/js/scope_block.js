@@ -563,9 +563,7 @@ function getPDF_scope(){
                 }
             }
             if (label === 'Is this a high-risk task, such as working at heights, working in a confined space, working alone, live electrical work, working near power lines, or working near energized equipment?') {
-                console.log('made it A');
                 if (input.toLowerCase() === 'yes') {
-                    console.log('made it B');
                     taskReady.table.body.push ([
                         {
                             text: 'Ensure that these risks are specifically identified and discuss the plan before proceeding.',
@@ -574,7 +572,6 @@ function getPDF_scope(){
                         },
                         {}
                     ])
-                    console.log('made it C');
                 }
             }
         } catch (e) {
@@ -594,8 +591,6 @@ function getPDF_scope(){
     if(issue && !bypass) {
         throw new Error('Missing Data');
     }
-
-    console.log(pdfContent);
 
     return pdfContent;
 }

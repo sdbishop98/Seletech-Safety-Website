@@ -271,29 +271,36 @@ class Collapsible {
         this.#btn_expand = document.createElement('button');
         this.#btn_expand.classList.add('collapsible-expand');
         this.#header.appendChild(this.#btn_expand);
-        this.#btn_expand.onclick = this.#expand;
+        this.#btn_expand.onclick = () => this.#expand();
     }
 
     #expand(){
         this.#btn_expand.classList.toggle('collapsible-active');
-        this.#getAncestors();
+        this.getAncestors();
         if (this.#body.style.maxHeight) {
             this.#header.style.borderRadius = '10px';
             this.#body.style.maxHeight = null;
-            this.#ancestors.forEach(ancestor => {
-                ancestor.style.maxHeight = `${ancestor.scrollHeight - this.#body.scrollHeight}px`
-            });
+            if(this.#ancestors.length >= 1) {
+                this.#ancestors.forEach(ancestor => {
+                    ancestor.style.maxHeight = `${ancestor.scrollHeight - this.#body.scrollHeight}px`
+                });
+            }
+            
         } else {
             this.#header.style.borderBottomRightRadius = '0';
             this.#header.style.borderBottomLeftRadius = '0';
-            this.#body.style.maxHeight = this.#body.scrollHeight = 'px';
-            this.#ancestors.forEach(ancestor => {
-                ancestor.style.maxHeight = `${ancestor.scrollHeight + this.#body.scrollHeight}px`;
-            });
+            this.#body.style.maxHeight = this.#body.scrollHeight + 'px';
+            if(this.#ancestors.length >= 1) {
+                this.#ancestors.forEach(ancestor => {
+                    ancestor.style.maxHeight = `${ancestor.scrollHeight + this.#body.scrollHeight}px`;
+                });
+            }
+            
         }
     }
 
-    #getAncestors(){
+    getAncestors(){
+        this.#ancestors = []
         let element = this.#wrapper.parentElement;
         while (element) {
             if (element.classList && element.classList.contains('collapsible-content')){
@@ -301,10 +308,19 @@ class Collapsible {
             }
             element = element.parentElement;
         }
+        return this.#ancestors;
     }
 
     getHTML(){
         return this.#wrapper;
+    }
+
+    getHeaderHTML() {
+        return this.#header_con;
+    }
+
+    getContentHTML() {
+        return this.#body;
     }
 
     setHeader(html) {
@@ -336,7 +352,6 @@ class Input_Collection{
         });
         return filtered;
     }
-    
     getObject(){
         return this.obj;
     }
@@ -1045,6 +1060,7 @@ function create_collapsible(id = null) {
         const content = this.parentElement.nextElementSibling;
         const header = this.parentElement;
         const ancestors = getAncestorsWithClass(this, 'collapsible-content');
+        console.log(content.scrollHeight);
         if (content.style.maxHeight) {
             header.style.borderRadius = '10px';
             content.style.maxHeight = null;
