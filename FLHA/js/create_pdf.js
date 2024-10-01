@@ -65,7 +65,6 @@ function createPDF(){
     const pdf = pdfMake.createPdf(doc)
 
     upload_PDF(pdf, make_fileName());
-
     
 
     btn.style.backgroundColor = 'mediumpurple';
@@ -111,8 +110,9 @@ function createPDF(){
             } else {
                 data.signatures = getPDF_signatures();
             }
+            // data.signatures = getPDF_signatures();
         } catch (e) {
-            issue = true;
+            // issue = true;
             console.log('MISSING - signatures')
         }
         if(issue && !bypass) {
@@ -123,13 +123,19 @@ function createPDF(){
     }
 
     function make_fileName(){
-        const jobNumber = document.getElementById('input-number-jobNumber').value;
         const date = document.getElementById('input-date').value;
         const time = document.getElementById('input-time').value;
-        const location  = document.getElementById('input-text-location').value;
-        const name = document.getElementById('input-text-name-assessor').value;
+        if (!bypass) {
+            const jobNumber = document.getElementById('input-text-numeric-jobNumber').value;
+            
+            const location  = document.getElementById('input-text-location').value;
+            const name = document.getElementById('input-text-name-assessor').value;
 
-        return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
+            return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
+        } else {
+            return `TEST-DISREGARD_${date}_${time}`;
+        }
+        
     }
 
     function upload_PDF(pdf, fileName){
@@ -141,18 +147,20 @@ function createPDF(){
         
 
         function uploadToDrive(base64, fileName) {
-            fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    type: 'pdf',
-                    name: fileName,
-                    content: base64
+            if(!bypass){
+                fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        type: 'pdf',
+                        name: fileName,
+                        content: base64
+                    })
                 })
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            console.log('PDF sent to google services');
-
+                .then(response => response.text())
+                .then(data => console.log(data))
+                console.log('PDF sent to google services');
+            }
+            
             const download = getRadioInput('download');
             if(download === 'Yes') {
                 pdf.download(make_fileName());

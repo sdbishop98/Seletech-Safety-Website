@@ -1,58 +1,4 @@
 // CLASSES
-class Table { // I don't think I used this one
-    constructor() {
-        this.element = document.createElement('table');
-        this.head = {
-            parent: this,
-            element: document.createElement('thead'),
-            rows: [],
-            addRow: function() {
-                const row = new this.parent.Row(this.element);
-                this.rows.push(row);
-                return row;
-            }
-        }
-        this.element.appendChild(this.head.element);
-
-        this.body = {
-            parent: this,
-            element: document.createElement('tbody'),
-            rows: [],
-            addRow: function() {
-                const row = new this.parent.Row(this.element);
-                this.rows.push(row);
-                return row;
-            }
-        }
-        this.element.appendChild(this.body.element);
-    }
-
-    /**
-     * Places a title in the table header
-     * @param {string} title - what the title should read
-     * @param {number} colSpan - optional - colSpan for the title cell
-     */
-    setTitle(title, colSpan = null) {
-        const cell = this.head.addRow().addCell();
-        if (colSpan) {
-            cell.colSpan = colSpan;
-        }
-        cell.textContent = title;
-    }
-
-    Row = class {
-        constructor(parent) {
-            this.element = parent.insertRow();
-            this.cells = [];
-        }
-        addCell() {
-            const cell = this.element.insertCell();
-            this.cells.push(cell);
-            return cell;
-        }
-    }
-}
-
 class Modal {
     // static #modals = []
     static #instances = []
@@ -108,7 +54,9 @@ class Modal {
     static getInstances(){
         return Modal.#instances;
     }
-    
+    static removeLast(){
+        Modal.#instances.pop()
+    }
 
     #init_buttons(){
         const open = document.createElement('button');
@@ -147,7 +95,6 @@ class Modal {
         this.#modal.style.display = 'none';
     }
 }
-
 class Modal_SignaturePad extends Modal {
     #sp
     constructor(id = null, thumbnail_height = 50) {
@@ -301,6 +248,435 @@ class SignaturePad {
     }
 }
 
+class Collapsible {
+    #wrapper;
+    #header;
+    #header_con;
+    #body;
+    #btn_expand;
+    #ancestors;
+    constructor(){
+        this.#wrapper = document.createElement('div');
+        this.#wrapper.classList.add('collapsible-wrapper');
+        this.#header = document.createElement('div');
+        this.#header.classList.add('collapsible-header');
+        this.#body = document.createElement('div');
+        this.#body.classList.add('collapsible-content');
+        this.#wrapper.appendChild(this.#header);
+        this.#wrapper.appendChild(this.#body);
+
+        this.#header_con = document.createElement('div');
+        this.#header.appendChild(this.#header_con);
+
+        this.#btn_expand = document.createElement('button');
+        this.#btn_expand.classList.add('collapsible-expand');
+        this.#header.appendChild(this.#btn_expand);
+        this.#btn_expand.onclick = () => this.#expand();
+    }
+
+    #expand(){
+        this.#btn_expand.classList.toggle('collapsible-active');
+        this.getAncestors();
+        if (this.#body.style.maxHeight) {
+            this.#header.style.borderRadius = '10px';
+            this.#body.style.maxHeight = null;
+            if(this.#ancestors.length >= 1) {
+                this.#ancestors.forEach(ancestor => {
+                    ancestor.style.maxHeight = `${ancestor.scrollHeight - this.#body.scrollHeight}px`
+                });
+            }
+            
+        } else {
+            this.#header.style.borderBottomRightRadius = '0';
+            this.#header.style.borderBottomLeftRadius = '0';
+            this.#body.style.maxHeight = this.#body.scrollHeight + 'px';
+            if(this.#ancestors.length >= 1) {
+                this.#ancestors.forEach(ancestor => {
+                    ancestor.style.maxHeight = `${ancestor.scrollHeight + this.#body.scrollHeight}px`;
+                });
+            }
+            
+        }
+    }
+
+    getAncestors(){
+        this.#ancestors = []
+        let element = this.#wrapper.parentElement;
+        while (element) {
+            if (element.classList && element.classList.contains('collapsible-content')){
+                this.#ancestors.push(element);
+            }
+            element = element.parentElement;
+        }
+        return this.#ancestors;
+    }
+
+    getHTML(){
+        return this.#wrapper;
+    }
+
+    getHeaderHTML() {
+        return this.#header_con;
+    }
+
+    getContentHTML() {
+        return this.#body;
+    }
+
+    setHeader(html) {
+        this.#header_con.appendChild(html);
+    }
+
+    setContent(html) {
+        this.#body.appendChild(html);
+    }
+}
+
+class Input_Collection{
+    static #objects = [];
+    static #instances = []
+    constructor (obj) {
+        this.obj = obj;
+        Input_Collection.#objects.push(this.obj);
+        Input_Collection.#instances.push(this);
+    }
+    static getObjects(){
+        const instances = this.getInstances();
+        const objects = instances.map(instance => instance.getObject());
+        return objects;
+    }
+    static getInstances(){
+        const instances = Input_Collection.#instances;
+        const filtered = instances.filter(instance => {
+            return instance.constructor.name === this.name;
+        });
+        return filtered;
+    }
+    getObject(){
+        return this.obj;
+    }
+    getLabel(){
+        return this.obj.getLabelValue();
+    }
+    getValue(){
+        return this.obj.getInputValue();
+    }
+}
+// INPUT CLASSES
+class AbstractInput {
+    static #instances = []
+    /** 
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [required = false]  affects the required property of input element
+     */
+    constructor(identifier, label_str = null, required = false, ...rest) {
+        this._createInput(identifier, required, ...rest);
+
+        this._editListener();
+
+        if(label_str){
+            this.label = this._createLabel(label_str);
+        }
+
+        AbstractInput.#instances.push(this);
+    }
+    // CONSTRUCTOR HELPERS
+    _editListener(){
+        this.input.addEventListener('input', () => {
+            this.input.classList.remove('error');
+        })
+    }
+    _elementType(){
+        return document.createElement('input');
+    }
+    _createInput(identifier, required){
+        this.input = this._elementType();
+        this.input.id = identifier;
+        this.input.required = required;
+    }
+    _createLabel(label_str) {
+        const label = document.createElement('label');
+        label.textContent = label_str;
+        label.htmlFor = this.input.id;
+        return label;
+    }
+    // STATIC METHODS
+    static getInstances() {
+        const instances = AbstractInput.getSuperInstances();
+        const filtered = instances.filter(instance => {
+            return instance.constructor.name === this.name;
+        })
+        return filtered;
+    }
+    static getSuperInstances(){
+        return AbstractInput.#instances;
+    }
+    // GETTERS
+    getLabelHTML(){
+        return this.label;
+    }
+    getLabelValue(){
+        return this.label.textContent;
+    }
+    getInputValue(){
+        if(this.input.required && !this.input.value){
+            this.input.classList.add('error');
+            throw new Error('required input not provided');
+        }
+        return this.input.value;
+
+    }
+    getInputHTML() {
+        return this.input;
+    }
+}
+class TextInput extends AbstractInput {
+    /** creates a text input element and optional corresponding label
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor(identifier, label_str = null, required = false){
+        identifier = `input-text-${identifier}`;
+        super(identifier, label_str, required);
+        this.input.type = 'text';
+    }
+}
+class NumericTextInput extends TextInput {
+    constructor(identifier, label_str, required = false){
+        identifier = `numeric-${identifier}`;
+        super(identifier, label_str, required);
+        this.input.inputMode = 'numeric';
+        this.input.pattern = '[0-9]*';
+        this.input.classList.add('numeric');
+    }
+    _editListener(){
+        this.input.addEventListener('input', () => {
+            if(isNaN(this.input.value)){
+                this.input.classList.add('error');
+            } else if (this.input.classList.contains('error')){
+                this.input.classList.remove('error');
+            }
+        })
+    }
+    getInputHTML(unit_str = null){
+        if(unit_str){
+            const label = document.createElement('label');
+            label.classList.add('unit');
+            label.appendChild(this.input);
+            const unit = document.createElement('span');
+            unit.innerHTML = unit_str;
+            label.appendChild(unit);
+            return label;
+        }
+        return this.input;
+    }
+}
+class DateInput extends TextInput {
+    /**creates a date input element and optional corresponding label
+     * 
+     * @param {string} [identifier = null] - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [populate = true] - if true, autopopulates field with current date
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor(identifier = null, label_str = null, populate = true, required = false){
+        super('', label_str, required);
+        if(identifier){
+            this.input.id = `input-date-${identifier}`
+        } else {
+            this.input.id = 'input-date';
+        }
+        this.input.type = 'date';
+        this.input.classList.add('dateTime');
+        if(populate){
+            this.#setCurrentDate()
+        }
+        if(label_str){
+            this.label.htmlFor = this.input.id;
+        }
+    }
+    #setCurrentDate(){
+        const now = new Date();
+        this.input.value = now.toISOString().split('T')[0];
+    }
+    
+}
+class TimeInput extends TextInput {
+    /**creates a time input element and optional corresponding label
+     * 
+     * @param {string} [identifier = null] - a unique identifier for the HTML input element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [populate = true] - if true, autopopulates field with current time
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor(identifier = null, label_str = null, populate = true, required = false){
+        super('', label_str, required);
+        if(identifier){
+            this.input.id = `input-time-${identifier}`
+        } else {
+            this.input.id = 'input-time';
+        }
+        this.input.type = 'time';
+        this.input.classList.add('dateTime');
+        if(populate){
+            this.#setCurrentTime()
+        }
+        if(label_str){
+            this.label.htmlFor = this.input.id;
+        }
+    }
+
+    #setCurrentTime(){
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        this.input.value = `${hours}:${minutes}`;
+    }
+
+    getInputValue(){
+        const value = this.input.value;
+        let [hours, minutes] = value.split(':');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes} ${ampm}`;
+    }
+}
+class SelectInput extends AbstractInput {
+    /** creates a select element and optional corresponding label
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {string[]} options - the options available for selection
+     * @param {boolean} [start_blank = true] - if true, inserts a blank default element
+     * @param {string} [label_str = null] - textContent for optional label element
+     * @param {boolean} [required = false] - affects the required property of input element
+     */
+    constructor (identifier, options, start_blank = true, label_str = null, required = false) {
+        identifier = `input-select-${identifier}`;
+        super(identifier, label_str, required);
+
+        if (start_blank) {
+            const undecided = document.createElement('option');
+            undecided.value = '';
+            undecided.selected = true;
+            undecided.disabled = true;
+            undecided.hidden = true;
+            undecided.textContent = 'Please select an option';
+            undecided.classList.add('placeholder');
+            this.input.appendChild(undecided);
+        }
+        options.forEach(option_str => {
+            const option = document.createElement('option');
+            option.textContent = option_str;
+            option.value = option_str;
+            this.input.appendChild(option);
+        })
+    }
+    _editListener() {
+        this.input.addEventListener('change', () => {
+            this.input.classList.remove('error');
+        })
+    }
+    _elementType() {
+        return document.createElement('select');
+    }
+}
+class RadioInput extends AbstractInput {
+    /**
+     * 
+     * @param {string} name 
+     * @param {string[]} options 
+     * @param {string} label_str 
+     * @param {boolean} required 
+     */
+    #required
+    constructor (name, options, label_str = null, required = false) {
+        super(options, label_str, required, name)
+        this.#required = required;
+    }
+    _createInput(options, required, name) {
+        // const identifiers = options.map((option) => toCamelCase(option));
+        this.input = [];
+        this.radios = []
+        options.forEach((option, index) => {
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.value = option;
+            radio.id = `input-radio-${name}-${toCamelCase(option)}`;
+            radio.name = name;
+            radio.required = required;
+            radio.addEventListener('input', () => {
+                this.removeClass('error')
+            });
+            this.radios.push(radio);
+
+            const label = document.createElement('label');
+            label.textContent = option;
+            label.htmlFor = radio.id;
+
+            label.insertBefore(radio, label.firstChild)
+
+            this.input.push(label);
+        })
+    }
+    _editListener(){
+        return;
+    }
+    _createLabel(label_str){
+        const p = document.createElement('p');
+        p.textContent = label_str;
+        return p;
+    }
+    // GETTERS
+    getInputValue(){
+        let selectedValue = null;
+        for(const radio of this.radios) {
+            if(radio.checked){
+                selectedValue = radio.value;
+            }
+        }
+        if(this.#required && !selectedValue) {
+            this.addClass('error');
+            throw new Error('required input not provided');
+        }
+        return selectedValue;
+    }
+    // SETTERS
+    removeClass(className){
+        this.radios.forEach(radio => {
+            radio.classList.remove(className)
+        })
+    }
+    addClass(className){
+        this.radios.forEach(radio => {
+            radio.classList.add(className);
+        })
+    }
+}
+class TextAreaInput extends AbstractInput {
+    /**
+     * 
+     * @param {string} identifier - a unique identifier for the HTML input element
+     * @param {number} rows - how many rows (height) should the textarea have
+     * @param {number} cols - how many cols (width) should the textarea have
+     * @param {string} label_str - textContent for optional label element
+     * @param {boolean} required - affects the required property of input element
+     */
+    constructor (identifier, rows, cols, label_str = null, required = false) {
+        identifier = `input-textArea-${identifier}`;
+        super(identifier, label_str, required);
+        this.input.rows = rows;
+        this.input.cols = cols;
+    }
+    _elementType(){
+        return document.createElement('textarea');
+    }
+}
+
 /** links a stylesheet to the html 
  * @param {string} href - a link in href format eg: 'css/signature_block.css'
  */
@@ -381,7 +757,7 @@ function make_textInput_tableHtml(row, identifier, label_str, required = false){
     cell_input.appendChild(content.input);
 }
 
-/** creates the HTML for a collapsible menu
+/** creates the HTML for a Text Input Label Pair
  * 
  * DOES NOT insert html
  * @param {string} identifier - a unique identifer for the html
@@ -627,7 +1003,7 @@ function removeRadioClass(name, className){
     })
 }
 
-/** creates the HTML for a collapsible menu
+/** creates the HTML for a textarea
  * 
  * DOES NOT insert html
  * @param {string} identifier - a unique identifer for the html
@@ -684,6 +1060,7 @@ function create_collapsible(id = null) {
         const content = this.parentElement.nextElementSibling;
         const header = this.parentElement;
         const ancestors = getAncestorsWithClass(this, 'collapsible-content');
+        console.log(content.scrollHeight);
         if (content.style.maxHeight) {
             header.style.borderRadius = '10px';
             content.style.maxHeight = null;
