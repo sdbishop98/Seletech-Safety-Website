@@ -1,6 +1,6 @@
 /** generates the html for the signature block
  */
-function signatures_html() {    
+function signatures_html_OLD() {    
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-signatures';
     wrapper.classList.add('block-wrapper');
@@ -221,6 +221,89 @@ function getPDF_signatures(){
     }
 }   
 
+function signatures_html(){
+    class Signature_Block{
+        constructor(id, required = false){
+            this.id = id;
+            this.required = required;
+
+            this.table = document.createElement('table');
+            this.table.classList.add('signature');
+            this.head = document.createElement('thead');
+            this.body = document.createElement('tbody');
+            this.table.appendChild(this.body);
+            this.table.appendChild(this.head);
+        }
+
+        getHTML(){
+            return this.table;
+        }
+
+        /**
+         * 
+         * @param {string} title 
+         */
+        setTitle(title){
+            const cell = assessor.head.insertRow().insertCell();
+            cell.textContent = title;
+        }
+
+        create_signature_segment(){
+            const name = new TextInput(this.id, 'Name:', this.required);
+
+            let tbody = document.createElement('tbody');
+            tbody.classList.add('signature');
+
+            let row = tbody.insertRow();
+            let cell = row.insertCell();
+
+            cell.appendChild(name.getLabelHTML());
+            cell.classList.add('accent');
+            cell.style.borderTopLeftRadius = '10px'
+            cell.style.padding = '0.1rem';
+
+            // get the height
+            document.body.appendChild(tbody);
+            const height = cell.offsetHeight * 2;
+            document.body.removeChild(tbody);
+
+            const modal = new Modal_SignaturePad(this.id, height);
+
+            cell = row.insertCell();
+            modal.getHTML().style.height = height + 'px';
+            cell.appendChild(modal.getHTML());
+            cell.classList.add('secondary');
+            cell.style.borderRadius = '0 10px 10px 0';
+            cell.rowSpan = 2;
+
+            row = tbody.insertRow();
+            cell = row.insertCell();
+            cell.appendChild(name.getInputHTML());
+            cell.classList.add('accent');
+            cell.style.borderBottomLeftRadius = '10px';
+            name.getInputHTML().style.borderRadius = '0 0 0 5px';
+
+            this.body.appendChild(tbody);
+        }
+        
+    }
+
+
+    const wrapper = document.createElement('div');
+    wrapper.id = 'wrapper-scopeOfWork';
+    wrapper.classList.add('block-wrapper');
+    document.currentScript.parentElement.appendChild(wrapper);
+
+    const assessor = new Signature_Block('assessor');
+    assessor.setTitle('Assessed By:');
+    assessor.create_signature_segment();
+    assessor.create_signature_segment();
+    wrapper.appendChild(assessor.getHTML());
+    
+
+
+}
+
 window.addEventListener('resize', function() {
     const modals = Modal_SignaturePad.getInstances();
     for (const modal of modals) {
@@ -231,4 +314,5 @@ window.addEventListener('resize', function() {
     }
 })
 
+signatures_html_OLD();
 signatures_html();

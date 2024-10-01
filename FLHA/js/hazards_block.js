@@ -530,7 +530,6 @@ function getPDF_hazards(){
 
     // const task_wrappers = document.getElementsByClassName('wrapper-task');
     const tasks = Tasks_Input.getInstances()
-    console.log(tasks);
     const blank = {text: '', border: [true, false, true, false]};
     let issue = false
     tasks.forEach(task => {
@@ -547,7 +546,6 @@ function getPDF_hazards(){
         }
         row.push({text: text, border: [true, true, true, false]});
         const hazards = task.getHazards();
-        console.log(hazards);
         hazards.forEach((hazard, index) => {
             let text;
             try{
@@ -568,7 +566,6 @@ function getPDF_hazards(){
                     // a linked copy will cause bugs
             }
             const controls = hazard.getControls();
-            console.log(controls);
             controls.forEach((control, index) => {
                 let text;
                 try {
@@ -590,7 +587,6 @@ function getPDF_hazards(){
             })
         })
     })
-    console.log(tableBody);
     tableBody[tableBody.length - 1][0].border[3] = true;
     tableBody[tableBody.length - 1][1].border[3] = true;
     return {
