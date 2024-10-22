@@ -226,8 +226,11 @@ function signatures_html(){
         constructor(id, required = false){
             this.id = id;
             this.required = required;
+            this.segments = [];
 
+            this.wrapper = document.createElement('div');
             this.table = document.createElement('table');
+            this.wrapper.appendChild(this.table);
             this.table.classList.add('signature');
             this.head = document.createElement('thead');
             this.body = document.createElement('tbody');
@@ -236,7 +239,11 @@ function signatures_html(){
         }
 
         getHTML(){
-            return this.table;
+            return this.wrapper;
+        }
+
+        getSegments(){
+            return this.segments;
         }
 
         /**
@@ -248,7 +255,7 @@ function signatures_html(){
             cell.textContent = title;
         }
 
-        create_signature_segment(){
+        addSegment(){
             const name = new TextInput(this.id, 'Name:', this.required);
 
             let tbody = document.createElement('tbody');
@@ -284,6 +291,48 @@ function signatures_html(){
             name.getInputHTML().style.borderRadius = '0 0 0 5px';
 
             this.body.appendChild(tbody);
+            this.segments.push({signature: modal.getSignaturePad(), name: name});
+        }
+        removeSegment(){
+            if(this.segments.length <= 1) {
+                console.log('Error: Must have at least one reviewer');
+                return;
+            }
+            
+            const row = this.body.lastElementChild;
+            row.remove();
+            this.segments.pop();
+        }
+
+        addButtons(text = null){
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            if(isMobileDevice()){
+                wrapper.style.flexDirection = 'column';
+            } else {
+                wrapper.style.flexDirection = 'row';
+            }
+            this.table.appendChild(wrapper);
+
+            if(text){
+                text = ` ${text}`;
+            } else {
+                text = '';
+            }
+
+            const btn_add = document.createElement('button');
+            btn_add.classList.add('fill');
+            btn_add.textContent = `ADD${text}`;
+            btn_add.onclick = () => this.addSegment();
+            wrapper.appendChild(btn_add);
+
+            const btn_remove = document.createElement('button');
+            btn_remove.classList.add('fill');
+            btn_remove.classList.add('fill');
+            btn_remove.textContent = `REMOVE${text}`;
+            btn_remove.onclick = () => this.removeSegment();
+            wrapper.appendChild(btn_remove);
+
         }
         
     }
@@ -296,8 +345,8 @@ function signatures_html(){
 
     const assessor = new Signature_Block('assessor');
     assessor.setTitle('Assessed By:');
-    assessor.create_signature_segment();
-    assessor.create_signature_segment();
+    assessor.addSegment();
+    assessor.addButtons('TEST');
     wrapper.appendChild(assessor.getHTML());
     
 
