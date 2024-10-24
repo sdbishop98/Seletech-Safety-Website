@@ -1,4 +1,4 @@
-function scope_html(){
+function scope_html_OLD(){
     // modular package that generates html
     // gathers scope of work
     // utilizes helper functions in order to keep things tidy
@@ -165,7 +165,7 @@ function scope_html(){
     }
 }
 
-function getPDF_scope(){
+function getPDF_scope_OLD(){
     let issue = false;
 
     let description;
@@ -302,10 +302,303 @@ function getPDF_scope(){
     ]
 }
 
+class Scope_Input extends Input_Collection{
+    constructor (obj) {
+        super(obj)
+    }
+}
+function scope_html(){
+    const wrapper = document.createElement('div');
+    wrapper.id = 'wrapper-scopeOfWork';
+    wrapper.classList.add('block-wrapper');
+    document.currentScript.parentElement.appendChild(wrapper);
+
+    // Work Description
+    let table = document.createElement('table');
+    wrapper.appendChild(table);
+
+    let cols = 50;
+    if(isMobileDevice()){
+        cols = 23;
+    }
+    const workDescription = new TextAreaInput('workDescription', 4, cols, 'Work Description', true);
+    new Scope_Input(workDescription);
+
+    let row = table.insertRow();
+    let cell = row.insertCell();
+    cell.appendChild(workDescription.getLabelHTML());
+    row = table.insertRow();
+    cell = row.insertCell();
+    cell.appendChild(workDescription.getInputHTML());
+    cell.colSpan = 2;
+
+    // Permit Required
+    const permitRequired = new RadioInput(
+        'permitRequired', 
+        ['Yes', 'No'], 
+        'Permit Required', 
+        true
+    );
+    new Scope_Input(permitRequired);
+
+    row = table.insertRow();
+    cell = row.insertCell();
+    cell.appendChild(permitRequired.getLabelHTML());
+    cell.style.width = '150px';
+    cell = row.insertCell();
+    cell.appendChild(permitRequired.getInputHTML()[0]);
+    cell.appendChild(permitRequired.getInputHTML()[1]);
+    
+
+    // TASK READINESS
+    table = document.createElement('table');
+    wrapper.appendChild(table);
+
+    // Clear Understanding
+    row = taskReady_row_html(
+        'clearUnderstanding', 
+        'Do you have a clear understanding of your scope of work for the day?'
+    )
+    table.appendChild(row);
+
+    // Safety Review
+    row = taskReady_row_html(
+        'safetyReview', 
+        'Have all workers reviewed any and all applicable safe work procedures and Safety Data Sheets (SDS) that apply to this work?'
+    )
+    table.appendChild(row);
+
+    // Identify Missing
+    const identifyMissing = new TextInput(
+        'IdentifyMissing', 
+        'Identify what was missing and review with all applicable workers:',
+        true
+    )
+    new Scope_Input(identifyMissing);
+
+    row = table.insertRow();
+    row.hidden = true;
+    row.id = 'row-identifyMissing';
+    cell = row.insertCell();
+    if(isMobileDevice()){
+        cell.style.paddingLeft = '20px';
+    } else {
+        cell.style.paddingLeft = '50px';
+    }
+    cell.colSpan = 2;
+    cell.appendChild(identifyMissing.getLabelHTML());
+    cell.appendChild(identifyMissing.getInputHTML());
+
+    // Correct Tools
+    row = taskReady_row_html(
+        'correctTools', 
+        'Are the correct tools and equipment for the task available, in good condition, and ready to be used by a competent worker?'
+    )
+    table.appendChild(row);
+
+    // High Risk
+    row = taskReady_row_html(
+        'highRisk', 
+        'Is this a high-risk task, such as working at heights, working in a confined space, working alone, live electrical work, working near power lines, or working near energized equipment?'
+    )
+    table.appendChild(row);
+
+    // Specify Risks
+    row = table.insertRow();
+    row.hidden = true;
+    row.id = 'row-specifyRisks';
+    cell = row.insertCell();
+    if(isMobileDevice()){
+        cell.style.paddingLeft = '20px';
+    } else {
+        cell.style.paddingLeft = '50px';
+    }
+    cell.colSpan = 2;
+    cell.textContent = 'Ensure that these risks are specifically identified and discuss the plan before proceeding.'
+    
+    /** creates row for taskReady table
+     * 
+     * @param {string} name 
+     * @param {string} label_str 
+     * 
+     * @returns {HTMLTableRowElement}
+     */
+    function taskReady_row_html(name, label_str) {
+        let radio = new RadioInput(
+            name, 
+            ['Yes', 'No'],
+            label_str,
+            true
+        )
+        new Scope_Input(radio);
+
+        let row = document.createElement('tr');
+        row.classList.add('long-question');
+        let cell = row.insertCell();
+        cell.appendChild(radio.getLabelHTML());
+
+        let tabSize = 25;
+        if(isMobileDevice()){
+            tabSize = 10
+        }
+        cell.style.paddingLeft = `${tabSize}px`
+
+        cell = row.insertCell();
+        if(isMobileDevice()){
+            cell.style.width = '50px';
+        } else {
+            cell.style.width = '100px';
+        }
+        cell.appendChild(radio.getInputHTML()[0]);
+        cell.appendChild(radio.getInputHTML()[1]);
+        
+        return row;
+    }
+}
+
+function getPDF_scope(){
+    const objects = Scope_Input.getObjects();
+    let issue = false;
+    let pdfContent = [];
+
+    // Work Description
+    let active = objects.shift();
+    try {
+        pdfContent.push({
+            text: [
+                {text: `${active.getLabelValue()}:\n`, bold: true},
+                {text: `${active.getInputValue()}`}
+            ]
+        })
+    } catch (e) {
+        if (bypass) {
+            pdfContent.push({
+                text: [
+                    {text: `${active.getLabelValue()}:\n`, bold: true},
+                    {text: 'test'}
+                ]
+            })
+        } else {
+            issue = true;
+        }
+    }
+
+    // Permit Required
+    active = objects.shift();
+    try {
+        pdfContent.push({
+            table: {
+                body: [
+                    {text: `${active.getLabelValue()}`},
+                    {text: `${active.getInputValue()}`}
+                ]
+            },
+            layout: 'noBorders'
+        })
+    } catch (e) {
+        if(bypass){
+            pdfContent.push({
+                table: {
+                    body: [
+                        {text: `${active.getLabelValue()}`},
+                        {text: `test`}
+                    ]
+                },
+                layout: 'noBorders'
+            })
+        } else {
+            issue = true;
+        }
+    }
+
+
+    let taskReady = {
+        table: {
+            body: []
+        },
+        layout: 'noBorders'
+    }
+    while (objects.length >= 1){
+        const active = objects.shift();
+        try {
+            const label = active.getLabelValue();
+            const input = active.getInputValue();
+            taskReady.table.body.push([label, input]);
+            if (label === 'Have all workers reviewed any and all applicable safe work procedures and Safety Data Sheets (SDS) that apply to this work?') {
+                if (input.toLowerCase() === 'no') {
+                    const active = objects.shift();
+                    try {
+                        const label = active.getLabelValue();
+                        const input = active.getInputValue();
+                        taskReady.table.body.push (
+                            [
+                                {
+                                    text: `${label} ${input}`,
+                                    colSpan: 2,
+                                    margin: [20, 0, 0, 0]
+                                },
+                                {}
+                            ]
+                        )
+                    } catch (e) {
+                        if(bypass) {
+                            const label = active.getLabelValue();
+                            const input = 'test';
+                            taskReady.table.body.push(
+                                [
+                                    {
+                                        text: `${label} ${input}`,
+                                        colSpan: 2,
+                                        margin: [20, 0, 0, 0]
+                                    },
+                                    {}
+                                ]
+                            )
+                        } else {
+                            issue = true;
+                        }
+                    }
+                } else {
+                    objects.shift();
+                }
+            }
+            if (label === 'Is this a high-risk task, such as working at heights, working in a confined space, working alone, live electrical work, working near power lines, or working near energized equipment?') {
+                if (input.toLowerCase() === 'yes') {
+                    taskReady.table.body.push ([
+                        {
+                            text: 'Ensure that these risks are specifically identified and discuss the plan before proceeding.',
+                            colSpan: 2,
+                            margin: [20, 0, 0, 0]
+                        },
+                        {}
+                    ])
+                }
+            }
+        } catch (e) {
+            if(bypass) {
+                const label = active.getLabelValue();
+                const input = 'test';
+                taskReady.table.body.push([label, input]);
+            } else {
+                issue = true;
+            }
+        }
+    }
+
+    pdfContent.push(taskReady);
+
+
+    if(issue && !bypass) {
+        throw new Error('Missing Data');
+    }
+
+    return pdfContent;
+}
+
 scope_html();
 
 // if no, identify what was missing and review with all applicable workers
-document.querySelectorAll('input[name="safety-review"]').forEach((radio) => {
+document.querySelectorAll('input[name="safetyReview"]').forEach((radio) => {
     radio.addEventListener('change', (event) => {
         if (event.target.value === 'No') {
             const row = document.getElementById('row-identifyMissing');
@@ -316,7 +609,7 @@ document.querySelectorAll('input[name="safety-review"]').forEach((radio) => {
         }
     })
 })
-document.querySelectorAll('input[name="high-risk"]').forEach((radio) => {
+document.querySelectorAll('input[name="highRisk"]').forEach((radio) => {
     radio.addEventListener('change', (event) => {
         if (event.target.value === 'Yes') {
             const row = document.getElementById('row-specifyRisks');

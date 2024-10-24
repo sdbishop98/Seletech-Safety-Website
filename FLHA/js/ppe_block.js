@@ -1,4 +1,4 @@
-function ppe_html(){
+function ppe_html_OLD(){
     // modular package that generates html
     // gathers scope of work
     // utilizes helper functions in order to keep things tidy
@@ -171,7 +171,7 @@ function ppe_html(){
     }
 }
 
-function getPDF_ppe() {
+function getPDF_ppe_OLD() {
     let issue = false;
 
     let hardHat;
@@ -345,6 +345,106 @@ function getPDF_ppe() {
             layout: 'noBorders'
         }
     ]   
+}
+
+class PPE_Input extends Input_Collection {
+    constructor(obj) {
+        super(obj);
+    }
+}
+
+function ppe_html(){
+    const wrapper = document.createElement('div');
+    wrapper.id = 'wrapper-ppe';
+    wrapper.classList.add('block-wrapper');
+    document.currentScript.parentElement.appendChild(wrapper);
+
+    const table = document.createElement('table');
+    wrapper.appendChild(table);
+
+    // TITLE - ppe required
+    const header = document.createElement('thead');
+    table.appendChild(header);
+    let row = header.insertRow();
+    let cell = row.insertCell();
+    cell.textContent = 'PPE REQUIRED';
+    cell.colSpan = 2;
+
+    const body = document.createElement('tbody');
+    table.appendChild(body);
+
+    const options = [
+        ['Yes (at all times)', 'Yes (as needed)', 'No'],
+        ['Yes', 'No'],
+        ['Yes (always required)']
+    ];
+
+    const data = [
+        new RadioInput('ppeHardHat',options[0],'Hard Hat', true),
+        new RadioInput('ppeHardHatTether',options[1],'Hard Hat Tether', true),
+        new RadioInput('ppeSafetyGlasses',options[0],'Safety Glasses', true),
+        new RadioInput('ppeFaceShield',options[1],'Face Shield', true),
+        new RadioInput('ppeRespirator',options[0],'Respiratory Protection / Mask', true),
+        new RadioInput('ppeHearingProtection',options[0],'Hearing Protection', true),
+        new RadioInput('ppeHiVis',options[0],'High Visibility Clothing', true),
+        new RadioInput('ppePants',options[2],'Long Pants', true),
+        new RadioInput('ppeFR',options[1],'Fire Resistant Clothing', true),
+        new RadioInput('ppeArc',options[1],'Arc Flash Suit', true),
+        new RadioInput('ppeInsulGloves',options[1],'Insulated Gloves', true),
+        new RadioInput('ppeInsulTools',options[1],'Insulated Tools', true),
+        new RadioInput('ppeWorkGloves',options[0],'Work Gloves', true),
+        new RadioInput('ppeFootwear',options[2],'CSA Footwear (Steel Toes)', true),
+    ]
+
+    data.forEach((d, i) => {
+        new PPE_Input(d);
+        const row = table.insertRow();
+        let cell = row.insertCell();
+        cell.appendChild(d.getLabelHTML());
+        cell.classList.add('label');
+        cell = row.insertCell();
+        cell.classList.add('input');
+        const input = d.getInputHTML();
+        input.forEach(option => {
+            cell.appendChild(option);
+        })
+    })
+}
+
+function getPDF_ppe() {
+    let issue = false;
+    const objects = PPE_Input.getObjects();
+    let tableBody = [];
+
+    objects.forEach(obj => {
+        let value;
+        try {
+            value = obj.getInputValue();
+        } catch (e) {
+            if (bypass) {
+                value = 'test';
+            } else {
+                issue = true;
+            }
+        }
+
+        tableBody.push([
+            {text: obj.getLabelValue()},
+            {text: value}
+        ])
+    })
+
+    return [
+        {text: ' '},
+        'PPE REQUIRED',
+        {
+            table: {
+                widths: '*',
+                body: tableBody,
+            },
+            layout: 'noBorders'
+        }
+    ]
 }
 
 ppe_html();

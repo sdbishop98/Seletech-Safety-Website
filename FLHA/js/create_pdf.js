@@ -65,7 +65,6 @@ function createPDF(){
     const pdf = pdfMake.createPdf(doc)
 
     upload_PDF(pdf, make_fileName());
-
     
 
     btn.style.backgroundColor = 'mediumpurple';
@@ -111,8 +110,9 @@ function createPDF(){
             } else {
                 data.signatures = getPDF_signatures();
             }
+            // data.signatures = getPDF_signatures();
         } catch (e) {
-            issue = true;
+            // issue = true;
             console.log('MISSING - signatures')
         }
         if(issue && !bypass) {
@@ -123,13 +123,19 @@ function createPDF(){
     }
 
     function make_fileName(){
-        const jobNumber = document.getElementById('input-number-jobNumber').value;
         const date = document.getElementById('input-date').value;
         const time = document.getElementById('input-time').value;
-        const location  = document.getElementById('input-text-location').value;
-        const name = document.getElementById('input-text-name-assessor').value;
+        if (!bypass) {
+            const jobNumber = document.getElementById('input-text-numeric-jobNumber').value;
+            
+            const location  = document.getElementById('input-text-location').value;
+            const name = document.getElementById('input-text-signBlock_assessor_0').value;
 
-        return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
+            return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
+        } else {
+            return `TEST-DISREGARD_${date}_${time}`;
+        }
+        
     }
 
     function upload_PDF(pdf, fileName){
@@ -141,19 +147,22 @@ function createPDF(){
         
 
         function uploadToDrive(base64, fileName) {
-            fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    type: 'pdf',
-                    name: fileName,
-                    content: base64
+            if(!bypass){
+                fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        type: 'pdf',
+                        name: fileName,
+                        content: base64
+                    })
                 })
-            })
-            .then(response => response.text())
-            .then(data => console.log(data))
-            console.log('PDF sent to google services');
-
-            const download = getRadioInput('download');
+                .then(response => response.text())
+                .then(data => console.log(data))
+                console.log('PDF sent to google services');
+            }
+            
+            // const download = document.querySelector('input[name="download"]:checked').value;
+            const download = RadioInput.getValueByName('download');
             if(download === 'Yes') {
                 pdf.download(make_fileName());
             }
@@ -179,26 +188,12 @@ function submit_html(){
     
     wrapper.appendChild(wrapper_download);
 
-    const question = document.createElement('p');
-    question.textContent = 'Do you wish to download a copy for yourself?'
-    wrapper_download.appendChild(question);
-
-    const downloadyn = makeRadioInputLabelPairs(
-        'download', 
-        ['download-yes', 'download-no'],
-        ['Yes', 'No'],
-        false
-    );
-    downloadyn[1].input.checked = true;
-    downloadyn[0].label.appendChild(downloadyn[0].input);
-    downloadyn[0].label.classList.add('label-w-radio');
-    downloadyn[1].label.appendChild(downloadyn[1].input);
-    downloadyn[1].label.classList.add('label-w-radio');
-    const wrapper_radio = document.createElement('div');
-    wrapper_radio.style.marginLeft = '10px';
-    wrapper_download.appendChild(wrapper_radio);
-    wrapper_radio.appendChild(downloadyn[0].label);
-    wrapper_radio.appendChild(downloadyn[1].label);
+    const downloadyn = new RadioInput('download', ['Yes', 'No'], 'Do you wish to download a copy for yourself?');
+    downloadyn.setDefault(1);
+    wrapper_download.appendChild(downloadyn.getLabelHTML());
+    downloadyn.getInputHTML().forEach(option => {
+        wrapper_download.appendChild(option);
+    })
 
     const btn_submit = document.createElement('button');
     btn_submit.id = 'button-submit';

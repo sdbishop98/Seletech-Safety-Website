@@ -1,4 +1,4 @@
-function weather_html(){
+function weather_html_old(){
     // modular package that generates html
     // gathers weather information
     // utilizes helper functions in order to keep things tidy
@@ -94,7 +94,7 @@ function weather_html(){
     }
 }
 
-function getPDF_weather(){
+function getPDF_weather_old(){
     let issue = false;
 
     let workAffected;
@@ -157,6 +157,109 @@ function getPDF_weather(){
         ],
         ['', 'Temperature', temperature]
     ]
+
+    return {
+        table: {
+            widths: '*',
+            body: tableBody
+        }
+    }
+}
+
+class Weather_Input extends Input_Collection{
+    constructor (obj) {
+        super(obj);
+    }
+
+}
+/** modular package that generates html
+ * 
+ * gathers: current weather and temperature
+ * 
+ * checks: if work is affected by the weather
+ */
+function weather_html(){
+    const weatherConditions = [
+        'Clear', 'Partly Cloudy', 'Overcast', 'Windy', 'Rain', 
+        'Lightning / Thunderstorm', 'Freezing Rain', 'Snow', 'Fog', 'Smoke / Haze'
+    ];
+
+    const wrapper = document.createElement('div');
+    wrapper.id = 'wrapper-weather';
+    wrapper.classList.add('block-wrapper');
+    document.currentScript.parentElement.appendChild(wrapper);
+
+    const table = document.createElement('table');
+    wrapper.appendChild(table);
+
+    const weatherAffected = new RadioInput(
+        'weatherAffected',
+        ['Yes', 'No'],
+        'Is the work affected by the weather?',
+        true
+    )
+    new Weather_Input(weatherAffected);
+
+    let row = table.insertRow();
+    let cell = row.insertCell();
+    cell.appendChild(weatherAffected.getLabelHTML());
+    cell = row.insertCell();
+    cell.classList.add('td-radio');
+    cell.appendChild(weatherAffected.getInputHTML()[0]);
+    cell.appendChild(weatherAffected.getInputHTML()[1]);
+
+    const currentWeather = new SelectInput(
+        'currentWeather',
+        weatherConditions,
+        true, 
+        'Current weather conditions',
+        true
+    )
+    new Weather_Input(currentWeather);
+
+    row = table.insertRow();
+    cell = row.insertCell();
+    cell.appendChild(currentWeather.getLabelHTML());
+    cell = row.insertCell();
+    cell.appendChild(currentWeather.getInputHTML());
+
+    const temperature = new NumericTextInput('temperature', 'Temperature', true);
+    new Weather_Input(temperature);
+
+    row = table.insertRow();
+    cell = row.insertCell();
+    cell.appendChild(temperature.getLabelHTML());
+    cell = row.insertCell();
+    cell.appendChild(temperature.getInputHTML('&deg;C'));
+
+}
+
+function getPDF_weather(){
+    const objects = Weather_Input.getObjects();
+    let issue = false;
+    let tableBody = [];
+
+    objects.forEach((obj, index) => {
+        let value
+        try {
+            value = obj.getInputValue(); 
+        } catch(e) {
+            if (bypass) {
+                value = 'test';
+            } else {
+                issue = true;
+            }
+        }
+
+        tableBody.push([
+            {text: `${obj.getLabelValue()}:`},
+            {text: value}
+        ])
+    })
+
+    if(issue && !bypass) {
+        throw new Error('Missing Data');
+    }
 
     return {
         table: {
