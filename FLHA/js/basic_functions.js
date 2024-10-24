@@ -149,6 +149,13 @@ class SignaturePad {
         this.#clear.textContent = "Clear";
         this.#clear.onclick = () => this.#sp.clear();
 
+
+        // set width
+        const min = 2;
+        const max = 5;
+        this.#sp.minWidth = min;
+        this.#sp.maxWidth = max;
+
     }
 
     static getPads() {

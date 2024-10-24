@@ -129,7 +129,7 @@ function createPDF(){
             const jobNumber = document.getElementById('input-text-numeric-jobNumber').value;
             
             const location  = document.getElementById('input-text-location').value;
-            const name = document.getElementById('input-text-name-assessor').value;
+            const name = document.getElementById('input-text-signBlock_assessor_0').value;
 
             return `FLHA_${jobNumber}${location}_${name}_${date}_${time}`;
         } else {

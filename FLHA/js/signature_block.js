@@ -155,7 +155,7 @@ function signatures_html_OLD() {
     }
 }
 
-function getPDF_signatures(){
+function getPDF_signatures_OLD(){
     class SignatureBlock {
         constructor(modal, suppress = false) {
             const fit = [100, 100];
@@ -221,122 +221,152 @@ function getPDF_signatures(){
     }
 }   
 
-function signatures_html(){
-    class Signature_Block{
-        constructor(id, required = false){
-            this.id = id;
-            this.required = required;
-            this.segments = [];
+class Signature_Block{
+    static #instances = [];
+    constructor(id, required = false){
+        this.id = `signBlock_${id}`;
+        this.required = required;
+        this.segments = [];
 
-            this.wrapper = document.createElement('div');
-            this.table = document.createElement('table');
-            this.wrapper.appendChild(this.table);
-            this.table.classList.add('signature');
-            this.head = document.createElement('thead');
-            this.body = document.createElement('tbody');
-            this.table.appendChild(this.body);
-            this.table.appendChild(this.head);
-        }
+        this.wrapper = document.createElement('div');
+        this.wrapper.id = `wrapper_${this.id}`;
 
-        getHTML(){
-            return this.wrapper;
-        }
+        this.table = document.createElement('table');
+        this.wrapper.appendChild(this.table);
+        this.table.classList.add('signature');
+        this.head = document.createElement('thead');
+        this.body = document.createElement('tbody');
+        this.table.appendChild(this.body);
+        this.table.appendChild(this.head);
 
-        getSegments(){
-            return this.segments;
-        }
-
-        /**
-         * 
-         * @param {string} title 
-         */
-        setTitle(title){
-            const cell = assessor.head.insertRow().insertCell();
-            cell.textContent = title;
-        }
-
-        addSegment(){
-            const name = new TextInput(this.id, 'Name:', this.required);
-
-            let tbody = document.createElement('tbody');
-            tbody.classList.add('signature');
-
-            let row = tbody.insertRow();
-            let cell = row.insertCell();
-
-            cell.appendChild(name.getLabelHTML());
-            cell.classList.add('accent');
-            cell.style.borderTopLeftRadius = '10px'
-            cell.style.padding = '0.1rem';
-
-            // get the height
-            document.body.appendChild(tbody);
-            const height = cell.offsetHeight * 2;
-            document.body.removeChild(tbody);
-
-            const modal = new Modal_SignaturePad(this.id, height);
-
-            cell = row.insertCell();
-            modal.getHTML().style.height = height + 'px';
-            cell.appendChild(modal.getHTML());
-            cell.classList.add('secondary');
-            cell.style.borderRadius = '0 10px 10px 0';
-            cell.rowSpan = 2;
-
-            row = tbody.insertRow();
-            cell = row.insertCell();
-            cell.appendChild(name.getInputHTML());
-            cell.classList.add('accent');
-            cell.style.borderBottomLeftRadius = '10px';
-            name.getInputHTML().style.borderRadius = '0 0 0 5px';
-
-            this.body.appendChild(tbody);
-            this.segments.push({signature: modal.getSignaturePad(), name: name});
-        }
-        removeSegment(){
-            if(this.segments.length <= 1) {
-                console.log('Error: Must have at least one reviewer');
-                return;
-            }
-            
-            const row = this.body.lastElementChild;
-            row.remove();
-            this.segments.pop();
-        }
-
-        addButtons(text = null){
-            const wrapper = document.createElement('div');
-            wrapper.style.display = 'flex';
-            if(isMobileDevice()){
-                wrapper.style.flexDirection = 'column';
-            } else {
-                wrapper.style.flexDirection = 'row';
-            }
-            this.table.appendChild(wrapper);
-
-            if(text){
-                text = ` ${text}`;
-            } else {
-                text = '';
-            }
-
-            const btn_add = document.createElement('button');
-            btn_add.classList.add('fill');
-            btn_add.textContent = `ADD${text}`;
-            btn_add.onclick = () => this.addSegment();
-            wrapper.appendChild(btn_add);
-
-            const btn_remove = document.createElement('button');
-            btn_remove.classList.add('fill');
-            btn_remove.classList.add('fill');
-            btn_remove.textContent = `REMOVE${text}`;
-            btn_remove.onclick = () => this.removeSegment();
-            wrapper.appendChild(btn_remove);
-
-        }
-        
+        Signature_Block.#instances.push(this);
     }
 
+    static getInstances() {
+        return this.#instances;
+    }
+
+    getHTML(){
+        return this.wrapper;
+    }
+
+    getSegments(){
+        return this.segments;
+    }
+
+    getPDF_Segments(){
+        let bodies = [];
+        this.segments.forEach(seg => {
+            let png;
+            try {
+                png = seg.signature.getPNG_URL();
+            } catch (e) {
+                throw new Error('Missing Signature');
+            }
+            const fit = [100, 100];
+            const body = [
+                [{text: 'Name'}, {image: png, fit: fit, rowSpan: 2}],
+                [{text: seg.name.getInputValue()}, {text: ''}]
+            ]
+            bodies.push(body);
+        })
+        // console.log(bodies);
+        return bodies;
+    }
+    /**
+     * 
+     * @param {string} title 
+     */
+    setTitle(title){
+        const cell = this.head.insertRow().insertCell();
+        cell.textContent = title;
+    }
+
+    addSegment(){
+        const id = `${this.id}_${this.segments.length}`;
+        const name = new TextInput(id, 'Name:', this.required);
+
+        let tbody = document.createElement('tbody');
+        tbody.classList.add('signature');
+
+        let row = tbody.insertRow();
+        let cell = row.insertCell();
+
+        cell.appendChild(name.getLabelHTML());
+        cell.classList.add('accent');
+        cell.style.borderTopLeftRadius = '10px'
+        cell.style.padding = '0.1rem';
+
+        // get the height
+        document.body.appendChild(tbody);
+        const height = cell.offsetHeight * 2;
+        document.body.removeChild(tbody);
+
+        const modal = new Modal_SignaturePad(id, height);
+
+        cell = row.insertCell();
+        modal.getHTML().style.height = height + 'px';
+        cell.appendChild(modal.getHTML());
+        cell.classList.add('secondary');
+        cell.style.borderRadius = '0 10px 10px 0';
+        cell.rowSpan = 2;
+
+        row = tbody.insertRow();
+        cell = row.insertCell();
+        cell.appendChild(name.getInputHTML());
+        cell.classList.add('accent');
+        cell.style.borderBottomLeftRadius = '10px';
+        name.getInputHTML().style.borderRadius = '0 0 0 5px';
+
+        this.body.appendChild(tbody);
+        this.segments.push({signature: modal.getSignaturePad(), name: name});
+    }
+    removeSegment(){
+        if(this.segments.length <= 1) {
+            console.log('Error: Must have at least one reviewer');
+            return;
+        }
+        
+        const row = this.body.lastElementChild;
+        row.remove();
+        this.segments.pop();
+    }
+
+    addButtons(text = null){
+        const wrapper = document.createElement('div');
+        wrapper.style.display = 'flex';
+        if(isMobileDevice()){
+            wrapper.style.flexDirection = 'column';
+        } else {
+            wrapper.style.flexDirection = 'row';
+        }
+        this.table.appendChild(wrapper);
+
+        if(text){
+            text = ` ${text}`;
+        } else {
+            text = '';
+        }
+
+        const btn_add = document.createElement('button');
+        btn_add.classList.add('fill');
+        btn_add.textContent = `ADD${text}`;
+        btn_add.onclick = () => this.addSegment();
+        wrapper.appendChild(btn_add);
+
+        const btn_remove = document.createElement('button');
+        btn_remove.classList.add('fill');
+        btn_remove.classList.add('fill');
+        btn_remove.textContent = `REMOVE${text}`;
+        btn_remove.onclick = () => this.removeSegment();
+        wrapper.appendChild(btn_remove);
+
+    }
+    
+}
+
+function signatures_html(){
+    
 
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-scopeOfWork';
@@ -346,10 +376,63 @@ function signatures_html(){
     const assessor = new Signature_Block('assessor');
     assessor.setTitle('Assessed By:');
     assessor.addSegment();
-    assessor.addButtons('TEST');
     wrapper.appendChild(assessor.getHTML());
     
+    const reviewer = new Signature_Block('reviewer');
+    reviewer.setTitle('Reviewed By:');
+    reviewer.addSegment();
+    wrapper.appendChild(reviewer.getHTML());
 
+    const crew = new Signature_Block('crew');
+    crew.setTitle('Crew Sign-On');
+    crew.addSegment();
+    crew.addButtons('CREW');
+    wrapper.appendChild(crew.getHTML());
+}
+
+function getPDF_signatures(){
+    const signatures = Signature_Block.getInstances();
+
+
+    const tableBody = [];
+    // assessor
+    tableBody.push([
+        {text: 'Assessed By:', style: 'tableHeader', colSpan: 2},
+        {text: ''}
+    ])
+    console.log(signatures[0]);
+    console.log(signatures[0].getPDF_Segments());
+    const assessorBody = signatures[0].getPDF_Segments()[0];
+    tableBody.push(assessorBody[0]);
+    tableBody.push(assessorBody[1]);
+
+    // reviewer
+    tableBody.push([
+        {text: 'Reviewed By:', style: 'tableHeader', colSpan: 2},
+        {text: ''}
+    ])
+    const reviewerBody = signatures[1].getPDF_Segments()[0];
+    tableBody.push(reviewerBody[0]);
+    tableBody.push(reviewerBody[1]);
+
+    // crew sign on
+    tableBody.push([
+        {text: 'Crew Sign-On:', style: 'tableHeader', colSpan: 2},
+        {text: ''}
+    ])
+    const crewBody = signatures[2].getPDF_Segments();
+    crewBody.forEach(c => {
+        tableBody.push(c[0]);
+        tableBody.push(c[1]);
+    })
+
+
+    return {
+        table: {
+            widths: '*',
+            body: tableBody
+        }
+    }
 
 }
 
@@ -363,5 +446,4 @@ window.addEventListener('resize', function() {
     }
 })
 
-signatures_html_OLD();
 signatures_html();
