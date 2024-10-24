@@ -161,7 +161,8 @@ function createPDF(){
                 console.log('PDF sent to google services');
             }
             
-            const download = getRadioInput('download');
+            // const download = document.querySelector('input[name="download"]:checked').value;
+            const download = RadioInput.getValueByName('download');
             if(download === 'Yes') {
                 pdf.download(make_fileName());
             }
@@ -187,26 +188,12 @@ function submit_html(){
     
     wrapper.appendChild(wrapper_download);
 
-    const question = document.createElement('p');
-    question.textContent = 'Do you wish to download a copy for yourself?'
-    wrapper_download.appendChild(question);
-
-    const downloadyn = makeRadioInputLabelPairs(
-        'download', 
-        ['download-yes', 'download-no'],
-        ['Yes', 'No'],
-        false
-    );
-    downloadyn[1].input.checked = true;
-    downloadyn[0].label.appendChild(downloadyn[0].input);
-    downloadyn[0].label.classList.add('label-w-radio');
-    downloadyn[1].label.appendChild(downloadyn[1].input);
-    downloadyn[1].label.classList.add('label-w-radio');
-    const wrapper_radio = document.createElement('div');
-    wrapper_radio.style.marginLeft = '10px';
-    wrapper_download.appendChild(wrapper_radio);
-    wrapper_radio.appendChild(downloadyn[0].label);
-    wrapper_radio.appendChild(downloadyn[1].label);
+    const downloadyn = new RadioInput('download', ['Yes', 'No'], 'Do you wish to download a copy for yourself?');
+    downloadyn.setDefault(1);
+    wrapper_download.appendChild(downloadyn.getLabelHTML());
+    downloadyn.getInputHTML().forEach(option => {
+        wrapper_download.appendChild(option);
+    })
 
     const btn_submit = document.createElement('button');
     btn_submit.id = 'button-submit';
