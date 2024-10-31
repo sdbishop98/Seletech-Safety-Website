@@ -73,6 +73,7 @@ function createPDF(){
     function getData(){
         const data = {}
         let issue = false;
+        let testIssue = false;
 
         try {
             data.basics = getPDF_basics();
@@ -110,13 +111,15 @@ function createPDF(){
             } else {
                 data.signatures = getPDF_signatures();
             }
-            // data.signatures = getPDF_signatures();
         } catch (e) {
-            // issue = true;
+            issue = true;
+            testIssue = true;
             console.log('MISSING - signatures')
         }
         if(issue && !bypass) {
             throw new Error('missing data');
+        } else if (testIssue) {
+            throw new Error('missing signatures');
         } else {
             return data;
         }
@@ -207,3 +210,12 @@ function submit_html(){
 }
 
 submit_html();
+
+document.addEventListener('change', function(event) {
+    const btn = document.getElementById('button-submit');
+
+    if(btn.style.backgroundColor === 'darkred'){
+        btn.style.backgroundColor = 'mediumpurple';
+        btn.textContent = 'SUBMIT';
+    }
+})

@@ -734,3 +734,21 @@ function toCamelCase(str){
     });
     return camelCaseStr;
 }   
+
+function getAncestorsWithClass(element, className) {
+    const ancestors = [];
+    while (element) {
+        if (element.classList && element.classList.contains(className)){
+            ancestors.push(element);
+        }
+        element = element.parentElement;
+    }
+    return ancestors;
+}
+
+function getAncestorWithTag(element, tagName) {
+    while (element && element.tagName !== tagName.toUpperCase()) {
+        element = element.parentElement;
+    }
+    return element;
+}
