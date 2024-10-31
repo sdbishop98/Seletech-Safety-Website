@@ -87,7 +87,6 @@ function signatures_html_OLD() {
     }
 
     function removeReviewer(reviewers, body) {
-        // console.log(Modal_SignaturePad.getInstances())
         if(reviewers.length <=1) {
             alert('Error: Must have at least one reviewer');
             return;
@@ -106,7 +105,6 @@ function signatures_html_OLD() {
         }
         reviewers.pop();
         Modal_SignaturePad.removeLast();
-        // console.log(Modal_SignaturePad.getInstances())
     }
 
     /** creates a table body containing a text input and signature modal input
@@ -164,7 +162,6 @@ function getPDF_signatures_OLD(){
             try {
                 this.png = this.sp.getPNG_URL(suppress);
             } catch (e) {
-                console.log(modal.getHTML());
                 modal.getHTML().classList.add('error');
                 throw new Error('Missing signature');
             }
@@ -255,24 +252,33 @@ class Signature_Block{
     }
 
     getPDF_Segments(){
+
+
         let bodies = [];
+        const fit = [100, 100];
         this.segments.forEach(seg => {
-            let png;
+            // let png;
+            let body = []
             try {
-                png = seg.signature.getPNG_URL();
+                const png = seg.signature.getPNG_URL();
+                body = [
+                    [{text: 'Name'}, {image: png, fit: fit, rowSpan: 2}],
+                    [{text: seg.name.getInputValue()}, {text: ''}]
+                ]
             } catch (e) {
-                throw new Error('Missing Signature');
+                console.log(`something went wrong\nrequired = ${this.required}`);
+                if(this.required){
+                    console.log('getPDF_Segments is throwing an error')
+                    throw new Error('Missing Signature');
+                } else {
+                    body = null;
+                }
             }
-            const fit = [100, 100];
-            const body = [
-                [{text: 'Name'}, {image: png, fit: fit, rowSpan: 2}],
-                [{text: seg.name.getInputValue()}, {text: ''}]
-            ]
             bodies.push(body);
         })
-        // console.log(bodies);
         return bodies;
     }
+
     /**
      * 
      * @param {string} title 
@@ -366,14 +372,12 @@ class Signature_Block{
 }
 
 function signatures_html(){
-    
-
     const wrapper = document.createElement('div');
     wrapper.id = 'wrapper-scopeOfWork';
     wrapper.classList.add('block-wrapper');
     document.currentScript.parentElement.appendChild(wrapper);
 
-    const assessor = new Signature_Block('assessor');
+    const assessor = new Signature_Block('assessor', true);
     assessor.setTitle('Assessed By:');
     assessor.addSegment();
     wrapper.appendChild(assessor.getHTML());
@@ -393,18 +397,19 @@ function signatures_html(){
 function getPDF_signatures(){
     const signatures = Signature_Block.getInstances();
 
-
     const tableBody = [];
     // assessor
     tableBody.push([
         {text: 'Assessed By:', style: 'tableHeader', colSpan: 2},
         {text: ''}
     ])
-    console.log(signatures[0]);
-    console.log(signatures[0].getPDF_Segments());
+
     const assessorBody = signatures[0].getPDF_Segments()[0];
-    tableBody.push(assessorBody[0]);
-    tableBody.push(assessorBody[1]);
+    if(assessorBody){
+        tableBody.push(assessorBody[0]);
+        tableBody.push(assessorBody[1]);
+    }
+    
 
     // reviewer
     tableBody.push([
@@ -412,8 +417,11 @@ function getPDF_signatures(){
         {text: ''}
     ])
     const reviewerBody = signatures[1].getPDF_Segments()[0];
-    tableBody.push(reviewerBody[0]);
-    tableBody.push(reviewerBody[1]);
+    if(reviewerBody){
+        tableBody.push(reviewerBody[0]);
+        tableBody.push(reviewerBody[1]);
+    }
+    
 
     // crew sign on
     tableBody.push([
@@ -422,8 +430,10 @@ function getPDF_signatures(){
     ])
     const crewBody = signatures[2].getPDF_Segments();
     crewBody.forEach(c => {
-        tableBody.push(c[0]);
-        tableBody.push(c[1]);
+        if(c){
+            tableBody.push(c[0]);
+            tableBody.push(c[1]);
+        }  
     })
 
 
