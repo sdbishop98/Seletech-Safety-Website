@@ -106,12 +106,11 @@ function createPDF(){
             console.log('MISSING - hazards')
         }
         try {
-            // if(bypass){
-            //     data.signatures = {}
-            // } else {
-            //     data.signatures = getPDF_signatures();
-            // }
-            data.signatures = getPDF_signatures();
+            if(bypass){
+                data.signatures = {}
+            } else {
+                data.signatures = getPDF_signatures();
+            }
         } catch (e) {
             issue = true;
             testIssue = true;
@@ -211,3 +210,12 @@ function submit_html(){
 }
 
 submit_html();
+
+document.addEventListener('change', function(event) {
+    const btn = document.getElementById('button-submit');
+
+    if(btn.style.backgroundColor === 'darkred'){
+        btn.style.backgroundColor = 'mediumpurple';
+        btn.textContent = 'SUBMIT';
+    }
+})
