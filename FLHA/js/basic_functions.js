@@ -456,7 +456,7 @@ class NumericTextInput extends TextInput {
     constructor(identifier, label_str, required = false){
         identifier = `numeric-${identifier}`;
         super(identifier, label_str, required);
-        this.input.inputMode = 'numeric';
+        // this.input.inputMode = 'numeric';
         this.input.pattern = '[0-9]*';
         this.input.classList.add('numeric');
     }
