@@ -394,6 +394,7 @@ function ppe_html(){
         new RadioInput('ppeInsulTools',options[1],'Insulated Tools', true),
         new RadioInput('ppeWorkGloves',options[0],'Work Gloves', true),
         new RadioInput('ppeFootwear',options[2],'CSA Footwear (Steel Toes)', true),
+        new RadioInput('ppeLOTO', options[1], 'Lock Out / Tag Out', true),
     ]
 
     data.forEach((d, i) => {
