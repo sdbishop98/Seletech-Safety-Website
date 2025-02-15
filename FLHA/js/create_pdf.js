@@ -1,4 +1,7 @@
 function createPDF(){
+
+    // const pdfMake = require('pdfmake/build/pdfmake.js');
+    // require('pdfmake/build/vfs_fonts.js');
     
     const btn = document.getElementById('button-submit');
     btn.style.backgroundColor = 'darkkhaki';
@@ -143,13 +146,19 @@ function createPDF(){
 
     function upload_PDF(pdf, fileName){
         console.log('uploading pdf');
-        pdf.getBase64(function(base64) {
-            uploadToDrive(base64, fileName);
-        });
+        // pdf.getBase64(function(base64) {
+        //     console.log('made it 1');
+        //     uploadToDrive(base64, fileName);
+        // });
+        pdf.getBase64((data) => {
+            console.log('made it 1');
+            uploadToDrive(data, fileName);
+        })
 
         
 
         function uploadToDrive(base64, fileName) {
+            console.log('made it 2');
             if(!bypass){
                 fetch('https://script.google.com/macros/s/AKfycbz-VEUcuC0rzFkvESOHO6VJ2NTzcIPGSIyX___cU3gZnQ1hTbAbmMUR8Av7t0tdRAs3Aw/exec', {
                     method: 'POST',

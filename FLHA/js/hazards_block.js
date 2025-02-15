@@ -304,9 +304,16 @@ class Hazards_Input{
 class Controls_Input{
     constructor(obj){
         this.obj = obj;
+        this.responsible = null;
     }
     getValue(){
         return this.obj.getInputValue();
+    }
+    addResponsible(obj){
+        this.responsible = obj;
+    }
+    getResponsible(){
+        return this.responsible.getInputValue();
     }
 }
 function hazards_html(){
@@ -491,25 +498,39 @@ function hazards_html(){
 
     function create_control_segment(parent_HTML, parent_id, hazard){
         const index = parent_HTML.getElementsByClassName('wrapper-control').length;
-        const id = `${parent_id}-control${index}`;
+        const control_id = `${parent_id}-control${index}`;
+        const responsible_id = `${parent_id}-responsible${index}`;
         const wrapper = document.createElement('div');
         wrapper.classList.add('collapsible-leaf', 'wrapper-control');
 
         const required = (function() {
-            const parts = id.split('-');
+            const parts = control_id.split('-');
             const task = parts[0].replace('task', '');
             const hazard = parts[1].replace('hazard', '');
             const control = parts[2].replace('control', '');
             return task === '0' && hazard === '0' && control === '0';
         })();
-        const content = new TextInput(id, 'CONTROL', required);
-        hazard.addControl(content);
+        const content = new TextInput(control_id, 'CONTROL', required);
+        const control = hazard.addControl(content);
         content.getInputHTML().style.marginLeft = '10px';
+
+        const responsible = new TextInput(responsible_id, 'Person responsible for Control', required);
+        control.addResponsible(responsible);
+        responsible.getInputHTML().style.marginLeft = '10px';
 
         const data = document.createElement('div');
         wrapper.appendChild(data);
-        data.appendChild(content.getLabelHTML());
-        data.appendChild(content.getInputHTML());
+
+        let div = document.createElement('div');
+        data.appendChild(div);
+        div.appendChild(content.getLabelHTML());
+        div.appendChild(content.getInputHTML());
+
+        div = document.createElement('div');
+        data.appendChild(div);
+        div.appendChild(responsible.getLabelHTML());
+        div.appendChild(responsible.getInputHTML());
+        div.style.marginTop = '5px';
 
         if(isMobileDevice()) {
             data.style.display = 'flex';
@@ -567,23 +588,34 @@ function getPDF_hazards(){
             }
             const controls = hazard.getControls();
             controls.forEach((control, index) => {
-                let text;
+                let text_control;
+                let text_responsible;
                 try {
-                    text = control.getValue();
+                    text_control = control.getValue();
+                    text_responsible = control.getResponsible();
                 } catch(e) {
                     if (bypass) {
-                        text = 'test';
+                        text_control = 'test';
+                        text_responsible = 'test';
                     } else {
                         issue = true;
                     }
                 }
-                const data = {text: text, border: [true, true, true, true]};
+                let data = {text: `Control: ${text_control}\nPerson Responsible: ${text_responsible}`, border: [true, true, true, true]};
                 if (index === 0){
                     row.push(data);
                 } else {
                     row = [JSON.parse(JSON.stringify(blank)), JSON.parse(JSON.stringify(blank)), data];
                 }
                 tableBody.push(row);
+
+                // data = {text: text_responsible, border: [true, true, true, true]};
+                // if (index === 0){
+                //     row.push(data);
+                // } else {
+                //     row = [JSON.parse(JSON.stringify(blank)), JSON.parse(JSON.stringify(blank)), data];
+                // }
+                // tableBody.push(row);
             })
         })
     })

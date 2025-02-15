@@ -383,7 +383,7 @@ function signatures_html(){
     wrapper.appendChild(assessor.getHTML());
     
     const reviewer = new Signature_Block('reviewer');
-    reviewer.setTitle('Reviewed By:');
+    reviewer.setTitle('Supervisor / Lead Tech:');
     reviewer.addSegment();
     wrapper.appendChild(reviewer.getHTML());
 
@@ -413,7 +413,7 @@ function getPDF_signatures(){
 
     // reviewer
     tableBody.push([
-        {text: 'Reviewed By:', style: 'tableHeader', colSpan: 2},
+        {text: 'Supervisor / Lead Tech:', style: 'tableHeader', colSpan: 2},
         {text: ''}
     ])
     const reviewerBody = signatures[1].getPDF_Segments()[0];
