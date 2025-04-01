@@ -174,10 +174,11 @@ function createPDF(){
             }
             
             // const download = document.querySelector('input[name="download"]:checked').value;
-            const download = RadioInput.getValueByName('download');
-            if(download === 'Yes') {
-                pdf.download(make_fileName());
-            }
+            // const download = RadioInput.getValueByName('download');
+            pdf.download(make_fileName());
+            // if(download === 'Yes') {
+            //     pdf.download(make_fileName());
+            // }
         }
     }
 }
@@ -200,12 +201,12 @@ function submit_html(){
     
     wrapper.appendChild(wrapper_download);
 
-    const downloadyn = new RadioInput('download', ['Yes', 'No'], 'Do you wish to download a copy for yourself?');
-    downloadyn.setDefault(1);
-    wrapper_download.appendChild(downloadyn.getLabelHTML());
-    downloadyn.getInputHTML().forEach(option => {
-        wrapper_download.appendChild(option);
-    })
+    // const downloadyn = new RadioInput('download', ['Yes', 'No'], 'Do you wish to download a copy for yourself?');
+    // downloadyn.setDefault(1);
+    // wrapper_download.appendChild(downloadyn.getLabelHTML());
+    // downloadyn.getInputHTML().forEach(option => {
+    //     wrapper_download.appendChild(option);
+    // })
 
     const btn_submit = document.createElement('button');
     btn_submit.id = 'button-submit';
