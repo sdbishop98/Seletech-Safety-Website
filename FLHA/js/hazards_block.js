@@ -471,7 +471,7 @@ function hazards_html(){
             const control = create_control_segment(collapsible.getHTML(), id, hazard);
             collapsible.getContentHTML().insertBefore(control, this.parentElement);
             const ancestors = getAncestorsWithClass(this, 'collapsible-content');
-            const content = this.parentElement.parentElement;
+            const content = this.parentElement.parentElement; // gets first instance of collabsible-content
             content.style.maxHeight = content.scrollHeight + 'px';
             ancestors.forEach(ancestor => {
                 ancestor.style.maxHeight = `${ancestor.scrollHeight + content.scrollHeight*2}px`;
@@ -631,6 +631,72 @@ function getPDF_hazards(){
             defaultBorder: false
         }
     }
+}
+
+function getJSON_hazards(){
+    const json = {};
+    json.hazard_block = [];
+
+    let issue = false;
+
+    const tasks = Tasks_Input.getInstances();
+    tasks.forEach(task => {
+        let row = [];
+        let text;
+        try {
+            text = task.getValue();
+        } catch (e) {
+            if (bypass) {
+                text = 'test';
+            } else {
+                issue = true;
+            }
+        }
+        row.push(text);
+
+        const hazards = task.getHazards();
+        hazards.forEach((hazard, index) => {
+            let text;
+            try {
+                text = hazard.getValue();
+            } catch (e) {
+                if (bypass) {
+                    text = 'test';
+                } else {
+                    issue = true;
+                }
+            }
+            if (index === 0) {
+                row.push(text);
+            } else {
+                row = ['', text];
+            }
+
+            const controls = hazard.getControls();
+            controls.forEach((control, index) => {
+                let text_control;
+                let text_responsible;
+                try {
+                    text_control = control.getValue();
+                    text_responsible = control.getResponsible();
+                } catch(e) {
+                    if (bypass) {
+                        text_control = 'test';
+                        text_responsible = 'test';
+                    } else {
+                        issue = true;
+                    }
+                }
+                if (index === 0) {
+                    row.push(data);
+                } else {
+                    row = ['', '', text_control, text_responsible];
+                }
+                json.hazard_block.push(row);
+            })
+        })
+    })
+    return json;
 }
 
 hazards_html();

@@ -75,38 +75,49 @@ function createPDF(){
 
     function getData(){
         const data = {}
+        let json = {}
         let issue = false;
         let testIssue = false;
 
         try {
             data.basics = getPDF_basics();
+            json = { ...json, ...getJSON_basics()};
         } catch (e) {
             issue = true;
             console.log('MISSING - basics')
         }
+        
         try {
             data.weather = getPDF_weather();
+            json = { ...json, ...getJSON_weather()};
         } catch (e) {
             issue = true;
             console.log('MISSING - weather')
         }
+        
         try {
             data.scope = getPDF_scope();
+            json = { ...json, ...getJSON_scope()};
         } catch (e) {
             issue = true;
             console.log('MISSING - scope')
         }
+        
         try {
             data.ppe = getPDF_ppe(); 
+            json = { ...json, ...getJSON_ppe()};
         } catch (e) {
             issue = true;
             console.log('MISSING - ppe')
         }
+        console.log(json);
+
         try {
             data.hazards = getPDF_hazards();
+            json = { ...json, ...getJSON_hazards()};
         } catch (e) {
             issue = true;
-            console.log('MISSING - hazards')
+            console.log('MISSING - hazards');
         }
         try {
             if(bypass){
@@ -151,8 +162,10 @@ function createPDF(){
         //     uploadToDrive(base64, fileName);
         // });
         pdf.getBase64((data) => {
-            console.log('made it 1');
-            uploadToDrive(data, fileName);
+            // console.log('made it - base64 conversion');
+            // uploadToDrive(data, fileName);
+            // const blob = base64ToBlob(data, 'application/pdf');
+            // uploadToSharePoint(fileName, blob);
         })
 
         
@@ -180,9 +193,84 @@ function createPDF(){
             //     pdf.download(make_fileName());
             // }
         }
+        
+        // okay this did not work.
+        // new plan, which i shall do tomorrow 
+        // use power automate as a middle man to talk to sharepoint. 
+        // I can send JSONs to power automate, and then i should be able to use something called word templates to turn that into a pdf.
+        /* function uploadToSharePoint(fileName, fileContent) {
+            console.log('beginning upload to sharepoint');
+
+            const siteUrl = "https://myseletech.sharepoint.com/sites/safety";
+            const folderPath = "Shared Documents/FLHA's";
+
+            const accessToken = getAccessToken(tenantId, clientId, clientSecret, siteUrl);
+
+            try {
+                const uploadUrl = `${siteUrl}/_api/web/GetFolderByServerRelativeUrl('${folderPath}')/Files/add(url='${fileName}.pdf',overwrite=true)`;
+
+                fetch(uploadUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json;odata=verbose',
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                    body: fileContent
+                })
+                .then (response => {
+                    console.log('uploadToSharePoint - fetch complete');
+                    if (response.ok) {
+                        console.log('File uploaded successfully!');
+                    } else {
+                        return response.text().then(err => { throw new Error(err); });
+                    }
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        } */
     }
 }
+/* 
+async function getAccessToken(tenantId, clientId, clientSecret, sharepointDomain) {
+    const tokenUrl = `https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`;
 
+    const body = new URLSearchParams({
+        grant_type: 'client_credentials',
+        client_id: clientId,
+        client_secret: clientSecret,
+        scope: `${sharepointDomain}/.default`
+    });
+
+    try {
+        const response = await fetch(tokenUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: body.toString()
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data.access_token;
+        } else {
+            const error = await response.text();
+            console.error('Error fetching access token:', error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+    return null;
+}
+ */
+function base64ToBlob(base64, contentType = '') {
+    console.log('made it - base64ToBlob');
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length).map((_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: contentType });
+}
 
 function submit_html(){
     // modular package that generates html

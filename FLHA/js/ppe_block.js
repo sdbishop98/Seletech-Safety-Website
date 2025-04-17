@@ -448,4 +448,44 @@ function getPDF_ppe() {
     ]
 }
 
+function getJSON_ppe(){
+    const objects = PPE_Input.getObjects();
+    const json = {};
+    if (bypass) {
+        json.ppeHardHat = 'test';
+        json.ppeHardHatTether = 'test';
+        json.ppeSafetyGlasses = 'test';
+        json.ppeFaceShield = 'test';
+        json.ppeRespirator = 'test';
+        json.ppeHearingProtection = 'test';
+        json.ppeHiVis = 'test';
+        json.ppePants = 'test';
+        json.ppeFR = 'test';
+        json.ppeArc = 'test';
+        json.ppeInsulGloves = 'test';
+        json.ppeInsulTools = 'test';
+        json.ppeWorkGloves = 'test';
+        json.ppeFootWear = 'test';
+        json.ppeLOTO = 'test';
+    } else {
+        json.ppeHardHat = objects[0].getInputValue();
+        json.ppeHardHatTether = objects[1].getInputValue();
+        json.ppeSafetyGlasses = objects[2].getInputValue();
+        json.ppeFaceShield = objects[3].getInputValue();
+        json.ppeRespirator = objects[4].getInputValue();
+        json.ppeHearingProtection = objects[5].getInputValue();
+        json.ppeHiVis = objects[6].getInputValue();
+        json.ppePants = objects[7].getInputValue();
+        json.ppeFR = objects[8].getInputValue();
+        json.ppeArc = objects[9].getInputValue();
+        json.ppeInsulGloves = objects[10].getInputValue();
+        json.ppeInsulTools = objects[11].getInputValue();
+        json.ppeWorkGloves = objects[12].getInputValue();
+        json.ppeFootWear = objects[13].getInputValue();
+        json.ppeLOTO = objects[14].getInputValue();
+    }
+
+    return json;
+}
+
 ppe_html();

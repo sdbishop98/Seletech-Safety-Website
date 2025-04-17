@@ -269,4 +269,22 @@ function getPDF_weather(){
     }
 }
 
+function getJSON_weather(){
+    const objects = Weather_Input.getObjects();
+    let json = {};
+    
+    if (bypass){
+        json.weatherAffected = 'test';
+        json.currentWeather = 'test';
+        json.temperature = 'test';
+    } else {
+        json.weatherAffected = objects[0].getInputValue();
+        json.currentWeather = objects[1].getInputValue();
+        json.temperature = objects[2].getInputValue();
+    }
+    
+
+    return json;
+}
+
 weather_html();

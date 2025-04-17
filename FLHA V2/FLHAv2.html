@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FLHA</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style/main.css">
+    </head>
+    <body>
+        <script src="./js/collapsibleTree.js"></script>
+        <script src="./js/html_classes.js"></script>
+        <h1> <!-- Title -->
+            <span class = "seletech">Seletech</span> FIELD LEVEL HAZARD ASSESSMENT
+        </h1>
+        <div class="block-wrapper"> <!-- instructions -->
+            <p>
+                <b>As a group:</b>
+                <br>
+                <span class="red-text">STOP:</span> Step back and observe.
+                <br>
+                <span class="red-text">THINK:</span> Identify and review all tasks involved in the work scope.
+                <br>
+                <span class="red-text">ASSESS:</span> Hazards, pathways, impact related to scope of work and site. Identify the hazards and controls you will use.
+                <br>
+                <span class="red-text">PLAN:</span> Identify needed controls, verify implementation and document.
+                <br>
+                <span class="red-text">DISCUSS:</span> The plan with all involved and complete the task.
+                <br>
+                <span class="red-text">REVISE:</span> Repeat assessment with the group if conditions or tasks change.
+            </p>
+        </div>
+        <div> <!-- The Form itself -->
+            <div id="wrapper-basicInfo" class="block-wrapper"> <!-- Basic Info - Date, Time, Location, Job Number -->
+                <table> 
+                    <tbody>
+                        <tr> <!-- Date input - read only -->
+                            <td>
+                                <label for="input-date">Date</label>
+                            </td>
+                            <td>
+                                <input type="date" id="input-date" class="dateTime" readonly>
+                            </td>
+                        </tr>
+                        <tr> <!-- Time input - read only -->
+                            <td>
+                                <label for="input-time">Time</label>
+                            </td>
+                            <td>
+                                <input type="time" id="input-time" class="dateTime" readonly>
+                            </td>
+                        </tr>
+                        <script> <!-- Update dateTime inputs to be the current date and time -->
+                            const now = new Date()
+                            const today = now.toISOString().split('T')[0]
+                            const hours = String(now.getHours()).padStart(2, '0');
+                            const minutes = String(now.getMinutes()).padStart(2, '0');
+                            document.getElementById('input-date').value = today;
+                            document.getElementById('input-time').value = `${hours}:${minutes}`;
+                        </script>
+                        <tr> <!-- Location input -->
+                            <td>
+                                <label for="input-text-location">Location</label>
+                            </td>
+                            <td>
+                                <input type="text" id="input-text-location" required>
+                            </td>
+                        </tr>
+                        <tr> <!-- Job Number input -->
+                            <td>
+                                <label for="input-text-numeric-jobNumber">Job Number</label>
+                            </td>
+                            <td>
+                                <input type="text" id="input-text-numeric-jobNumber" class="numeric" required>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="wrapper-weather" class="block-wrapper">
+                <table>
+                    <tbody>
+                        <tr> <!-- Work affected by weather -->
+                            <td>
+                                <p>Is the work affected by the weather?</p>
+                            </td>
+                            <td class="td-radio">
+                                <label for="input-radio-weatherAffected-yes">
+                                    <input type="radio" name="weatherAffected" id="input-radio-weatherAffected-yes" value="Yes" required>
+                                    Yes
+                                </label>
+                                <label for="input-radio-weatherAffected-no">
+                                    <input type="radio" name="weatherAffected" id="input-radio-weatherAffected-no" value="No" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Current Weather -->
+                            <td>
+                                <label for="input-select-currentWeather">Current weather conditions: </label>
+                            </td>
+                            <td>
+                                <select id="input-select-currentWeather">
+                                    <option value hidden class="placeholder">Please select an option</option>
+                                    <option value="Clear">Clear</option>
+                                    <option value="Partly Cloudy">Partly Cloudy</option>
+                                    <option value="Overcast">Overcast</option>
+                                    <option value="Windy">Windy</option>
+                                    <option value="Rain">Rain</option>
+                                    <option value="Lightning / Thunderstorm">Lighting / Thunderstorm</option>
+                                    <option value="Freezing Rain">Freezing Rain</option>
+                                    <option value="Snow">Snow</option>
+                                    <option value="Fog">Fog</option>
+                                    <option value="Smoke / Haze">Smoke / Haze</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr> <!-- temperature -->
+                            <td>
+                                <label for="input-text-numeric-temperature">Temperature</label>
+                            </td>
+                            <td>
+                                <label class="unit">
+                                    <input type="text" id="input-text-temperature" required class="numeric">
+                                    <span>&deg;C</span>
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="wrapper-scopeOfWork" class="block-wrapper">
+                <table> <!-- Description of work -->
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="input-textArea-workDescription">Work Descriptions</label>
+                            </td>
+                        </tr>
+                        <tr> <!-- work description -->
+                            <td colspan="2">
+                                <textarea id="input-textArea-workDescription" required rows="4" cols="50"></textarea>
+                            </td>
+                        </tr>
+                        <tr> <!-- permit required -->
+                            <td style="width: 150px;">
+                                <p>Permit Required</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-permitRequired-yes">
+                                    <input type="radio" value="Yes" id="input-radio-permitRequired-yes" name="permitRequired" required>
+                                    Yes
+                                </label>
+                                <label for="input-radio-permitRequired-no">
+                                    <input type="radio" value="No" id="input-radio-permitRequired-no" name="permitRequired" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table> <!-- Guaging questions -->
+                    <tr class="long-question">
+                        <td style="padding-left: 25px;">
+                            <p>Do you have a clear understanding of your scope of work for the day?</p>
+                        </td>
+                        <td>
+                            <label for="input-radio-clearUnderstanding-yes">
+                                <input type="radio" name="clearUnderstaing" id="input-radio-clearUnderstanding-yes" value="Yes" required>
+                                Yes
+                            </label>
+                            <label for="input-radio-clearUnderstanding-no">
+                                <input type="radio" name="clearUnderstaing" id="input-radio-clearUnderstanding-no" value="No" required>
+                                No
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="long-question">
+                        <td style="padding-left: 25px;">
+                            <p>Have all workers reviewed any and all applicable safe work procedures and Safety Data Sheets (SDS) that apply to this work?</p>
+                        </td>
+                        <td>
+                            <label for="input-radio-safetyReview-yes">
+                                <input type="radio" name="safetyReview" id="input-radio-safetyReview-yes" value="Yes" required>
+                                Yes
+                            </label>
+                            <label for="input-radio-safetyReview-no">
+                                <input type="radio" name="safetyReview" id="input-radio-safetyReview-no" value="No" required>
+                                No
+                            </label>
+                        </td>
+                    </tr>
+                    <tr hidden id="row-identifyMissing">
+                        <td colspan="2" style="padding-left: 50px;">
+                            <label for="input-text-IdentifyMissing">Identify what was missing and review with all applicable workers</label>
+                            <input type="text" id="input-text-IdentifyMissing" required>
+                        </td>
+                    </tr>
+                    <tr class="long-question">
+                        <td style="padding-left: 25px;">
+                            <p>Are the correct tools and equipment for the task available, in good condition, and ready to be used by a competent worker?</p>
+                        </td>
+                        <td>
+                            <label for="input-radio-correctTools-yes">
+                                <input type="radio" name="correctTools" id="input-radio-correctTools-yes" value="Yes" required>
+                                Yes
+                            </label>
+                            <label for="input-radio-correctTools-no">
+                                <input type="radio" name="correctTools" id="input-radio-correctTools-no" value="No" required>
+                                No
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="long-question">
+                        <td style="padding-left: 25px;">
+                            <p>Is this a high-risk task, such as working at heights, working in a confined space, working alone, live electrical work, working near power lines, or working near energized equipment?</p>
+                        </td>
+                        <td>
+                            <label for="input-radio-highRisk-yes">
+                                <input type="radio" name="highRisk" id="input-radio-highRisk-yes" value="Yes" required>
+                                Yes
+                            </label>
+                            <label for="input-radio-highRisk-no">
+                                <input type="radio" name="highRisk" id="input-radio-highRisk-no" value="No" required>
+                                No
+                            </label>
+                        </td>
+                    </tr>
+                    <tr hidden id="row-specifyRisks">
+                        <td colspan="2" style="padding-left: 50px;">Ensure that these risks are specifically identified and discuss the plan before proceeding</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="wrapper-ppe" class="block-wrapper">
+                <table>
+                    <thead>
+                        <td colspan="2">PPE REQUIRED</td>
+                    </thead>
+                    <tbody>
+                        <tr> <!-- Hard Hat -->
+                            <td>
+                                <p>Hard Hat</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeHardHat-yes(atAllTimes)">
+                                    <input type="radio" value="Yes (at all times)" id="input-radio-ppeHardHat-yes(atAllTimes)" name="ppeHardHat" required>
+                                    Yes (at all times)
+                                </label>
+                                <label for="input-radio-ppeHardHat-yes(asNeeded)">
+                                    <input type="radio" value="Yes (as needed)" id="input-radio-ppeHardHat-yes(asNeeded)" name="ppeHardHat" required>
+                                    Yes (as needed)
+                                </label>
+                                <label for="input-radio-ppeHardHat-no">
+                                    <input type="radio" value="No" id="input-radio-ppeHardHat-no" name="ppeHardHat" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Hard Hat Tether -->
+                            <td>
+                                <p>Hard Hat Tether</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeHardHatTether-yes">
+                                    <input type="radio" value="Yes" id="input-radio-ppeHardHatTether-yes" name="ppeHardHatTether" required>
+                                    Yes
+                                </label>
+                                <label for="input-radio-ppeHardHatTether-no">
+                                    <input type="radio" value="No" id="input-radio-ppeHardHatTether-no" name="ppeHardHatTether" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Safety Glasses -->
+                            <td>
+                                <p>Safety Glasses</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeSafetyGlasses-yes(atAllTimes)">
+                                    <input type="radio" value="Yes (at all times)" id="input-radio-ppeSafetyGlasses-yes(atAllTimes)" name="ppeSafetyGlasses" required>
+                                    Yes (at all times)
+                                </label>
+                                <label for="input-radio-ppeSafetyGlasses-yes(asNeeded)">
+                                    <input type="radio" value="Yes (as needed)" id="input-radio-ppeSafetyGlasses-yes(asNeeded)" name="ppeSafetyGlasses" required>
+                                    Yes (as needed)
+                                </label>
+                                <label for="input-radio-ppeSafetyGlasses-no">
+                                    <input type="radio" value="No" id="input-radio-ppeSafetyGlasses-no" name="ppeSafetyGlasses" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Face Shield -->
+                            <td>
+                                <p>Face Shield</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeFaceShield-yes">
+                                    <input type="radio" value="Yes" id="input-radio-ppeFaceShield-yes" name="ppeFaceShield" required>
+                                    Yes 
+                                </label>
+                                <label for="input-radio-ppeFaceShield-no">
+                                    <input type="radio" value="No" id="input-radio-ppeFaceShield-no" name="ppeFaceShield" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Respriatory Protection / Mask -->
+                            <td>
+                                <p>Respriatory Protection / Mask</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeRespirator-yes(atAllTimes)">
+                                    <input type="radio" value="Yes (at all times)" id="input-radio-ppeRespirator-yes(atAllTimes)" name="ppeRespirator" required>
+                                    Yes (at all times)
+                                </label>
+                                <label for="input-radio-ppeRespirator-yes(asNeeded)">
+                                    <input type="radio" value="Yes (as needed)" id="input-radio-ppeRespirator-yes(asNeeded)" name="ppeRespirator" required>
+                                    Yes (as needed)
+                                </label>
+                                <label for="input-radio-ppeRespirator-no">
+                                    <input type="radio" value="No" id="input-radio-ppeRespirator-no" name="ppeRespirator" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Hearing Protection -->
+                            <td>
+                                <p>Hearing Protection</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeHearingProtection-yes(atAllTimes)">
+                                    <input type="radio" value="Yes (at all times)" id="input-radio-ppeHearingProtection-yes(atAllTimes)" name="ppeHearingProtection" required>
+                                    Yes (at all times)
+                                </label>
+                                <label for="input-radio-ppeHearingProtection-yes(asNeeded)">
+                                    <input type="radio" value="Yes (as needed)" id="input-radio-ppeHearingProtection-yes(asNeeded)" name="ppeHearingProtection" required>
+                                    Yes (as needed)
+                                </label>
+                                <label for="input-radio-ppeHearingProtection-no">
+                                    <input type="radio" value="No" id="input-radio-ppeHearingProtection-no" name="ppeHearingProtection" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- High Visibility Clothing -->
+                            <td>
+                                <p>High Visibility Clothing</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeHiVis-yes(atAllTimes)">
+                                    <input type="radio" value="Yes (at all times)" id="input-radio-ppeHiVis-yes(atAllTimes)" name="ppeHiVis" required>
+                                    Yes (at all times)
+                                </label>
+                                <label for="input-radio-ppeHiVis-yes(asNeeded)">
+                                    <input type="radio" value="Yes (as needed)" id="input-radio-ppeHiVis-yes(asNeeded)" name="ppeHiVis" required>
+                                    Yes (as needed)
+                                </label>
+                                <label for="input-radio-ppeHiVis-no">
+                                    <input type="radio" value="No" id="input-radio-ppeHiVis-no" name="ppeHiVis" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Long Pants -->
+                            <td>
+                                <p>Long Pants</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppePants-yes(alwaysRequired)">
+                                    <input type="radio" value="Yes (always required)" id="input-radio-ppePants-yes(alwaysRequired)" name="ppePants" required>
+                                    Yes (always required)
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Fire Resistant Clothing -->
+                            <td>
+                                <p>Fire Resistant Clothing</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeFR-yes">
+                                    <input type="radio" value="Yes" id="input-radio-ppeFR-yes" name="ppeFR" required>
+                                    Yes 
+                                </label>
+                                <label for="input-radio-ppeFR-no">
+                                    <input type="radio" value="No" id="input-radio-ppeFR-no" name="ppeFR" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Arc Flash Suit -->
+                            <td>
+                                <p>Arc Flash Suit</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeArc-yes">
+                                    <input type="radio" value="Yes" id="input-radio-ppeArc-yes" name="ppeArc" required>
+                                    Yes 
+                                </label>
+                                <label for="input-radio-ppeArc-no">
+                                    <input type="radio" value="No" id="input-radio-ppeArc-no" name="ppeArc" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Insulated Gloves -->
+                            <td>
+                                <p>Insulated Gloves</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeInsulGloves-yes">
+                                    <input type="radio" value="Yes" id="input-radio-ppeInsulGloves-yes" name="ppeInsulGloves" required>
+                                    Yes 
+                                </label>
+                                <label for="input-radio-ppeInsulGloves-no">
+                                    <input type="radio" value="No" id="input-radio-ppeInsulGloves-no" name="ppeInsulGloves" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Insulated Tools -->
+                            <td>
+                                <p>Insulated Tools</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeInsulTools-yes">
+                                    <input type="radio" value="Yes" id="input-radio-ppeInsulTools-yes" name="ppeInsulTools" required>
+                                    Yes 
+                                </label>
+                                <label for="input-radio-ppeInsulTools-no">
+                                    <input type="radio" value="No" id="input-radio-ppeInsulTools-no" name="ppeInsulTools" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Work Gloves -->
+                            <td>
+                                <p>Work Gloves</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeWorkGloves-yes(atAllTimes)">
+                                    <input type="radio" value="Yes (at all times)" id="input-radio-ppeWorkGloves-yes(atAllTimes)" name="ppeWorkGloves" required>
+                                    Yes (at all times)
+                                </label>
+                                <label for="input-radio-ppeWorkGloves-yes(asNeeded)">
+                                    <input type="radio" value="Yes (as needed)" id="input-radio-ppeWorkGloves-yes(asNeeded)" name="ppeWorkGloves" required>
+                                    Yes (as needed)
+                                </label>
+                                <label for="input-radio-ppeWorkGloves-no">
+                                    <input type="radio" value="No" id="input-radio-ppeWorkGloves-no" name="ppeWorkGloves" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- Steel Toes -->
+                            <td>
+                                <p>CSA Footwear (Steel Toes)</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeFootwear-yes(alwaysRequired)">
+                                    <input type="radio" value="Yes (always required)" id="input-radio-ppeFootwear-yes(alwaysRequired)" name="ppeFootwear" required>
+                                    Yes (always required)
+                                </label>
+                            </td>
+                        </tr>
+                        <tr> <!-- LOTO -->
+                            <td>
+                                <p>Lock Out / Tag Out</p>
+                            </td>
+                            <td>
+                                <label for="input-radio-ppeLOTO-yes">
+                                    <input type="radio" value="Yes" id="input-radio-ppeLOTO-yes" name="ppeLOTO" required>
+                                    Yes 
+                                </label>
+                                <label for="input-radio-ppeLOTO-no">
+                                    <input type="radio" value="No" id="input-radio-ppeLOTO-no" name="ppeLOTO" required>
+                                    No
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="wrapper-hazards" class="block-wrapper">
+                <script src="./js/hazards_block.js"></script>
+            </div>
+        </div>
+    </body>
+</html>

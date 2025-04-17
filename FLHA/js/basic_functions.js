@@ -371,7 +371,7 @@ class Input_Collection{
 }
 // INPUT CLASSES
 class AbstractInput {
-    static #instances = []
+    static instances = []
     /** 
      * 
      * @param {string} identifier - a unique identifier for the HTML input element
@@ -387,7 +387,7 @@ class AbstractInput {
             this.label = this._createLabel(label_str);
         }
 
-        AbstractInput.#instances.push(this);
+        AbstractInput.instances.push(this);
     }
     // CONSTRUCTOR HELPERS
     _editListener(){
@@ -418,7 +418,7 @@ class AbstractInput {
         return filtered;
     }
     static getSuperInstances(){
-        return AbstractInput.#instances;
+        return AbstractInput.instances;
     }
     // GETTERS
     getLabelHTML(){

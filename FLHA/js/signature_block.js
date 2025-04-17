@@ -279,6 +279,32 @@ class Signature_Block{
         return bodies;
     }
 
+    getJSON_segments(){
+        const json = {};
+        json.segments = [];
+        const fit = [100,100];
+
+        this.segments.forEach(seg => {
+            const segment = {}
+            try {
+                const png = seg.signature.getPNG_URL();
+                segment.name = seg.name.getInputValue();
+                segment.signature = png;
+            } catch (e) {
+                console.log(`something went wrong\nrequired = ${this.required}`);
+                if(this.required) {
+                    console.log('getPDF_Segments is throwing an error');
+                    throw new Error('Missing Signature');
+                } else {
+                    segment.name = null;
+                    segment.signature = null;
+                }
+            }
+            json.segments.push(segment);
+        })
+        return json;
+    }
+
     /**
      * 
      * @param {string} title 
@@ -444,6 +470,21 @@ function getPDF_signatures(){
         }
     }
 
+}
+
+function getJSON_signatures(){
+    const signatures = Signature_Block.getInstances();
+
+    const json = {};
+    json.signature_block = {};
+
+    json.signature_block.assessor = signatures[0].getJSON_segments();
+
+    json.signature_block.reviewer = signatures[1].getJSON_segments();
+
+    json.signature_block.crew = signatures[2].getJSON_segments();
+
+    return json;
 }
 
 window.addEventListener('resize', function() {

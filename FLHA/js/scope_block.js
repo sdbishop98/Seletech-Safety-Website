@@ -595,6 +595,33 @@ function getPDF_scope(){
     return pdfContent;
 }
 
+function getJSON_scope(){
+    const objects = Scope_Input.getObjects();
+    let json = {};
+
+    // console.log(objects);
+
+    if (bypass) {
+        json.workDescription = 'test';
+        json.permitRequired = 'test';
+        json.clearUnderstanding = 'test';
+        json.safetyReview = 'test';
+        json.identifyMissing = 'test';
+        json.correctTools = 'test';
+        json.highRisk = 'test';
+    } else {
+        json.workDescription = objects[0].getInputValue();
+        json.permitRequired = objects[1].getInputValue();
+        json.clearUnderstanding = objects[2].getInputValue();
+        json.safetyReview = objects[3].getInputValue();
+        json.identifyMissing = objects[4].getInputValue();
+        json.correctTools = objects[5].getInputValue();
+        json.highRisk = objects[6].getInputValue();
+    }
+
+    return json;
+}
+
 scope_html();
 
 // if no, identify what was missing and review with all applicable workers

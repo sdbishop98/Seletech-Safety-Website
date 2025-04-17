@@ -1,8 +1,12 @@
-$primary: #f5f5f5;
-$secondary: #a8a8a8;
+// $primary: #f5f5f5;
+$primary: #eaf0f5;
+// $secondary: #a8a8a8;
+$secondary: #5d6e7c;
 $accent: #d32f2f;
-$background: #e8e8e8;
+// $background: #e8e8e8;
+$background: #c5d4e0;
 $text-color: #333333;
+$blue: rgb(66, 116, 156);
 $desktop-font-size: medium;
 $mobile-font-size: 1.2rem;
 
@@ -132,7 +136,7 @@ div {
         display: flex;
         justify-content: space-between;
         border-radius: 10px;
-        background-color: rgba($text-color, 0.1);
+        background-color: rgba($blue, 0.1);
         margin-top: 5px;
     }
     &.error {
@@ -256,27 +260,27 @@ h6 {
 label {
     &.unit { // adds units to inputs
         display: flex;
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 3px;
-    width: calc(100% - 0.85rem);
-    box-sizing: border-box;
-    @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
-        width: 100%;
-    }
-    input {
-        border: none;
-        text-align: right;
-        width: calc(100% - 1.2rem);
-    }
-    &:focus-within {
-        outline-color: cornflowerblue;
-        outline-width: 2px;
-        outline-style: solid;
-        input {
-            outline: none;
+        background-color: white;
+        border: 1px solid black;
+        border-radius: 3px;
+        width: calc(100% - 0.85rem);
+        box-sizing: border-box;
+        @media (max-width: 600px), (max-height: 600px) and (max-width: 800px){
+            width: 100%;
         }
-    }
+        input {
+            border: none;
+            text-align: right;
+            width: calc(100% - 1.2rem);
+        }
+        &:focus-within {
+            outline-color: cornflowerblue;
+            outline-width: 2px;
+            outline-style: solid;
+            input {
+                outline: none;
+            }
+        }
     }
     &.label-w-radio{
         display: inline-block;
@@ -389,7 +393,7 @@ button{
     }
     &.fill {
         width: 100%;
-        background-color: mediumpurple;
+        background-color: rgb(66, 116, 156);
         color: $primary;
         border: none;
         outline: none;

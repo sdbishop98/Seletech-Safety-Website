@@ -106,6 +106,8 @@ function basics_html(){
     })
 }
 
+
+
 function getPDF_basics() {
     const objects = Basics_Input.getObjects();
     let issue = false;
@@ -149,6 +151,25 @@ function getPDF_basics() {
     
 
     return table
+}
+
+function getJSON_basics() {
+    const objects = Basics_Input.getObjects();
+    let issue = false;
+    let json = {};
+
+    json.date = objects[0].getInputValue();
+    json.location = objects[1].getInputValue();
+    json.time = objects[2].getInputValue();
+    if (json.location.toLowerCase() === 'uuddlrlrba'){
+        json.jobNumber = 'test';
+        json.location = 'test';
+        bypass = true;
+    } else {
+        json.jobNumber = objects[3].getInputValue();
+    }
+
+    return json;
 }
 
 basics_html();
