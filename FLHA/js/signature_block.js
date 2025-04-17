@@ -252,8 +252,6 @@ class Signature_Block{
     }
 
     getPDF_Segments(){
-
-
         let bodies = [];
         const fit = [100, 100];
         this.segments.forEach(seg => {

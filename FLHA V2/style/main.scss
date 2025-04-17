@@ -234,3 +234,38 @@ h1 {
 .red-text {
     color: $accent;
 }
+
+// Signature Pad
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba($text-color, 0.8);
+    .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        height: 90%;
+        background-color: $primary;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        canvas.signaturePad {
+            aspect-ratio: 2/1;
+            width: 100%;
+            max-width: calc(70vh * 2);
+            max-height: 70vh;
+            border: 1px solid #000;
+        }
+    }
+}

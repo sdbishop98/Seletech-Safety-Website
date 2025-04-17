@@ -209,9 +209,6 @@ class Control_Collapsible extends Abstract_HazSeg_Collapsible {
 function hazards_HTML(){
     const wrapper = document.createElement('div');
     
-
-    
-
     const wrapper_buttons = document.createElement('div');
     wrapper_buttons.style.display = 'flex';
     wrapper_buttons.style.flexDirection = 'row';
